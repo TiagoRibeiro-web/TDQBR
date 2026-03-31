@@ -529,14 +529,14 @@ def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, t
             badge = f'<div class="kpi-variation kpi-down">↓ {abs(variacao):.1f}% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
         else:
             badge = f'<div class="kpi-variation kpi-neutral">→ 0% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
-    st.html(f"""
+    st.markdown(f"""
     <div class="glass-card kpi-premium">
         <div class="kpi-icon">{icone}</div>
         <div class="kpi-number">{format_number(valor)}</div>
         <div class="kpi-label">{label}</div>
         {badge}
     </div>
-    """)
+    """, unsafe_allow_html=True)
 
 def _comp_badge(variacao):
     if variacao is None:
@@ -576,7 +576,7 @@ def render_metric_card(metric_name, icon, current_value,
         {_comp_badge(var_same)}
     </div>"""
 
-    st.html(f"""
+    st.markdown(f"""
     <div class="glass-card" style="text-align:center;">
         <div style="font-size:34px;margin-bottom:8px;">{icon}</div>
         <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{cur}{suffix}</div>
@@ -587,7 +587,7 @@ def render_metric_card(metric_name, icon, current_value,
             {row2}
         </div>
     </div>
-    """)
+    """, unsafe_allow_html=True)
 
 def render_blog_item(label, value,
                      prev_fy25_value, prev_fy25_name,
@@ -610,7 +610,7 @@ def render_blog_item(label, value,
         cls   = 'blog-change-up' if v > 0 else 'blog-change-down'
         return f'<span class="blog-change-premium {cls}">{arrow} {abs(v):.1f}%</span>'
 
-    st.html(f"""
+    st.markdown(f"""
     <div class="blog-item-premium">
         <div class="blog-label-premium">{icon} {label}</div>
         <div class="blog-value-premium">{val_str}{suffix}</div>
@@ -623,7 +623,7 @@ def render_blog_item(label, value,
             {badge(var_same)}
         </div>
     </div>
-    """)
+    """, unsafe_allow_html=True)
 
 def render_horizontal_bars(df, title):
     if df is None or df.empty:
@@ -853,7 +853,7 @@ else:
         if leads is None:
             leads = '—'
         
-        st.html(f"""
+        st.markdown(f"""
         <div class="glass-card">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
                 <div style="text-align:center;">
@@ -876,7 +876,7 @@ else:
                 </div>
             </div>
         </div>
-        """)
+        """, unsafe_allow_html=True)
 
     with cc2:
         top_hardcoded = get_campanha_hardcoded(q, 'top_campanhas')
@@ -903,7 +903,7 @@ else:
         else:
             obj_brand = f"{obj_brand}%"
         
-        st.html(f"""
+        st.markdown(f"""
         <div class="glass-card">
             <div style="font-size:18px;font-weight:700;color:{COLORS['text']};margin-bottom:16px;">🏆 Top Campanhas</div>
             <div style="font-size:13px;line-height:1.6;color:{COLORS['text_muted']};margin-bottom:20px;">{top_text}</div>
@@ -919,7 +919,7 @@ else:
                 </div>
             </div>
         </div>
-        """)
+        """, unsafe_allow_html=True)
 
     # ── 4. FABRICANTES ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">🏭</div><div><div class="section-title-premium">Fabricantes por Vertical</div><div class="section-sub">Principais fornecedores</div></div></div>', unsafe_allow_html=True)
@@ -927,7 +927,7 @@ else:
     if q in FABRICANTES_DATA:
         fabricantes_q = FABRICANTES_DATA[q]
         df_fab = pd.DataFrame([
-            {'Vertical': v, 'Maior Solicitante': d['maior'], 'Menor Solicitante': d['menor'], 'Top 3 Peças': d['top_pecas'], 'Campanha Ativa': d['campanha'] if d['campanha'] else '—'}
+            {'Vertical': v, 'Maior Solicitante': d['maior'], 'Menor Solicitante': d['menor'] if d['menor'] else '—', 'Top 3 Peças': d['top_pecas'], 'Campanha Ativa': d['campanha'] if d['campanha'] else '—'}
             for v, d in fabricantes_q.items()
         ])
         render_table(df_fab, "🏭 Fabricantes por Vertical")
@@ -997,7 +997,7 @@ else:
     bl_col, nw_col = st.columns(2)
 
     with bl_col:
-        st.html(f"""
+        st.markdown(f"""
         <div class="blog-premium">
             <div class="blog-header-premium">
                 <div class="blog-icon-premium">📖</div>
@@ -1007,7 +1007,7 @@ else:
                 </div>
             </div>
         </div>
-        """)
+        """, unsafe_allow_html=True)
         for metric, label, icon, same_fy24_key in [
             ('visitas', 'Visitas', '👁️', 'visitas'),
             ('usuarios', 'Usuários', '👥', 'usuarios'),
@@ -1025,7 +1025,7 @@ else:
             )
 
     with nw_col:
-        st.html(f"""
+        st.markdown(f"""
         <div class="blog-premium">
             <div class="blog-header-premium">
                 <div class="blog-icon-premium">📬</div>
@@ -1035,7 +1035,7 @@ else:
                 </div>
             </div>
         </div>
-        """)
+        """, unsafe_allow_html=True)
         for metric, label, icon, same_fy24_key, is_pct in [
             ('empresas', 'Empresas', '🏢', 'empresas_news', False),
             ('envios', 'Envios', '📨', 'envios_news', False),
