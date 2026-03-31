@@ -1,0 +1,2 @@
+postgresql-client
+postgresql-server-dev-all
