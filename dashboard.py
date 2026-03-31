@@ -776,7 +776,23 @@ def render_comparative_charts(quarterly_data):
 # ========== CONEXÃO COM BANCO ==========
 @st.cache_resource
 def get_engine():
-    return create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require")
+    # Tenta usar st.secrets (Streamlit Cloud)
+    try:
+        db_user = st.secrets["DB_USER"]
+        db_password = st.secrets["DB_PASSWORD"]
+        db_host = st.secrets["DB_HOST"]
+        db_port = st.secrets["DB_PORT"]
+        db_name = st.secrets["DB_NAME"]
+    except:
+        # Fallback para desenvolvimento local (variáveis de ambiente)
+        import os
+        db_user = os.getenv("DB_USER")
+        db_password = os.getenv("DB_PASSWORD")
+        db_host = os.getenv("DB_HOST")
+        db_port = os.getenv("DB_PORT", "5432")
+        db_name = os.getenv("DB_NAME")
+    
+    return create_engine(f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}?sslmode=require")
 
 @st.cache_data(ttl=3600)
 def query_db(sql):
