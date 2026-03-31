@@ -1,21 +1,10 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
-from sqlalchemy import create_engine, text
-from datetime import datetime
+import plotly.express as px
 import re
 import io
-
-# ========== CONFIGURAÇÃO DA PÁGINA ==========
-st.set_page_config(
-    page_title="QBR TD SYNNEX Dashboard",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-
+from datetime import datetime
 
 # ========== TEMA ==========
 if 'theme' not in st.session_state:
@@ -112,7 +101,7 @@ CURRENT_EMAIL_DATA = {
     'Q1': {'entrega': 95.7,  'abertura': 35.8, 'cliques': 1.7, 'optout': 0.04},
     'Q2': {'entrega': 98.4,  'abertura': 45.3, 'cliques': 2.6, 'optout': 0.07},
     'Q3': {'entrega': 96.0,  'abertura': 38.0, 'cliques': 6.0, 'optout': 0.05},
-    'Q4': {'entrega': 93.0,  'abertura': 24.0, 'cliques': 2.2,'optout': 0.02},
+    'Q4': {'entrega': 93.0,  'abertura': 24.0, 'cliques': 2.2, 'optout': 0.02},
 }
 
 CURRENT_BLOG_DATA = {
@@ -129,7 +118,7 @@ CURRENT_NEWSLETTER_DATA = {
     'Q4': {'envios': 426, 'empresas': 488, 'abertura': 32.0,  'cliques': 1.8},
 }
 
-# ========== DADOS DE CAMPANHAS HARDCODED (DOS PRINTS) ==========
+# ========== DADOS DE CAMPANHAS HARDCODED ==========
 CURRENT_CAMPANHAS_DATA = {
     'Q1': {
         'solicitadas': 6,
@@ -169,9 +158,91 @@ CURRENT_CAMPANHAS_DATA = {
     }
 }
 
+# ========== DADOS DE OVERVIEW HARDCODED ==========
+OVERVIEW_DATA = {
+    'Q1': {'pecas': 518, 'solicitacoes': 108, 'campanhas': 4},
+    'Q2': {'pecas': 692, 'solicitacoes': 159, 'campanhas': 9},
+    'Q3': {'pecas': 674, 'solicitacoes': 100, 'campanhas': 7},
+    'Q4': {'pecas': 647, 'solicitacoes': 131, 'campanhas': 6},
+}
+
+# ========== DADOS DE FABRICANTES HARDCODED ==========
+FABRICANTES_DATA = {
+    'Q1': {
+        'Segurança': {'maior': 'Fortinet', 'menor': 'Palo Alto', 'top_pecas': 'E-mail Derivação, E-mail Novo, Peça Avulsa', 'campanha': 'Fortinet Roadshow'},
+        'Cloud': {'maior': 'AWS', 'menor': 'Microsoft', 'top_pecas': 'E-mail Derivação, Peça Avulsa, Post RS Derivação', 'campanha': 'Cloud On the Go'},
+        'Data & AI': {'maior': 'IBM', 'menor': 'Red Hat', 'top_pecas': 'E-mail Novo, Peça Avulsa, LP+TKY', 'campanha': 'NVIDIA IA'},
+        'Data Center': {'maior': 'Dell', 'menor': 'Pure Storage', 'top_pecas': 'Peça Avulsa, E-mail Derivação, E-mail Novo', 'campanha': None},
+        'Networking': {'maior': 'Cisco', 'menor': 'Juniper', 'top_pecas': 'E-mail Novo, E-mail Derivação, Peça Avulsa', 'campanha': None},
+        'Institucional': {'maior': 'TD SYNNEX', 'menor': None, 'top_pecas': 'Post RS, E-mail, Blog', 'campanha': None},
+    },
+    'Q2': {
+        'Segurança': {'maior': 'Fortinet', 'menor': 'Trend Micro', 'top_pecas': 'E-mail Derivação, E-mail Novo, Peça Avulsa', 'campanha': 'Fortinet Recrutamento'},
+        'Cloud': {'maior': 'Microsoft', 'menor': 'Google Cloud', 'top_pecas': 'E-mail Derivação, Peça Avulsa, Post RS Derivação', 'campanha': None},
+        'Data & AI': {'maior': 'IBM', 'menor': 'NVIDIA', 'top_pecas': 'E-mail Novo, Peça Avulsa, LP+TKY', 'campanha': 'IBM IA'},
+        'Data Center': {'maior': 'Dell', 'menor': 'HPE Aruba', 'top_pecas': 'Peça Avulsa, E-mail Derivação, E-mail Novo', 'campanha': None},
+        'Networking': {'maior': 'Cisco', 'menor': 'Ciena', 'top_pecas': 'E-mail Novo, E-mail Derivação, Peça Avulsa', 'campanha': None},
+        'Institucional': {'maior': 'TD SYNNEX', 'menor': None, 'top_pecas': 'Post RS, E-mail, Blog', 'campanha': None},
+    },
+    'Q3': {
+        'Segurança': {'maior': 'Fortinet', 'menor': 'Trend Micro', 'top_pecas': 'E-mail Derivação, Peça Avulsa, E-mail Novo', 'campanha': 'Fortinet Roadshow'},
+        'Cloud': {'maior': 'Microsoft', 'menor': 'Google Cloud', 'top_pecas': 'E-mail Derivação, Peça Avulsa, E-mail Novo', 'campanha': 'Cloud On the Go'},
+        'Data & AI': {'maior': 'Red Hat', 'menor': 'SAS', 'top_pecas': 'Peça Avulsa, Campanha Anúncio, Post RS Derivação', 'campanha': 'NVIDIA IA'},
+        'Data Center': {'maior': 'TD SYNNEX', 'menor': 'Pure Storage', 'top_pecas': 'E-mail Novo, Peça Avulsa, LP+TKY', 'campanha': None},
+        'Networking': {'maior': 'Cisco', 'menor': 'Ciena', 'top_pecas': 'E-mail Derivação, Peça Avulsa, E-mail Novo', 'campanha': None},
+        'Institucional': {'maior': 'TD SYNNEX', 'menor': None, 'top_pecas': 'Post RS, E-mail, Blog', 'campanha': None},
+    },
+    'Q4': {
+        'Segurança': {'maior': 'Fortinet', 'menor': 'Tenable', 'top_pecas': 'EMKT DERIVAÇÃO, EMKT NOVO, PEÇA AVULSA', 'campanha': 'Campanha Recrutamento Fortinet'},
+        'Cloud': {'maior': 'Google Cloud', 'menor': 'AWS', 'top_pecas': 'EMKT DERIVAÇÃO, EMKT NOVO, POST RS DERIVAÇÃO', 'campanha': None},
+        'Data & AI': {'maior': 'IBM', 'menor': 'NVIDIA', 'top_pecas': 'PEÇA AVULSA, EMKT DERIVAÇÃO, EMKT NOVO', 'campanha': None},
+        'Data Center': {'maior': 'HPE', 'menor': 'Commvault, Dell, Pure Storage', 'top_pecas': 'PEÇA AVULSA, EMKT NOVO, EMKT DERIVAÇÃO', 'campanha': None},
+        'Networking': {'maior': 'Cisco', 'menor': 'Ciena', 'top_pecas': 'EMKT NOVO, EMKT DERIVAÇÃO, PEÇA AVULSA', 'campanha': None},
+        'Institucional': {'maior': 'TD SYNNEX', 'menor': None, 'top_pecas': 'Post RS, E-mail, Blog', 'campanha': None},
+    }
+}
+
+# ========== DADOS DE E-MAIL POR VERTICAL HARDCODED ==========
+EMAIL_VERTICAL_DATA = {
+    'Q1': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': 48.30, 'entrega': 97.78, 'abertura': 45.05, 'clique': 2.7, 'opt_out': 0.03},
+        {'vertical_tipo': 'Networking', 'percent_envio': 29.93, 'entrega': 94.92, 'abertura': 31.15, 'clique': 1.24, 'opt_out': 0.04},
+        {'vertical_tipo': 'Cloud', 'percent_envio': 8.84, 'entrega': 95.95, 'abertura': 41.27, 'clique': 1.59, 'opt_out': 0.05},
+        {'vertical_tipo': 'Data Center', 'percent_envio': 7.48, 'entrega': 94.74, 'abertura': 41.80, 'clique': 1.59, 'opt_out': 0.0},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': 5.44, 'entrega': 99.35, 'abertura': 53.87, 'clique': 3.17, 'opt_out': 0.0},
+    ]),
+    'Q2': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': 46.39, 'entrega': 99.20, 'abertura': 48.21, 'clique': 3.50, 'opt_out': 0.06},
+        {'vertical_tipo': 'Networking', 'percent_envio': 10.05, 'entrega': 96.72, 'abertura': 37.81, 'clique': 1.59, 'opt_out': 0.10},
+        {'vertical_tipo': 'Cloud', 'percent_envio': 26.80, 'entrega': 99.23, 'abertura': 51.48, 'clique': 3.57, 'opt_out': 0.06},
+        {'vertical_tipo': 'Data Center', 'percent_envio': 7.73, 'entrega': 97.93, 'abertura': 40.20, 'clique': 2.30, 'opt_out': 0.30},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': 6.70, 'entrega': 98.27, 'abertura': 39.97, 'clique': 1.53, 'opt_out': 0.01},
+    ]),
+    'Q3': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': 48.8, 'entrega': 98, 'abertura': 36, 'clique': 6, 'opt_out': 0.01},
+        {'vertical_tipo': 'Networking', 'percent_envio': 6.6, 'entrega': 99, 'abertura': 33, 'clique': 2, 'opt_out': 0},
+        {'vertical_tipo': 'Cloud', 'percent_envio': 21.9, 'entrega': 97, 'abertura': 46, 'clique': 12, 'opt_out': 0},
+        {'vertical_tipo': 'Data Center', 'percent_envio': 7.9, 'entrega': 96, 'abertura': 35, 'clique': 6, 'opt_out': 0.01},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': 14.6, 'entrega': 95, 'abertura': 24, 'clique': 2, 'opt_out': 0.02},
+    ]),
+    'Q4': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': 48.8, 'entrega': 98, 'abertura': 36, 'clique': 6, 'opt_out': 0.01},
+        {'vertical_tipo': 'Networking', 'percent_envio': 6.6, 'entrega': 99, 'abertura': 33, 'clique': 2, 'opt_out': 0},
+        {'vertical_tipo': 'Cloud', 'percent_envio': 21.9, 'entrega': 97, 'abertura': 46, 'clique': 12, 'opt_out': 0},
+        {'vertical_tipo': 'Data Center', 'percent_envio': 7.9, 'entrega': 96, 'abertura': 35, 'clique': 6, 'opt_out': 0.01},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': 14.6, 'entrega': 95, 'abertura': 24, 'clique': 2, 'opt_out': 0.02},
+    ]),
+}
+
+# ========== DADOS DE REDES SOCIAIS HARDCODED ==========
+REDES_DATA = {
+    'Q1': {'novos_seguidores': 1230, 'total_engajamentos': 81419, 'total_cliques': 6117},
+    'Q2': {'novos_seguidores': 1688, 'total_engajamentos': 10237, 'total_cliques': 8585},
+    'Q3': {'novos_seguidores': 1927, 'total_engajamentos': 76102, 'total_cliques': 36375},
+    'Q4': {'novos_seguidores': 2296, 'total_engajamentos': 58046, 'total_cliques': 51119},
+}
+
 # ========== CSS ==========
-# CSS em variável str pura (não f-string) para evitar conflito com % do CSS.
-# Cores dinâmicas são injetadas nos style="" inline das funções.
 CSS_STATIC = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -196,7 +267,6 @@ CSS_STATIC = """
     }
     .premium-sub { font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 8px; }
 
-    /* KPI cards */
     .kpi-premium { text-align: center; }
     .kpi-icon { font-size: 40px; margin-bottom: 12px; }
     .kpi-label { font-size: 12px; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
@@ -205,7 +275,6 @@ CSS_STATIC = """
     .kpi-down    { background: rgba(211,47,47,0.3);   color: #FF8A80; border: 1px solid rgba(239,83,80,0.4); }
     .kpi-neutral { background: rgba(136,146,160,0.3); color: #B0BEC5; border: 1px solid rgba(136,146,160,0.4); }
 
-    /* Metric comparison card */
     .comparison-premium {
         border-radius: 16px; padding: 12px;
         text-align: left; margin-top: 12px;
@@ -235,11 +304,9 @@ CSS_STATIC = """
     .badge-down { background: rgba(211,47,47,0.35);  color: #FF8A80; }
     .badge-flat { background: rgba(136,146,160,0.3); color: #B0BEC5; }
 
-    /* Section headers */
     .section-premium { display: flex; align-items: center; gap: 12px; margin: 48px 0 24px 0; }
     .section-icon { font-size: 32px; background: rgba(0,102,204,0.25); padding: 12px; border-radius: 16px; }
 
-    /* Bars */
     .bar-premium { margin-bottom: 20px; }
     .bar-track-premium { background: rgba(0,0,0,0.1); border-radius: 12px; height: 40px; overflow: hidden; }
     .bar-fill-premium {
@@ -248,7 +315,6 @@ CSS_STATIC = """
         padding-right: 16px; color: white; font-size: 14px; font-weight: 600;
     }
 
-    /* Blog cards */
     .blog-item-premium { margin-bottom: 24px; padding: 12px 0; }
     .blog-item-premium:last-child { margin-bottom: 0; padding-bottom: 0; }
     .blog-label-premium { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
@@ -261,7 +327,6 @@ CSS_STATIC = """
     .blog-change-up   { background: rgba(46,125,50,0.4);  color: #6FBF6F; }
     .blog-change-down { background: rgba(211,47,47,0.4); color: #FF8A80; }
 
-    /* Buttons */
     div.stButton > button {
         padding: 10px 28px; border-radius: 40px;
         background: rgba(0,0,0,0.2); backdrop-filter: blur(5px);
@@ -269,7 +334,6 @@ CSS_STATIC = """
     }
     div.stButton > button:hover { background: #0066CC; color: white; transform: translateY(-2px); }
 
-    /* Footer */
     .footer-premium { margin-top: 60px; padding: 24px; text-align: center; font-size: 12px; }
 
     .stDataFrame { border-radius: 16px !important; overflow: hidden !important; }
@@ -277,7 +341,6 @@ CSS_STATIC = """
 </style>
 """
 
-# Inject theme-dependent CSS variables via f-string (no % in CSS here)
 CSS_THEME = f"""
 <style>
     .stApp {{ background: {BG_GRADIENT}; }}
@@ -372,14 +435,16 @@ st.markdown(CSS_STATIC, unsafe_allow_html=True)
 st.markdown(CSS_THEME, unsafe_allow_html=True)
 
 # ========== FUNÇÕES AUXILIARES ==========
-def clean_percentage(value):
-    if value is None or pd.isna(value):
+def clean_value(val):
+    if val is None or pd.isna(val):
         return '—'
-    value_str = str(value).strip()
-    if '%' not in value_str:
-        return value_str
-    clean_str = value_str.replace('%', '').strip()
-    return '—' if clean_str == '' else f"{clean_str}%"
+    val_str = str(val).strip()
+    if val_str in ['', 'nan', 'NaN', 'None']:
+        return '—'
+    val_str = val_str.replace('%', '').strip()
+    if val_str == '':
+        return '—'
+    return val_str
 
 def format_number(val):
     if val is None or pd.isna(val):
@@ -390,44 +455,112 @@ def format_number(val):
     except:
         return str(val)
 
-def clean_value(val):
+def extract_percentage(val):
     if val is None or pd.isna(val):
-        return '—'
-    val_str = str(val).strip()
-    if val_str in ['', 'nan', 'NaN', 'None']:
-        return '—'
-    
-    # Remove todos os % da string
-    val_str = val_str.replace('%', '').strip()
-    
-    if val_str == '':
-        return '—'
-    
-    return val_str
+        return 0
+    try:
+        return float(re.sub(r'[^\d,\.]', '', str(val)).replace(',', '.'))
+    except:
+        return 0
+
+def calc_variacao(atual, anterior):
+    if atual in (None, '—') or anterior in (None, '—'):
+        return None
+    try:
+        a = float(str(atual).replace('.', '').replace(',', '.').replace('%', ''))
+        b = float(str(anterior).replace('.', '').replace(',', '.').replace('%', ''))
+        return ((a - b) / b) * 100 if b != 0 else None
+    except:
+        return None
+
+def get_vertical_distribution(q):
+    hardcoded = {
+        'Q1': [('Segurança',27.0),('Networking',13.0),('Cloud',13.0),('Data & AI',10.0),('Data Center',9.0),('Institucional',15.0)],
+        'Q2': [('Cloud',27.0),('Segurança',22.0),('Networking',19.0),('Data & AI',14.0),('Data Center',10.0),('Institucional',8.0)],
+        'Q3': [('Segurança',31.0),('Cloud',19.0),('Networking',16.0),('Institucional',15.0),('Data & AI',14.0),('Data Center',6.0)],
+        'Q4': [('Segurança',40.0),('Cloud',21.0),('Institucional',14.0),('Networking',9.0),('Data Center',8.0),('Data & AI',7.0)],
+    }
+    return pd.DataFrame(hardcoded.get(q, hardcoded['Q1']), columns=['vertical', 'percentual'])
+
+def get_current_email_value(q, metric):
+    if q in CURRENT_EMAIL_DATA and metric in CURRENT_EMAIL_DATA[q]:
+        val = CURRENT_EMAIL_DATA[q].get(metric)
+        if val is not None:
+            return f"{val}"
+    return '—'
+
+def get_current_blog_value(q, metric):
+    if q in CURRENT_BLOG_DATA and metric in CURRENT_BLOG_DATA[q]:
+        val = CURRENT_BLOG_DATA[q].get(metric)
+        if val is not None:
+            if metric == 'tempo_medio':
+                mapping = {5.0: "5:00", 4.04: "4:04", 4.07: "4:04", 2.35: "2:35", 4.6: "4:36"}
+                return mapping.get(val, f"{val}min")
+            return f"{val:,}".replace(',', '.')
+    return '—'
+
+def get_current_newsletter_value(q, metric):
+    if q in CURRENT_NEWSLETTER_DATA and metric in CURRENT_NEWSLETTER_DATA[q]:
+        val = CURRENT_NEWSLETTER_DATA[q].get(metric)
+        if val is not None:
+            if metric in ['abertura', 'cliques']:
+                return f"{val}"
+            return f"{val:,}".replace(',', '.')
+    return '—'
+
+def get_campanha_hardcoded(q, metric):
+    if q in CURRENT_CAMPANHAS_DATA and metric in CURRENT_CAMPANHAS_DATA[q]:
+        val = CURRENT_CAMPANHAS_DATA[q][metric]
+        if val is not None:
+            if metric in ['taxa_conversao']:
+                return f"{val}"
+            elif metric in ['conversao', 'branding']:
+                return f"{val}"
+            return str(val)
+    return None
+
+# ========== FUNÇÕES DE RENDERIZAÇÃO ==========
+def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, tooltip=None):
+    badge = ''
+    if variacao is not None and trimestre_ref:
+        if variacao > 0:
+            badge = f'<div class="kpi-variation kpi-up">↑ {variacao:.1f}% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
+        elif variacao < 0:
+            badge = f'<div class="kpi-variation kpi-down">↓ {abs(variacao):.1f}% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
+        else:
+            badge = f'<div class="kpi-variation kpi-neutral">→ 0% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
+    st.html(f"""
+    <div class="glass-card kpi-premium">
+        <div class="kpi-icon">{icone}</div>
+        <div class="kpi-number">{format_number(valor)}</div>
+        <div class="kpi-label">{label}</div>
+        {badge}
+    </div>
+    """)
+
+def _comp_badge(variacao):
+    if variacao is None:
+        return '<span class="comp-badge badge-flat">—</span>'
+    arrow = '▲' if variacao > 0 else '▼'
+    cls   = 'badge-up' if variacao > 0 else 'badge-down'
+    return f'<span class="comp-badge {cls}">{arrow} {abs(variacao):.2f}%</span>'
 
 def render_metric_card(metric_name, icon, current_value,
                        prev_fy25_value, prev_fy25_name,
                        same_fy24_value, same_fy24_name,
                        is_percentage=True, tooltip=None):
-    """
-    Card de métrica com 2 linhas de comparativo:
-      Linha 1 → Q anterior do FY25  (ex: Q1FY25 para Q2FY25)
-      Linha 2 → Mesmo Q do FY24     (ex: Q2FY24 para Q2FY25)
-    """
-    # Limpa os valores (remove %)
-    cur       = clean_value(current_value)
-    prev_str  = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
-    same_str  = clean_value(same_fy24_value) if same_fy24_value not in ('—', None) else '—'
+    cur = clean_value(current_value)
+    prev_str = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
+    same_str = clean_value(same_fy24_value) if same_fy24_value not in ('—', None) else '—'
 
-    var_prev  = calc_variacao(cur, prev_str) if prev_str != '—' else None
-    var_same  = calc_variacao(cur, same_str) if same_str != '—' else None
+    var_prev = calc_variacao(cur, prev_str) if prev_str != '—' else None
+    var_same = calc_variacao(cur, same_str) if same_str != '—' else None
 
-    # Adiciona o sufixo APENAS uma vez, se for porcentagem
-    suffix     = '%' if is_percentage and cur != '—' else ''
+    suffix = '%' if is_percentage and cur != '—' else ''
     prev_suffix = '%' if is_percentage and prev_str != '—' else ''
     same_suffix = '%' if is_percentage and same_str != '—' else ''
     
-    tip_html   = f'<span style="font-size:10px;opacity:0.6;margin-left:4px;" title="{tooltip}">ⓘ</span>' if tooltip else ''
+    tip_html = f'<span style="font-size:10px;opacity:0.6;margin-left:4px;" title="{tooltip}">ⓘ</span>' if tooltip else ''
 
     row1 = f"""
     <div class="comparison-row">
@@ -460,21 +593,14 @@ def render_blog_item(label, value,
                      prev_fy25_value, prev_fy25_name,
                      same_fy24_value, same_fy24_name,
                      is_percentage=False, icon="📊"):
-    """
-    Item de blog/newsletter com 2 linhas de comparativo:
-      Linha 1 → Q anterior do FY25
-      Linha 2 → Mesmo Q do FY24
-    """
-    # Limpa os valores (remove %)
-    val_str  = clean_value(value)
+    val_str = clean_value(value)
     prev_str = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
     same_str = clean_value(same_fy24_value) if same_fy24_value not in ('—', None) else '—'
 
     var_prev = calc_variacao(val_str, prev_str) if prev_str != '—' else None
     var_same = calc_variacao(val_str, same_str) if same_str != '—' else None
     
-    # Adiciona o sufixo APENAS uma vez, se for porcentagem
-    suffix     = '%' if is_percentage and val_str != '—' else ''
+    suffix = '%' if is_percentage and val_str != '—' else ''
     prev_suffix = '%' if is_percentage and prev_str != '—' else ''
     same_suffix = '%' if is_percentage and same_str != '—' else ''
 
@@ -494,202 +620,6 @@ def render_blog_item(label, value,
         </div>
         <div class="blog-compare-premium" style="margin-top:4px;">
             <span>vs {same_fy24_name}: {same_str}{same_suffix}</span>
-            {badge(var_same)}
-        </div>
-    </div>
-    """)
-
-def extract_percentage(val):
-    if val is None or pd.isna(val):
-        return 0
-    try:
-        return float(re.sub(r'[^\d,\.]', '', str(val)).replace(',', '.'))
-    except:
-        return 0
-
-def remove_duplicates(df, subset_columns):
-    return df if df.empty else df.drop_duplicates(subset=subset_columns, keep='first')
-
-def get_pecas_value(df, q):
-    rows = df[(df['trimestre'] == q) & df['metrica'].isin(['Peças Produzidas', 'Peças'])]['valor']
-    try: return int(rows.values[0]) if len(rows) > 0 else 0
-    except: return 0
-
-def get_solicitacoes_value(df, q):
-    rows = df[(df['trimestre'] == q) & (df['metrica'] == 'Solicitações')]['valor']
-    try: return int(rows.values[0]) if len(rows) > 0 else 0
-    except: return 0
-
-def get_campanhas_value(df, q):
-    rows = df[(df['trimestre'] == q) & (df['metrica'] == 'Campanhas')]['valor']
-    try: return int(rows.values[0]) if len(rows) > 0 else 0
-    except: return 0
-
-def calc_variacao(atual, anterior):
-    if atual in (None, '—') or anterior in (None, '—'):
-        return None
-    try:
-        a = float(str(atual).replace('.', '').replace(',', '.').replace('%', ''))
-        b = float(str(anterior).replace('.', '').replace(',', '.').replace('%', ''))
-        return ((a - b) / b) * 100 if b != 0 else None
-    except:
-        return None
-
-def get_campanha_valor(df, indicador_exato, q):
-    rows = df[(df['trimestre'] == q) & (df['indicador'] == indicador_exato)]
-    return clean_value(rows['valor'].values[0]) if not rows.empty else '—'
-
-def get_vertical_distribution(q):
-    hardcoded = {
-        'Q1': [('Segurança',27.0),('Networking',13.0),('Cloud',13.0),('Data & AI',10.0),('Data Center',9.0),('Institucional',15.0)],
-        'Q2': [('Cloud',27.0),('Segurança',22.0),('Networking',19.0),('Data & AI',14.0),('Data Center',10.0),('Institucional',8.0)],
-        'Q3': [('Segurança',31.0),('Cloud',19.0),('Networking',16.0),('Institucional',15.0),('Data & AI',14.0),('Data Center',6.0)],
-        'Q4': [('Segurança',40.0),('Cloud',21.0),('Institucional',14.0),('Networking',9.0),('Data Center',8.0),('Data & AI',7.0)],
-    }
-    return pd.DataFrame(hardcoded.get(q, hardcoded['Q1']), columns=['vertical', 'percentual'])
-
-def get_current_email_value(q, metric):
-    if q and q in CURRENT_EMAIL_DATA:
-        val = CURRENT_EMAIL_DATA[q].get(metric)
-        if val is not None:
-            return f"{val}%"
-    return '—'
-
-def get_current_blog_value(q, metric):
-    if q and q in CURRENT_BLOG_DATA:
-        val = CURRENT_BLOG_DATA[q].get(metric)
-        if val is not None:
-            if metric == 'tempo_medio':
-                mapping = {5.0: "5:00", 4.07: "4:04", 2.35: "2:35", 4.6: "4:36"}
-                return mapping.get(val, f"{val}min")
-            return f"{val:,}".replace(',', '.')
-    return '—'
-
-def get_current_newsletter_value(q, metric):
-    if q and q in CURRENT_NEWSLETTER_DATA:
-        val = CURRENT_NEWSLETTER_DATA[q].get(metric)
-        if val is not None:
-            return f"{val}%" if metric in ['abertura', 'cliques'] else f"{val:,}".replace(',', '.')
-    return '—'
-
-def get_campanha_hardcoded(q, metric):
-    """Busca dados de campanha hardcoded quando não disponíveis no banco"""
-    if q in CURRENT_CAMPANHAS_DATA and metric in CURRENT_CAMPANHAS_DATA[q]:
-        val = CURRENT_CAMPANHAS_DATA[q][metric]
-        if val is not None:
-            if metric in ['taxa_conversao']:
-                return f"{val}%"
-            elif metric in ['conversao', 'branding']:
-                return f"{val}%"
-            return str(val)
-    return None
-
-# ========== FUNÇÕES DE RENDERIZAÇÃO ==========
-def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, tooltip=None):
-    badge = ''
-    if variacao is not None and trimestre_ref:
-        if variacao > 0:
-            badge = f'<div class="kpi-variation kpi-up">↑ {variacao:.1f}% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
-        elif variacao < 0:
-            badge = f'<div class="kpi-variation kpi-down">↓ {abs(variacao):.1f}% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
-        else:
-            badge = f'<div class="kpi-variation kpi-neutral">→ 0% <span style="font-size:9px;">vs {trimestre_ref}</span></div>'
-    st.html(f"""
-    <div class="glass-card kpi-premium">
-        <div class="kpi-icon">{icone}</div>
-        <div class="kpi-number">{format_number(valor)}</div>
-        <div class="kpi-label">{label}</div>
-        {badge}
-    </div>
-    """)
-
-def _comp_badge(variacao):
-    """Gera o badge colorido de variação para o bloco comparison."""
-    if variacao is None:
-        return '<span class="comp-badge badge-flat">—</span>'
-    arrow = '▲' if variacao > 0 else '▼'
-    cls   = 'badge-up' if variacao > 0 else 'badge-down'
-    return f'<span class="comp-badge {cls}">{arrow} {abs(variacao):.2f}%</span>'
-
-def render_metric_card(metric_name, icon, current_value,
-                       prev_fy25_value, prev_fy25_name,
-                       same_fy24_value, same_fy24_name,
-                       is_percentage=True, tooltip=None):
-    """
-    Card de métrica com 2 linhas de comparativo:
-      Linha 1 → Q anterior do FY25  (ex: Q1FY25 para Q2FY25)
-      Linha 2 → Mesmo Q do FY24     (ex: Q2FY24 para Q2FY25)
-    """
-    cur       = clean_value(current_value)
-    prev_str  = clean_value(prev_fy25_value)  if prev_fy25_value  not in ('—', None) else '—'
-    same_str  = clean_value(same_fy24_value)  if same_fy24_value  not in ('—', None) else '—'
-
-    var_prev  = calc_variacao(cur, prev_str) if prev_str  != '—' else None
-    var_same  = calc_variacao(cur, same_str) if same_str  != '—' else None
-
-    suffix     = '%' if is_percentage else ''
-    tip_html   = f'<span style="font-size:10px;opacity:0.6;margin-left:4px;" title="{tooltip}">ⓘ</span>' if tooltip else ''
-
-    row1 = f"""
-    <div class="comparison-row">
-        <span class="comp-label">{prev_fy25_name}</span>
-        <span class="comp-value">{prev_str}{suffix}</span>
-        {_comp_badge(var_prev)}
-    </div>"""
-
-    row2 = f"""
-    <div class="comparison-row">
-        <span class="comp-label">{same_fy24_name}</span>
-        <span class="comp-value">{same_str}{suffix}</span>
-        {_comp_badge(var_same)}
-    </div>"""
-
-    st.html(f"""
-    <div class="glass-card" style="text-align:center;">
-        <div style="font-size:34px;margin-bottom:8px;">{icon}</div>
-        <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{cur}{suffix}</div>
-        <div style="font-size:13px;color:{COLORS['text_muted']};margin-bottom:14px;">{metric_name}{tip_html}</div>
-        <div class="comparison-premium">
-            <div class="comparison-header">📊 Comparativos</div>
-            {row1}
-            {row2}
-        </div>
-    </div>
-    """)
-
-def render_blog_item(label, value,
-                     prev_fy25_value, prev_fy25_name,
-                     same_fy24_value, same_fy24_name,
-                     is_percentage=False, icon="📊"):
-    """
-    Item de blog/newsletter com 2 linhas de comparativo:
-      Linha 1 → Q anterior do FY25
-      Linha 2 → Mesmo Q do FY24
-    """
-    val_str  = clean_value(value)
-    prev_str = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
-    same_str = clean_value(same_fy24_value) if same_fy24_value not in ('—', None) else '—'
-
-    var_prev = calc_variacao(val_str, prev_str) if prev_str != '—' else None
-    var_same = calc_variacao(val_str, same_str) if same_str != '—' else None
-    suffix   = '%' if is_percentage else ''
-
-    def badge(v):
-        if v is None: return ''
-        arrow = '▲' if v > 0 else '▼'
-        cls   = 'blog-change-up' if v > 0 else 'blog-change-down'
-        return f'<span class="blog-change-premium {cls}">{arrow} {abs(v):.1f}%</span>'
-
-    st.html(f"""
-    <div class="blog-item-premium">
-        <div class="blog-label-premium">{icon} {label}</div>
-        <div class="blog-value-premium">{val_str}{suffix}</div>
-        <div class="blog-compare-premium">
-            <span>vs {prev_fy25_name}: {prev_str}{suffix}</span>
-            {badge(var_prev)}
-        </div>
-        <div class="blog-compare-premium" style="margin-top:4px;">
-            <span>vs {same_fy24_name}: {same_str}{suffix}</span>
             {badge(var_same)}
         </div>
     </div>
@@ -751,7 +681,6 @@ def render_comparative_charts(quarterly_data):
                           legend=dict(font_color=COLORS['text']), height=400)
         st.plotly_chart(fig, use_container_width=True)
 
-    # Distribuição por vertical
     st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">Evolução por trimestre</div></div></div>', unsafe_allow_html=True)
     vertical_data = []
     for t in ['Q1','Q2','Q3','Q4']:
@@ -768,38 +697,7 @@ def render_comparative_charts(quarterly_data):
                           legend=dict(font_color=COLORS['text']), title_font_color=COLORS['text'], height=450)
         st.plotly_chart(fig, use_container_width=True)
 
-# ========== CONEXÃO COM BANCO ==========
-@st.cache_resource
-def get_engine():
-    return create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require")
-
-@st.cache_data(ttl=3600)
-def query_db(sql):
-    with get_engine().connect() as conn:
-        return pd.read_sql_query(text(sql), conn)
-
-@st.cache_data(ttl=3600)
-def load_all_data():
-    fabricantes = remove_duplicates(
-        query_db(f"SELECT * FROM {SCHEMA}.fabricantes_campanhas ORDER BY trimestre"),
-        ['trimestre', 'vertical']
-    )
-    return {
-        'overview': query_db(f"SELECT trimestre, metrica, valor FROM {SCHEMA}.overview WHERE metrica IN ('Peças Produzidas','Peças','Solicitações','Campanhas') ORDER BY trimestre"),
-        'overview_full': query_db(f"SELECT * FROM {SCHEMA}.overview ORDER BY trimestre"),
-        'pecas': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.pecas_por_vertical WHERE vertical IS NOT NULL AND vertical != '' ORDER BY trimestre, vertical"), ['trimestre','vertical','objetivo']),
-        'fabricantes': fabricantes,
-        'campanhas': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.campanhas ORDER BY trimestre"), ['trimestre','indicador']),
-        'email_geral': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.email_marketing WHERE categoria='geral' ORDER BY trimestre"), ['trimestre','indicador']),
-        'email_vertical': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.email_marketing WHERE categoria='vertical' ORDER BY trimestre"), ['trimestre','vertical_tipo']),
-        'email_tipo': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.email_marketing WHERE categoria='tipo_email' ORDER BY trimestre"), ['trimestre','vertical_tipo']),
-        'redes_geral': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.redes_sociais WHERE categoria='geral' ORDER BY trimestre"), ['trimestre','indicador']),
-        'redes_rede': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.redes_sociais WHERE categoria='rede_social' ORDER BY trimestre"), ['trimestre','rede']),
-        'blog_blog': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.blog_newsletter WHERE tipo='blog' ORDER BY trimestre"), ['trimestre','indicador']),
-        'blog_news': remove_duplicates(query_db(f"SELECT * FROM {SCHEMA}.blog_newsletter WHERE tipo='newsletter' ORDER BY trimestre"), ['trimestre','indicador']),
-    }
-
-data       = load_all_data()
+# ========== CONFIGURAÇÕES INICIAIS ==========
 trimestres = ['Q1', 'Q2', 'Q3', 'Q4', 'FY25']
 
 if 'view' not in st.session_state:
@@ -828,16 +726,14 @@ st.markdown('<div style="padding:0 56px 56px 56px;">', unsafe_allow_html=True)
 q = st.session_state.view
 quarterly_data = {
     t: {
-        'pecas': get_pecas_value(data['overview'], t),
-        'solic': get_solicitacoes_value(data['overview'], t),
-        'camp':  get_campanhas_value(data['overview'], t),
+        'pecas': OVERVIEW_DATA[t]['pecas'],
+        'solic': OVERVIEW_DATA[t]['solicitacoes'],
+        'camp': OVERVIEW_DATA[t]['campanhas'],
     }
     for t in ['Q1', 'Q2', 'Q3', 'Q4']
 }
 
-# ============================================================
-# ABA FY25
-# ============================================================
+# ========== ABA FY25 ==========
 if q == 'FY25':
     render_comparative_charts(quarterly_data)
 
@@ -847,11 +743,10 @@ if q == 'FY25':
     camp_tot  = sum(quarterly_data[t]['camp']  for t in ['Q1','Q2','Q3','Q4'])
 
     k1, k2, k3 = st.columns(3)
-    with k1: render_kpi_premium(pecas_tot, "Total Peças",        "📦")
+    with k1: render_kpi_premium(pecas_tot, "Total Peças", "📦")
     with k2: render_kpi_premium(solic_tot, "Total Solicitações", "📋")
-    with k3: render_kpi_premium(camp_tot,  "Total Campanhas",    "🎯")
+    with k3: render_kpi_premium(camp_tot,  "Total Campanhas", "🎯")
 
-    # Vertical média anual
     st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">Média anual</div></div></div>', unsafe_allow_html=True)
     vert_vals = {}
     for t in ['Q1','Q2','Q3','Q4']:
@@ -860,7 +755,6 @@ if q == 'FY25':
     df_annual = pd.DataFrame([{'vertical': v, 'percentual': sum(ps)/len(ps)} for v, ps in vert_vals.items()]).sort_values('percentual', ascending=False)
     render_horizontal_bars(df_annual, "% Peças por Vertical (Média Anual)")
 
-    # Top campanhas
     st.markdown(f'<div class="section-premium"><div class="section-icon">🏆</div><div><div class="section-title-premium">Top Campanhas do Ano</div><div class="section-sub">Destaques por trimestre</div></div></div>', unsafe_allow_html=True)
     top_camp = {
         'Q1':'Fortinet Roadshow (56 empresas) | NVIDIA IA (6 empresas)',
@@ -873,7 +767,6 @@ if q == 'FY25':
         with col:
             st.markdown(f'<div class="glass-card"><div style="font-size:14px;font-weight:600;color:{COLORS["primary"]};margin-bottom:12px;">{t} FY25</div><div style="font-size:12px;line-height:1.5;color:{COLORS["text"]};">{camp}</div></div>', unsafe_allow_html=True)
 
-    # E-mail anual
     st.markdown(f'<div class="section-premium"><div class="section-icon">📧</div><div><div class="section-title-premium">E-mail Marketing</div><div class="section-sub">Médias anuais</div></div></div>', unsafe_allow_html=True)
     email_means = {'entrega':[],'abertura':[],'cliques':[],'optout':[]}
     for t in ['Q1','Q2','Q3','Q4']:
@@ -887,7 +780,6 @@ if q == 'FY25':
             fmt = f"{avg:.2f}%" if m=='optout' else f"{avg:.1f}%"
             st.markdown(f'<div class="glass-card" style="text-align:center;"><div style="font-size:36px;">{icon}</div><div style="font-size:32px;font-weight:700;color:{COLORS["text"]};">{fmt}</div><div style="font-size:12px;color:{COLORS["text_muted"]};">{label}</div></div>', unsafe_allow_html=True)
 
-    # Download sidebar FY25
     with st.sidebar:
         st.markdown("---")
         st.markdown("### 📥 Exportar Dados")
@@ -902,28 +794,18 @@ if q == 'FY25':
                 with pd.ExcelWriter(buf, engine='openpyxl') as w: df_dl.to_excel(w, index=False)
                 st.download_button("✅ Baixar Excel", buf.getvalue(), "qbr_fy25.xlsx")
 
-# ============================================================
-# ABAS Q1–Q4
-# ============================================================
+# ========== ABAS Q1–Q4 ==========
 else:
-    q_num = int(q[1])   # 1, 2, 3 ou 4
-
-    # ── Trimestre anterior do FY25 (Q anterior do mesmo ano) ──
-    prev_fy25_q    = f'Q{q_num - 1}' if q_num > 1 else None   # None para Q1
+    q_num = int(q[1])
+    
+    prev_fy25_q = f'Q{q_num - 1}' if q_num > 1 else None
     prev_fy25_name = f'{prev_fy25_q} FY25' if prev_fy25_q else '—'
-
-    # ── Mesmo trimestre do FY24 ──
     same_fy24_name = f'{q} FY24'
-
-    # ── Trimestre anterior do FY24 (apenas para overview KPI) ──
-    prev_fy24_q    = f'Q{q_num - 1}' if q_num > 1 else 'Q4'
-    prev_fy24_name = f'{prev_fy24_q} FY24'
 
     pecas_val = quarterly_data[q]['pecas']
     solic_val = quarterly_data[q]['solic']
     camp_val  = quarterly_data[q]['camp']
 
-    # Para os KPIs de overview, compara com Q anterior FY25 (se existir) senão FY24
     if prev_fy25_q:
         pecas_var = calc_variacao(pecas_val, quarterly_data[prev_fy25_q]['pecas'])
         solic_var = calc_variacao(solic_val, quarterly_data[prev_fy25_q]['solic'])
@@ -939,50 +821,37 @@ else:
         'cliques': 'Percentual de cliques nos e-mails enviados',
     }
 
-    # ── 1. OVERVIEW ──────────────────────────────────────────
+    # ── 1. OVERVIEW ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview</div><div class="section-sub">Indicadores de performance</div></div></div>', unsafe_allow_html=True)
     k1, k2, k3 = st.columns(3)
     with k1: render_kpi_premium(pecas_val, "Peças Produzidas", "📦", pecas_var, kpi_ref)
     with k2: render_kpi_premium(solic_val, "Solicitações",     "📋", solic_var, kpi_ref)
     with k3: render_kpi_premium(camp_val,  "Campanhas",        "🎯", camp_var,  kpi_ref)
 
-    # ── 2. DISTRIBUIÇÃO POR VERTICAL ─────────────────────────
+    # ── 2. DISTRIBUIÇÃO POR VERTICAL ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">% Peças por vertical</div></div></div>', unsafe_allow_html=True)
     render_horizontal_bars(get_vertical_distribution(q), "% Peças por Vertical")
 
-    # ── 3. CAMPANHAS (COM FALLBACK HARDCODED) ─────────────────────────────────────────
+    # ── 3. CAMPANHAS ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">🎯</div><div><div class="section-title-premium">Campanhas</div><div class="section-sub">Métricas e destaques</div></div></div>', unsafe_allow_html=True)
     cc1, cc2 = st.columns(2)
 
     with cc1:
-        # Primeiro tenta buscar do banco, depois usa hardcoded
-        camp_solic = get_campanha_valor(data['campanhas'], 'Solicitadas', q)
-        if camp_solic == '—':
-            camp_solic = get_campanha_valor(data['campanhas'], 'Campanhas Solicitadas', q)
-        if camp_solic == '—':
-            hardcoded = get_campanha_hardcoded(q, 'solicitadas')
-            camp_solic = hardcoded if hardcoded else '—'
+        camp_solic = get_campanha_hardcoded(q, 'solicitadas')
+        if camp_solic is None:
+            camp_solic = '—'
         
-        camp_veic = get_campanha_valor(data['campanhas'], 'Veiculadas', q)
-        if camp_veic == '—':
-            camp_veic = get_campanha_valor(data['campanhas'], 'Campanhas Veiculadas', q)
-        if camp_veic == '—':
-            hardcoded = get_campanha_hardcoded(q, 'veiculadas')
-            camp_veic = hardcoded if hardcoded else '—'
+        camp_veic = get_campanha_hardcoded(q, 'veiculadas')
+        if camp_veic is None:
+            camp_veic = '—'
         
-        conv_invest = get_campanha_valor(data['campanhas'], 'Taxa de Conversão (com investimento)', q)
-        if conv_invest == '—':
-            conv_invest = get_campanha_valor(data['campanhas'], 'Taxa de Conversão (c/ invest.)', q)
-        if conv_invest == '—':
-            hardcoded = get_campanha_hardcoded(q, 'taxa_conversao')
-            conv_invest = hardcoded if hardcoded else '—'
+        conv_invest = get_campanha_hardcoded(q, 'taxa_conversao')
+        if conv_invest is None:
+            conv_invest = '—'
         
-        leads = get_campanha_valor(data['campanhas'], 'MQLs Gerados (empresas)', q)
-        if leads == '—':
-            leads = get_campanha_valor(data['campanhas'], 'Leads / Empresas Gerados', q)
-        if leads == '—':
-            hardcoded = get_campanha_hardcoded(q, 'leads_gerados')
-            leads = hardcoded if hardcoded else '—'
+        leads = get_campanha_hardcoded(q, 'leads_gerados')
+        if leads is None:
+            leads = '—'
         
         st.html(f"""
         <div class="glass-card">
@@ -1010,7 +879,6 @@ else:
         """)
 
     with cc2:
-        # Top Campanhas
         top_hardcoded = get_campanha_hardcoded(q, 'top_campanhas')
         if top_hardcoded:
             top_text = top_hardcoded
@@ -1023,20 +891,17 @@ else:
             }
             top_text = top_q.get(q, '—')
         
-        # Distribuição por Objetivo
-        obj_conv = get_campanha_valor(data['campanhas'], 'Conversão', q)
-        if obj_conv == '—':
-            obj_conv = get_campanha_valor(data['campanhas'], 'Objetivo Conversão', q)
-        if obj_conv == '—':
-            hardcoded = get_campanha_hardcoded(q, 'conversao')
-            obj_conv = hardcoded if hardcoded else '—'
+        obj_conv = get_campanha_hardcoded(q, 'conversao')
+        if obj_conv is None:
+            obj_conv = '—'
+        else:
+            obj_conv = f"{obj_conv}%"
         
-        obj_brand = get_campanha_valor(data['campanhas'], 'Branding', q)
-        if obj_brand == '—':
-            obj_brand = get_campanha_valor(data['campanhas'], 'Objetivo Branding', q)
-        if obj_brand == '—':
-            hardcoded = get_campanha_hardcoded(q, 'branding')
-            obj_brand = hardcoded if hardcoded else '—'
+        obj_brand = get_campanha_hardcoded(q, 'branding')
+        if obj_brand is None:
+            obj_brand = '—'
+        else:
+            obj_brand = f"{obj_brand}%"
         
         st.html(f"""
         <div class="glass-card">
@@ -1056,110 +921,75 @@ else:
         </div>
         """)
 
-    # ── 4. FABRICANTES ───────────────────────────────────────
+    # ── 4. FABRICANTES ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">🏭</div><div><div class="section-title-premium">Fabricantes por Vertical</div><div class="section-sub">Principais fornecedores</div></div></div>', unsafe_allow_html=True)
-    df_fab = data['fabricantes'][data['fabricantes']['trimestre'] == q].copy()
-    if not df_fab.empty:
-        df_fab = df_fab.drop_duplicates(subset=['vertical'], keep='first')
-        ordem  = ['Segurança','Cloud','Data & AI','Data Center','Networking','Institucional']
-        df_fab['ord'] = df_fab['vertical'].apply(lambda x: ordem.index(x) if x in ordem else 999)
-        df_fab = df_fab.sort_values('ord').drop('ord', axis=1)
-        render_table(pd.DataFrame({
-            'Vertical':         [clean_value(r['vertical'])          for _, r in df_fab.iterrows()],
-            'Maior Solicitante': [clean_value(r['maior_solicitante']) for _, r in df_fab.iterrows()],
-            'Menor Solicitante': [clean_value(r['menor_solicitante']) for _, r in df_fab.iterrows()],
-            'Top 3 Peças':      [clean_value(r['top_3_pecas'])       for _, r in df_fab.iterrows()],
-            'Campanha Ativa':   [clean_value(r['campanha_ativa']) if r['campanha_ativa'] not in ['—',None] else '—' for _, r in df_fab.iterrows()],
-        }), "🏭 Fabricantes por Vertical")
+    
+    if q in FABRICANTES_DATA:
+        fabricantes_q = FABRICANTES_DATA[q]
+        df_fab = pd.DataFrame([
+            {'Vertical': v, 'Maior Solicitante': d['maior'], 'Menor Solicitante': d['menor'], 'Top 3 Peças': d['top_pecas'], 'Campanha Ativa': d['campanha'] if d['campanha'] else '—'}
+            for v, d in fabricantes_q.items()
+        ])
+        render_table(df_fab, "🏭 Fabricantes por Vertical")
 
-    # ── 5. E-MAIL MARKETING ──────────────────────────────────
+    # ── 5. E-MAIL MARKETING ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">📧</div><div><div class="section-title-premium">E-mail Marketing</div><div class="section-sub">Métricas de performance</div></div></div>', unsafe_allow_html=True)
 
-    # Atual FY25
     entrega_atual  = get_current_email_value(q, 'entrega')
     abertura_atual = get_current_email_value(q, 'abertura')
     cliques_atual  = get_current_email_value(q, 'cliques')
     optout_atual   = get_current_email_value(q, 'optout')
 
-    # ── Linha 1: Q anterior do FY25 ──
     prev_entrega  = get_current_email_value(prev_fy25_q, 'entrega')  if prev_fy25_q else '—'
     prev_abertura = get_current_email_value(prev_fy25_q, 'abertura') if prev_fy25_q else '—'
     prev_cliques  = get_current_email_value(prev_fy25_q, 'cliques')  if prev_fy25_q else '—'
     prev_optout   = get_current_email_value(prev_fy25_q, 'optout')   if prev_fy25_q else '—'
 
-    # ── Linha 2: Mesmo Q do FY24 ──
     same_fy24_email = HISTORICAL_DATA['email'].get(f'{q}FY24', {})
-    same_entrega    = same_fy24_email.get('entrega',  '—')
+    same_entrega    = same_fy24_email.get('entrega', '—')
     same_abertura   = same_fy24_email.get('abertura', '—')
-    same_cliques    = same_fy24_email.get('cliques',  '—')
-    same_optout     = same_fy24_email.get('optout',   '—')
+    same_cliques    = same_fy24_email.get('cliques', '—')
+    same_optout     = same_fy24_email.get('optout', '—')
 
     e1, e2, e3, e4 = st.columns(4)
     with e1:
-        render_metric_card("Entregas",  "✅",  entrega_atual,  prev_entrega,  prev_fy25_name, same_entrega,  same_fy24_name, tooltip=tooltips['entrega'])
+        render_metric_card("Entregas", "✅", entrega_atual, prev_entrega, prev_fy25_name, same_entrega, same_fy24_name, tooltip=tooltips['entrega'])
     with e2:
         render_metric_card("Aberturas", "👁️", abertura_atual, prev_abertura, prev_fy25_name, same_abertura, same_fy24_name, tooltip=tooltips['abertura'])
     with e3:
-        render_metric_card("Cliques",   "🖱️", cliques_atual,  prev_cliques,  prev_fy25_name, same_cliques,  same_fy24_name, tooltip=tooltips['cliques'])
+        render_metric_card("Cliques", "🖱️", cliques_atual, prev_cliques, prev_fy25_name, same_cliques, same_fy24_name, tooltip=tooltips['cliques'])
     with e4:
-        render_metric_card("Opt-Out",   "🚫", optout_atual,   prev_optout,   prev_fy25_name, same_optout,   same_fy24_name)
+        render_metric_card("Opt-Out", "🚫", optout_atual, prev_optout, prev_fy25_name, same_optout, same_fy24_name)
 
-    df_ev = data['email_vertical'][data['email_vertical']['trimestre'] == q]
-    if not df_ev.empty:
-        render_table(df_ev[['vertical_tipo','percent_envio','entrega','abertura','clique','opt_out']], "📊 Métricas de E-mail por Vertical")
+    # Métricas de E-mail por Vertical
+    if q in EMAIL_VERTICAL_DATA:
+        render_table(EMAIL_VERTICAL_DATA[q], "📊 Métricas de E-mail por Vertical")
 
-    df_et = data['email_tipo'][data['email_tipo']['trimestre'] == q]
-    if not df_et.empty:
-        render_table(df_et[['vertical_tipo','percent_envio','entrega','abertura','clique','opt_out']], "📊 Métricas de E-mail por Tipo")
-
-    # ── 6. REDES SOCIAIS ─────────────────────────────────────
+    # ── 6. REDES SOCIAIS ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">📱</div><div><div class="section-title-premium">Redes Sociais</div><div class="section-sub">Engajamento e alcance</div></div></div>', unsafe_allow_html=True)
 
-    def _get_rede(df, ind):
-        rows = df[df['indicador'] == ind]
-        return clean_value(rows['valor'].values[0]) if not rows.empty else '—'
+    seg_atual = REDES_DATA[q]['novos_seguidores'] if q in REDES_DATA else '—'
+    eng_atual = REDES_DATA[q]['total_engajamentos'] if q in REDES_DATA else '—'
+    cli_atual = REDES_DATA[q]['total_cliques'] if q in REDES_DATA else '—'
 
-    df_rg = data['redes_geral'][data['redes_geral']['trimestre'] == q]
-    seg_atual = _get_rede(df_rg, 'Novos Seguidores')
-    eng_atual = _get_rede(df_rg, 'Total de Engajamentos')
-    cli_atual = _get_rede(df_rg, 'Total de Cliques')
-
-    # Linha 1: Q anterior FY25
-    if prev_fy25_q:
-        df_rg_prev = data['redes_geral'][data['redes_geral']['trimestre'] == prev_fy25_q]
-        prev_seg = _get_rede(df_rg_prev, 'Novos Seguidores')
-        prev_eng = _get_rede(df_rg_prev, 'Total de Engajamentos')
-        prev_cli = _get_rede(df_rg_prev, 'Total de Cliques')
+    if prev_fy25_q and prev_fy25_q in REDES_DATA:
+        prev_seg = REDES_DATA[prev_fy25_q]['novos_seguidores']
+        prev_eng = REDES_DATA[prev_fy25_q]['total_engajamentos']
+        prev_cli = REDES_DATA[prev_fy25_q]['total_cliques']
     else:
         prev_seg = prev_eng = prev_cli = '—'
 
-    # Linha 2: Mesmo Q FY24
     same_fy24_redes = HISTORICAL_DATA['redes'].get(f'{q}FY24', {})
-    same_seg = same_fy24_redes.get('seguidores',  '—')
-    same_eng = same_fy24_redes.get('engajamentos','—')
-    same_cli = same_fy24_redes.get('cliques',     '—')
+    same_seg = same_fy24_redes.get('seguidores', '—')
+    same_eng = same_fy24_redes.get('engajamentos', '—')
+    same_cli = same_fy24_redes.get('cliques', '—')
 
     r1, r2, r3 = st.columns(3)
     with r1: render_metric_card("Novos Seguidores", "👥", seg_atual, prev_seg, prev_fy25_name, same_seg, same_fy24_name, is_percentage=False)
-    with r2: render_metric_card("Engajamentos",     "❤️", eng_atual, prev_eng, prev_fy25_name, same_eng, same_fy24_name, is_percentage=False)
-    with r3: render_metric_card("Cliques",          "🖱️", cli_atual, prev_cli, prev_fy25_name, same_cli, same_fy24_name, is_percentage=False)
+    with r2: render_metric_card("Engajamentos", "❤️", eng_atual, prev_eng, prev_fy25_name, same_eng, same_fy24_name, is_percentage=False)
+    with r3: render_metric_card("Cliques", "🖱️", cli_atual, prev_cli, prev_fy25_name, same_cli, same_fy24_name, is_percentage=False)
 
-    df_rr = data['redes_rede'][data['redes_rede']['trimestre'] == q]
-    if not df_rr.empty:
-        render_table(df_rr[['rede','seguidores','media_seguidores','engajamentos','cliques']], "📊 Métricas por Rede Social")
-
-    top_pub = data['redes_geral'][data['redes_geral']['trimestre'] == q]
-    top_pub = top_pub[top_pub['indicador'].str.contains('Top 3 fabricantes mais publicados', na=False)]
-    top_eng_fab = data['redes_geral'][data['redes_geral']['trimestre'] == q]
-    top_eng_fab = top_eng_fab[top_eng_fab['indicador'].str.contains('Top 3 fabricantes mais engajados', na=False)]
-    if not top_pub.empty or not top_eng_fab.empty:
-        tp1, tp2 = st.columns(2)
-        with tp1:
-            if not top_pub.empty: render_table(top_pub[['indicador','valor','observacao']], "📸 Top Fabricantes Mais Publicados")
-        with tp2:
-            if not top_eng_fab.empty: render_table(top_eng_fab[['indicador','valor','observacao']], "🔥 Top Fabricantes Mais Engajados")
-
-    # ── 7. BLOG & NEWSLETTER ─────────────────────────────────
+    # ── 7. BLOG & NEWSLETTER ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">📝</div><div><div class="section-title-premium">Blog &amp; Newsletter</div><div class="section-sub">Conteúdo e engajamento</div></div></div>', unsafe_allow_html=True)
 
     same_fy24_blog = HISTORICAL_DATA['blog'].get(f'{q}FY24', {})
@@ -1179,10 +1009,10 @@ else:
         </div>
         """)
         for metric, label, icon, same_fy24_key in [
-            ('visitas',    'Visitas',              '👁️', 'visitas'),
-            ('usuarios',   'Usuários',             '👥', 'usuarios'),
-            ('blogposts',  'Blogposts Publicados', '📝', None),
-            ('tempo_medio','Tempo Médio na Página','⏱️', None),
+            ('visitas', 'Visitas', '👁️', 'visitas'),
+            ('usuarios', 'Usuários', '👥', 'usuarios'),
+            ('blogposts', 'Blogposts Publicados', '📝', None),
+            ('tempo_medio', 'Tempo Médio na Página', '⏱️', None),
         ]:
             render_blog_item(
                 label=label,
@@ -1207,10 +1037,10 @@ else:
         </div>
         """)
         for metric, label, icon, same_fy24_key, is_pct in [
-            ('empresas', 'Empresas',        '🏢', None,             False),
-            ('envios',   'Envios',          '📨', None,             False),
-            ('abertura', 'Taxa de Abertura','📊', 'abertura_news',  True),
-            ('cliques',  'Taxa de Cliques', '🖱️', 'cliques_news',  True),
+            ('empresas', 'Empresas', '🏢', 'empresas_news', False),
+            ('envios', 'Envios', '📨', 'envios_news', False),
+            ('abertura', 'Taxa de Abertura', '📊', 'abertura_news', True),
+            ('cliques', 'Taxa de Cliques', '🖱️', 'cliques_news', True),
         ]:
             render_blog_item(
                 label=label,
@@ -1223,7 +1053,7 @@ else:
                 icon=icon,
             )
 
-    # ── 8. APRENDIZADOS ──────────────────────────────────────
+    # ── 8. APRENDIZADOS ──
     st.markdown(f'<div class="section-premium"><div class="section-icon">📚</div><div><div class="section-title-premium">Aprendizados FY25</div><div class="section-sub">Principais lições do ano</div></div></div>', unsafe_allow_html=True)
     ap1, ap2, ap3 = st.columns(3)
     with ap1:
