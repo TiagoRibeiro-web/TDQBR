@@ -1,0 +1,113 @@
+# ========== Python ==========
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# ========== Streamlit ==========
+.streamlit/secrets.toml
+.streamlit/config.toml
+.streamlit/cache/
+.streamlit/uploads/
+.streamlit/credentials.toml
+
+# ========== Jupyter Notebook ==========
+.ipynb_checkpoints/
+*.ipynb
+*.ipynb_checkpoints
+
+# ========== IDE / Editor ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode/
+.idea/
+*.sublime-*
+
+# ========== Banco de Dados ==========
+*.db
+*.sqlite
+*.sqlite3
+*.pgsql
+*.dump
+
+# ========== Logs e Dados Temporários ==========
+*.log
+logs/
+*.tmp
+*.temp
+temp/
+tmp/
+
+# ========== Arquivos de Dados ==========
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.feather
+data/raw/
+data/processed/
+data/interim/
+*.pkl
+*.pickle
+
+# ========== Arquivos de Configuração ==========
+config.py
+config_local.py
+*.secret
+*.key
+*.pem
+*.crt
+
+# ========== Docker ==========
+docker-compose.override.yml
+.dockerignore
+Dockerfile
+docker/
+
+# ========== OS ==========
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.~
+Desktop.ini
+
+# ========== Projetos Específicos ==========
+# Arquivos gerados localmente
+qbr_td_synnex_*.csv
+qbr_td_synnex_*.xlsx
+*.pyc
+output/
+reports/
+
+# ========== Backup ==========
+*.bak
+*.backup
+*.old
