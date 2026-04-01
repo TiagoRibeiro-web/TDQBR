@@ -301,6 +301,34 @@ TOP_FABRICANTES_DATA = {
     },
 }
 
+# ==================== DADOS DE COMPARATIVOS DE CAMPANHAS ====================
+CAMPANHAS_COMPARATIVOS = {
+    'taxa_conversao_historico': {
+        'Q1': {'com_investimento': 7.26, 'sem_investimento': None, 'referencia_mercado': '0,5% a 2%', 'q4fy24': 7.09, 'q1fy24': 4.65},
+        'Q2': {'com_investimento': 6.5, 'sem_investimento': 10.5, 'referencia_mercado': '0,5% a 2%', 'q4fy24': None, 'q1fy24': None},
+        'Q3': {'com_investimento': 0.54, 'sem_investimento': None, 'referencia_mercado': '0,5% a 2%', 'q4fy24': None, 'q1fy24': None},
+        'Q4': {'com_investimento': 0.04, 'sem_investimento': 0.3, 'referencia_mercado': '0,5% a 2%', 'q4fy24': None, 'q1fy24': None},
+    },
+    'distribuicao_objetivo': {
+        'Q1': {'conversao': 83, 'branding': 17},
+        'Q2': {'conversao': 83, 'branding': 17},
+        'Q3': {'conversao': 83, 'branding': 17},
+        'Q4': {'conversao': 66, 'branding': 33},
+    },
+    'distribuicao_vertical_solicitadas': {
+        'Q1': {'Cloud': 42.9, 'Data & AI': 28.6, 'Segurança': 28.6},
+        'Q2': {'Cloud': 50, 'Segurança': 33, 'Data & AI': 16},
+        'Q3': {'Cloud': 66, 'Segurança': 33},
+        'Q4': {'Cloud': 66, 'Segurança': 33},
+    },
+    'distribuicao_vertical_veiculadas': {
+        'Q1': {'Cloud': 33, 'Data & AI': 33, 'Segurança': 11, 'Institucional': 11, 'Networking': 11},
+        'Q2': {'Cloud': 43, 'Segurança': 43, 'Data & AI': 14},
+        'Q3': {'Cloud': 17, 'Segurança': 50, 'Data & AI': 17, 'Networking': 17},
+        'Q4': {'Cloud': 17, 'Segurança': 50, 'Data & AI': 17, 'Networking': 17},
+    },
+}
+
 # ==================== FUNÇÕES AUXILIARES ====================
 def clean_value(val):
     if val is None or (isinstance(val, float) and pd.isna(val)):
@@ -358,6 +386,17 @@ def get_fabricantes_data(q):
 def get_campanhas_detalhes(q):
     return FALLBACK_DATA['campanhas_detalhes'].get(q, {})
 
+def get_campanhas_comparativos(q, tipo):
+    if tipo == 'taxa_conversao':
+        return CAMPANHAS_COMPARATIVOS['taxa_conversao_historico'].get(q, {})
+    elif tipo == 'objetivo':
+        return CAMPANHAS_COMPARATIVOS['distribuicao_objetivo'].get(q, {})
+    elif tipo == 'vertical_solicitadas':
+        return CAMPANHAS_COMPARATIVOS['distribuicao_vertical_solicitadas'].get(q, {})
+    elif tipo == 'vertical_veiculadas':
+        return CAMPANHAS_COMPARATIVOS['distribuicao_vertical_veiculadas'].get(q, {})
+    return {}
+
 def get_email_value(q, metric):
     if q and q in FALLBACK_DATA['email']:
         if metric == 'envios':
@@ -413,19 +452,15 @@ def get_redes_fy24(q, metric):
     return '—'
 
 def get_email_vertical_data(q):
-    """Retorna dados de email marketing por vertical"""
     return EMAIL_VERTICAL_DATA.get(q, pd.DataFrame())
 
 def get_email_tipo_data(q):
-    """Retorna dados de email marketing por tipo"""
     return EMAIL_TIPO_DATA.get(q, pd.DataFrame())
 
 def get_redes_por_rede_data(q):
-    """Retorna dados de redes sociais por rede"""
     return REDES_POR_REDE_DATA.get(q, pd.DataFrame())
 
 def get_top_fabricantes_data(q):
-    """Retorna dados de top fabricantes por rede social"""
     return TOP_FABRICANTES_DATA.get(q, {})
 
 # ==================== BADGE HELPERS ====================
@@ -647,7 +682,8 @@ def render_campanhas_card(q, is_annual=False):
         st.markdown('</div></div>', unsafe_allow_html=True)
     else:
         camp = get_campanhas_detalhes(q)
-
+        obj_dist = get_campanhas_comparativos(q, 'objetivo')
+        
         cc1, cc2 = st.columns(2)
         with cc1:
             st.html(f"""
@@ -674,7 +710,7 @@ def render_campanhas_card(q, is_annual=False):
                 </div>
             </div>
             """)
-
+        
         with cc2:
             st.html(f"""
             <div class="glass-card">
@@ -684,11 +720,11 @@ def render_campanhas_card(q, is_annual=False):
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                     <div style="background:rgba(46,125,50,0.2);border-radius:16px;padding:12px;text-align:center;">
                         <div style="font-size:11px;color:{COLORS['text_muted']};">Conversão</div>
-                        <div style="font-size:28px;font-weight:800;color:#6FBF6F;">83%</div>
+                        <div style="font-size:28px;font-weight:800;color:#6FBF6F;">{obj_dist.get('conversao', '83')}%</div>
                     </div>
                     <div style="background:rgba(255,107,53,0.2);border-radius:16px;padding:12px;text-align:center;">
                         <div style="font-size:11px;color:{COLORS['text_muted']};">Branding</div>
-                        <div style="font-size:28px;font-weight:800;color:#FF8C5A;">17%</div>
+                        <div style="font-size:28px;font-weight:800;color:#FF8C5A;">{obj_dist.get('branding', '17')}%</div>
                     </div>
                 </div>
             </div>
@@ -698,7 +734,6 @@ def render_campanhas_card(q, is_annual=False):
 def export_quarter_data(q, quarterly_data):
     """Exporta todos os dados do trimestre selecionado para CSV/Excel"""
     
-    # 1. Dados de Overview
     overview_data = {
         'Categoria': ['Peças Produzidas', 'Solicitações', 'Campanhas'],
         'Valor FY25': [
@@ -714,11 +749,9 @@ def export_quarter_data(q, quarterly_data):
     }
     df_overview = pd.DataFrame(overview_data)
     
-    # 2. Distribuição por Vertical
     df_vertical = get_vertical_distribution(q)
     df_vertical.columns = ['Vertical', 'Percentual (%)']
     
-    # 3. Dados de Campanhas
     camp_data = get_campanhas_detalhes(q)
     df_campanhas = pd.DataFrame([
         {'Indicador': 'Campanhas Solicitadas', 'Valor': camp_data.get('solicitadas', '—')},
@@ -726,11 +759,20 @@ def export_quarter_data(q, quarterly_data):
         {'Indicador': 'Taxa de Conversão (%)', 'Valor': camp_data.get('taxa_conversao', '—')},
         {'Indicador': 'Leads Gerados', 'Valor': camp_data.get('leads', '—')},
         {'Indicador': 'Top Campanhas', 'Valor': camp_data.get('top', '—').replace('<br>', ' | ')},
-        {'Indicador': 'Distribuição - Conversão (%)', 'Valor': '83%'},
-        {'Indicador': 'Distribuição - Branding (%)', 'Valor': '17%'},
     ])
     
-    # 4. Dados de Email Marketing - Geral
+    # Taxa conversão comparativos
+    taxa_comp = get_campanhas_comparativos(q, 'taxa_conversao')
+    obj_dist = get_campanhas_comparativos(q, 'objetivo')
+    
+    df_campanhas_comp = pd.DataFrame([
+        {'Indicador': 'Taxa Conversão (c/ investimento)', 'Valor': f"{taxa_comp.get('com_investimento', '—')}%"},
+        {'Indicador': 'Taxa Conversão (s/ investimento)', 'Valor': f"{taxa_comp.get('sem_investimento', '—')}%" if taxa_comp.get('sem_investimento') else '—'},
+        {'Indicador': 'Referência Mercado', 'Valor': taxa_comp.get('referencia_mercado', '—')},
+        {'Indicador': 'Distribuição - Conversão (%)', 'Valor': f"{obj_dist.get('conversao', '83')}%"},
+        {'Indicador': 'Distribuição - Branding (%)', 'Valor': f"{obj_dist.get('branding', '17')}%"},
+    ])
+    
     df_email = pd.DataFrame([
         {'Métrica': 'Total de Envios', 'Valor FY25': get_email_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'envios')},
         {'Métrica': 'Taxa de Entrega (%)', 'Valor FY25': get_email_value(q, 'entrega'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'entrega')},
@@ -739,14 +781,12 @@ def export_quarter_data(q, quarterly_data):
         {'Métrica': 'Taxa de Opt-Out (%)', 'Valor FY25': get_email_value(q, 'optout'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'optout')},
     ])
     
-    # 5. Dados de Redes Sociais - Geral
     df_redes_geral = pd.DataFrame([
         {'Métrica': 'Novos Seguidores', 'Valor FY25': get_redes_value(q, 'seguidores'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'seguidores')},
         {'Métrica': 'Total de Engajamentos', 'Valor FY25': get_redes_value(q, 'engajamentos'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'engajamentos')},
         {'Métrica': 'Total de Cliques', 'Valor FY25': get_redes_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'cliques')},
     ])
     
-    # 6. Dados do Blog
     df_blog = pd.DataFrame([
         {'Métrica': 'Visitas', 'Valor FY25': get_blog_value(q, 'visitas'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'visitas') if get_blog_fy24(q, 'visitas') else '—'},
         {'Métrica': 'Usuários', 'Valor FY25': get_blog_value(q, 'usuarios'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'usuarios') if get_blog_fy24(q, 'usuarios') else '—'},
@@ -754,7 +794,6 @@ def export_quarter_data(q, quarterly_data):
         {'Métrica': 'Tempo Médio na Página', 'Valor FY25': get_blog_value(q, 'tempo_medio'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'tempo_medio') if get_blog_fy24(q, 'tempo_medio') else '—'},
     ])
     
-    # 7. Dados da Newsletter
     df_newsletter = pd.DataFrame([
         {'Métrica': 'Empresas Inscritas', 'Valor FY25': get_newsletter_value(q, 'empresas'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'empresas') if get_newsletter_fy24(q, 'empresas') else '—'},
         {'Métrica': 'Total de Envios', 'Valor FY25': get_newsletter_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'envios') if get_newsletter_fy24(q, 'envios') else '—'},
@@ -762,56 +801,20 @@ def export_quarter_data(q, quarterly_data):
         {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_newsletter_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'cliques') if get_newsletter_fy24(q, 'cliques') else '—'},
     ])
     
-    # 8. Dados de Fabricantes
     df_fabricantes = get_fabricantes_data(q)
     
-    # 9. Insights do trimestre
     insights_map = {
-        'Q1': [
-            "Fortinet foi o maior solicitante com 120 peças na vertical Segurança",
-            "AWS liderou em Cloud com 43 peças solicitadas",
-            "IBM teve destaque em Data & AI com 40 peças",
-            "Cisco liderou em Networking com 132 peças",
-            "Taxa de conversão de campanhas atingiu 7,26%",
-            "Blog registrou 24.926 visitas e 17.075 usuários"
-        ],
-        'Q2': [
-            "Fortinet liderou em Segurança com 117 peças solicitadas",
-            "Microsoft foi destaque em Cloud com 115 peças",
-            "IBM liderou em Data & AI com 59 peças",
-            "Cisco continuou forte em Networking com 63 peças",
-            "Campanha IBM IA gerou 55 leads qualificados",
-            "Taxa de abertura de e-mail atingiu 45,3%"
-        ],
-        'Q3': [
-            "Fortinet manteve liderança em Segurança com 129 peças",
-            "Microsoft liderou Cloud com 69 peças",
-            "Red Hat teve destaque em Data & AI com 44 peças",
-            "Cisco liderou Networking com 82 peças",
-            "Cloud On the Go gerou 383 leads, maior campanha do ano",
-            "Taxa de cliques em e-mail atingiu 6% no Q3"
-        ],
-        'Q4': [
-            "Fortinet continuou líder em Segurança com 75 peças",
-            "Google Cloud liderou em Cloud com 28 peças",
-            "IBM foi destaque em Data & AI com 25 peças",
-            "Cisco liderou Networking com 17 peças",
-            "Campanha de recrutamento Fortinet gerou 70 leads",
-            "Total de envios de e-mail atingiu 349.487 no Q4"
-        ]
+        'Q1': ["Fortinet foi o maior solicitante com 120 peças na vertical Segurança", "AWS liderou em Cloud com 43 peças", "IBM teve destaque em Data & AI com 40 peças", "Taxa de conversão de campanhas atingiu 7,26%"],
+        'Q2': ["Fortinet liderou em Segurança com 117 peças", "Microsoft foi destaque em Cloud com 115 peças", "Campanha IBM IA gerou 55 leads", "Taxa de abertura de e-mail atingiu 45,3%"],
+        'Q3': ["Fortinet manteve liderança em Segurança com 129 peças", "Cloud On the Go gerou 383 leads", "Taxa de cliques em e-mail atingiu 6%"],
+        'Q4': ["Fortinet continuou líder em Segurança com 75 peças", "Campanha de recrutamento Fortinet gerou 70 leads", "Total de envios de e-mail atingiu 349.487"],
     }
-    df_insights = pd.DataFrame({'Insights e Recomendações FY25': insights_map.get(q, ['Nenhum insight disponível para este trimestre'])})
+    df_insights = pd.DataFrame({'Insights e Recomendações FY25': insights_map.get(q, ['Nenhum insight disponível'])})
     
-    # 10. Dados de Email Marketing por Vertical
     df_email_vertical = get_email_vertical_data(q)
-    
-    # 11. Dados de Email Marketing por Tipo
     df_email_tipo = get_email_tipo_data(q)
-    
-    # 12. Dados de Redes Sociais por Rede
     df_redes_por_rede = get_redes_por_rede_data(q)
     
-    # 13. Top Fabricantes
     top_fab = get_top_fabricantes_data(q)
     if top_fab:
         df_top_fabricantes = pd.DataFrame([
@@ -825,17 +828,18 @@ def export_quarter_data(q, quarterly_data):
     all_data = {
         '1_Overview': df_overview,
         '2_Distribuicao_Vertical': df_vertical,
-        '3_Campanhas': df_campanhas,
-        '4_Email_Marketing_Geral': df_email,
-        '5_Redes_Sociais_Geral': df_redes_geral,
-        '6_Blog': df_blog,
-        '7_Newsletter': df_newsletter,
-        '8_Fabricantes': df_fabricantes if not df_fabricantes.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis para este trimestre']}),
-        '9_Insights': df_insights,
-        '10_Email_Marketing_Por_Vertical': df_email_vertical if not df_email_vertical.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
-        '11_Email_Marketing_Por_Tipo': df_email_tipo if not df_email_tipo.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
-        '12_Redes_Sociais_Por_Rede': df_redes_por_rede if not df_redes_por_rede.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
-        '13_Top_Fabricantes_Redes': df_top_fabricantes
+        '3_Campanhas_Resumo': df_campanhas,
+        '4_Campanhas_Comparativos': df_campanhas_comp,
+        '5_Email_Marketing': df_email,
+        '6_Redes_Sociais_Geral': df_redes_geral,
+        '7_Blog': df_blog,
+        '8_Newsletter': df_newsletter,
+        '9_Fabricantes': df_fabricantes if not df_fabricantes.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '10_Insights': df_insights,
+        '11_Email_Por_Vertical': df_email_vertical if not df_email_vertical.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '12_Email_Por_Tipo': df_email_tipo if not df_email_tipo.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '13_Redes_Por_Rede': df_redes_por_rede if not df_redes_por_rede.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '14_Top_Fabricantes_Redes': df_top_fabricantes
     }
     
     return all_data
@@ -872,10 +876,13 @@ CSS_STATIC = """
 
     .glass-card {
         border-radius: 24px; padding: 24px;
-        transition: all 0.4s ease;
+        transition: all 0.3s ease;
         margin-bottom: 24px; height: 100%;
     }
-    .glass-card:hover { transform: translateY(-6px); }
+    .glass-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
 
     .kpi-premium { text-align: center; }
     .kpi-icon { font-size: 40px; margin-bottom: 12px; }
@@ -904,7 +911,17 @@ CSS_STATIC = """
     .badge-down { background: rgba(211,47,47,0.35);  color: #FF8A80; }
     .badge-flat { background: rgba(136,146,160,0.3); color: #B0BEC5; }
 
-    .section-premium { display: flex; align-items: center; gap: 12px; margin: 48px 0 24px 0; }
+    .section-premium {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 48px 0 24px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 12px;
+    }
+    .section-premium:first-of-type {
+        margin-top: 0;
+    }
     .section-icon { font-size: 32px; background: rgba(0,102,204,0.25); padding: 12px; border-radius: 16px; }
     .section-title-premium { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #FFFFFF; }
     .section-sub { font-size: 13px; margin-top: 4px; color: rgba(255,255,255,0.7); }
@@ -937,45 +954,18 @@ CSS_STATIC = """
     .stDataFrame thead th { background: linear-gradient(135deg, rgba(0,102,204,0.4), rgba(123,44,191,0.3)) !important; color: #FFFFFF !important; font-weight: 600 !important; }
     .stDataFrame tbody td { background: rgba(15,43,61,0.6) !important; color: #FFFFFF !important; }
 
-        /* Melhorias de espaçamento e organização */
-    .section-premium {
-        margin: 48px 0 24px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        padding-bottom: 12px;
-    }
-    
-    .section-premium:first-of-type {
-        margin-top: 0;
-    }
-    
-    .glass-card {
-        transition: all 0.3s ease;
-    }
-    
-    .glass-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    
-    /* Cores diferenciadas para os subtítulos dos cards */
     .glass-card [style*="border-left"] {
         transition: all 0.2s ease;
     }
-    
     .glass-card:hover [style*="border-left"] {
         padding-left: 16px;
     }
-    
-    /* Melhor espaçamento entre os cards */
     .stColumns {
         gap: 20px;
     }
-    
-    /* Estilo para os cards de métricas */
     .kpi-premium, .glass-card {
         animation: fadeInUp 0.4s ease-out;
     }
-    
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -1173,9 +1163,162 @@ def main():
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">% Peças por vertical</div></div></div>', unsafe_allow_html=True)
         render_horizontal_bars(get_vertical_distribution(q), "% Peças por Vertical")
 
-        # Campanhas
-        st.markdown(f'<div class="section-premium"><div class="section-icon">🎯</div><div><div class="section-title-premium">Campanhas</div><div class="section-sub">Métricas e destaques</div></div></div>', unsafe_allow_html=True)
-        render_campanhas_card(q, is_annual=False)
+        # ==================== CAMPANHAS ====================
+        st.markdown(f'<div class="section-premium"><div class="section-icon">🎯</div><div><div class="section-title-premium">Campanhas</div><div class="section-sub">Métricas, comparativos e destaques</div></div></div>', unsafe_allow_html=True)
+        
+        camp = get_campanhas_detalhes(q)
+        obj_dist = get_campanhas_comparativos(q, 'objetivo')
+        
+        cc1, cc2 = st.columns(2)
+        with cc1:
+            st.html(f"""
+            <div class="glass-card">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:12px;color:{COLORS['text_muted']};margin-bottom:8px;">📋 Solicitadas</div>
+                        <div style="font-size:42px;font-weight:800;color:{COLORS['text']};">{camp.get('solicitadas', '—')}</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:12px;color:{COLORS['text_muted']};margin-bottom:8px;">🚀 Veiculadas</div>
+                        <div style="font-size:42px;font-weight:800;color:{COLORS['text']};">{camp.get('veiculadas', '—')}</div>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:12px;color:{COLORS['text_muted']};margin-bottom:8px;">📊 Taxa Conversão</div>
+                        <div style="font-size:28px;font-weight:800;color:#6FBF6F;">{camp.get('taxa_conversao', '—')}%</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:12px;color:{COLORS['text_muted']};margin-bottom:8px;">👥 Leads Gerados</div>
+                        <div style="font-size:28px;font-weight:800;color:{COLORS['text']};">{camp.get('leads', '—')}</div>
+                    </div>
+                </div>
+            </div>
+            """)
+        
+        with cc2:
+            st.html(f"""
+            <div class="glass-card">
+                <div style="font-size:18px;font-weight:700;color:{COLORS['text']};margin-bottom:16px;">🏆 Top Campanhas</div>
+                <div style="font-size:13px;line-height:1.6;color:{COLORS['text']};margin-bottom:20px;">{camp.get('top', '—')}</div>
+                <div style="font-size:14px;font-weight:600;color:{COLORS['text']};margin:20px 0 12px;">📊 Distribuição por Objetivo</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div style="background:rgba(46,125,50,0.2);border-radius:16px;padding:12px;text-align:center;">
+                        <div style="font-size:11px;color:{COLORS['text_muted']};">Conversão</div>
+                        <div style="font-size:28px;font-weight:800;color:#6FBF6F;">{obj_dist.get('conversao', '83')}%</div>
+                    </div>
+                    <div style="background:rgba(255,107,53,0.2);border-radius:16px;padding:12px;text-align:center;">
+                        <div style="font-size:11px;color:{COLORS['text_muted']};">Branding</div>
+                        <div style="font-size:28px;font-weight:800;color:#FF8C5A;">{obj_dist.get('branding', '17')}%</div>
+                    </div>
+                </div>
+            </div>
+            """)
+        
+                # ==================== COMPARATIVO DE TAXA DE CONVERSÃO ====================
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📈</div><div><div class="section-title-premium">Comparativo de Taxa de Conversão</div><div class="section-sub">Histórico e referência de mercado</div></div></div>', unsafe_allow_html=True)
+        
+        taxa_comp = get_campanhas_comparativos(q, 'taxa_conversao')
+        if taxa_comp:
+            col_comp1, col_comp2, col_comp3 = st.columns(3)
+            
+            with col_comp1:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['primary']};">💰 Com Investimento</div>
+                    <div style="font-size:32px;font-weight:800;color:#6FBF6F;">{taxa_comp.get('com_investimento', '—')}%</div>
+                    <div style="font-size:11px;color:{COLORS['text_muted']};margin-top:8px;">Referência mercado: {taxa_comp.get('referencia_mercado', '—')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with col_comp2:
+                sem_invest = taxa_comp.get('sem_investimento')
+                if sem_invest is not None and sem_invest != '—':
+                    st.markdown(f"""
+                    <div class="glass-card">
+                        <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['secondary']};">📢 Sem Investimento</div>
+                        <div style="font-size:32px;font-weight:800;color:#FF8C5A;">{sem_invest}%</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div class="glass-card">
+                        <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['secondary']};">📢 Sem Investimento</div>
+                        <div style="font-size:32px;font-weight:800;color:{COLORS['text_muted']};">—</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            with col_comp3:
+                # Construir a lista de comparativos FY24
+                comparativos = []
+                if taxa_comp.get('q4fy24') is not None and taxa_comp.get('q4fy24') != '—':
+                    comparativos.append(f'<div>vs Q4 FY24: {taxa_comp.get("q4fy24")}%</div>')
+                if taxa_comp.get('q1fy24') is not None and taxa_comp.get('q1fy24') != '—':
+                    comparativos.append(f'<div>vs Q1 FY24: {taxa_comp.get("q1fy24")}%</div>')
+                
+                comparativos_html = ''.join(comparativos) if comparativos else '<div>Sem dados disponíveis</div>'
+                
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['accent']};">📅 Comparativo FY24</div>
+                    <div style="font-size:13px;line-height:1.8;">
+                        {comparativos_html}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+        # Distribuição por Vertical - Campanhas
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">Comparativo entre solicitadas e veiculadas</div></div></div>', unsafe_allow_html=True)
+        
+        col_solic, col_veic = st.columns(2)
+        
+        with col_solic:
+            st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📋 Campanhas Solicitadas</div>
+            """, unsafe_allow_html=True)
+            
+            solicitadas_data = get_campanhas_comparativos(q, 'vertical_solicitadas')
+            if solicitadas_data:
+                for vertical, percent in solicitadas_data.items():
+                    st.markdown(f"""
+                    <div style="margin-bottom:12px;">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <span style="font-size:13px;color:{COLORS['text']};">{vertical}</span>
+                            <span style="font-size:13px;font-weight:600;color:{COLORS['primary']};">{percent}%</span>
+                        </div>
+                        <div style="background:rgba(0,0,0,0.2);border-radius:8px;height:8px;overflow:hidden;">
+                            <div style="width:{percent}%;height:100%;background:{COLORS['primary']};border-radius:8px;"></div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            else:
+                st.markdown('<div style="font-size:13px;color:rgba(255,255,255,0.5);">Sem dados disponíveis</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col_veic:
+            st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['secondary']};border-left:3px solid {COLORS['secondary']};padding-left:12px;">🚀 Campanhas Veiculadas</div>
+            """, unsafe_allow_html=True)
+            
+            veiculadas_data = get_campanhas_comparativos(q, 'vertical_veiculadas')
+            if veiculadas_data:
+                for vertical, percent in veiculadas_data.items():
+                    st.markdown(f"""
+                    <div style="margin-bottom:12px;">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <span style="font-size:13px;color:{COLORS['text']};">{vertical}</span>
+                            <span style="font-size:13px;font-weight:600;color:{COLORS['secondary']};">{percent}%</span>
+                        </div>
+                        <div style="background:rgba(0,0,0,0.2);border-radius:8px;height:8px;overflow:hidden;">
+                            <div style="width:{percent}%;height:100%;background:{COLORS['secondary']};border-radius:8px;"></div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            else:
+                st.markdown('<div style="font-size:13px;color:rgba(255,255,255,0.5);">Sem dados disponíveis</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
         # Fabricantes
         st.markdown(f'<div class="section-premium"><div class="section-icon">🏭</div><div><div class="section-title-premium">Fabricantes por Vertical</div><div class="section-sub">Principais fornecedores</div></div></div>', unsafe_allow_html=True)
@@ -1183,10 +1326,9 @@ def main():
         if not df_fab.empty:
             render_table(df_fab, "🏭 Fabricantes por Vertical")
 
-# ==================== EMAIL MARKETING ====================
+        # ==================== EMAIL MARKETING ====================
         st.markdown(f'<div class="section-premium"><div class="section-icon">📧</div><div><div class="section-title-premium">E-mail Marketing</div><div class="section-sub">Métricas de performance e análise detalhada</div></div></div>', unsafe_allow_html=True)
         
-        # Cards principais de Email Marketing
         entrega_atual = get_email_value(q, 'entrega')
         abertura_atual = get_email_value(q, 'abertura')
         cliques_atual = get_email_value(q, 'cliques')
@@ -1204,7 +1346,6 @@ def main():
 
         def fmt_pct(v): return f"{v}%" if v not in ('—', None, '') else '—'
 
-        # Linha dos cards principais
         e1, e2, e3, e4 = st.columns(4)
         with e1:
             render_metric_card("Entregas", "✅",
@@ -1223,7 +1364,7 @@ def main():
                                fmt_pct(optout_atual), fmt_pct(prev_optout), prev_fy25_name,
                                opt_fy24, fy24_q_label if opt_fy24 else None)
         
-        # Tabelas detalhadas de Email Marketing (dentro de cards)
+        # Tabelas detalhadas de Email Marketing
         st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Análise Detalhada</div><div class="section-sub">Métricas por Vertical e Tipo de E-mail</div></div></div>', unsafe_allow_html=True)
         
         col_email_vert, col_email_tipo = st.columns(2)
@@ -1248,11 +1389,9 @@ def main():
                 st.dataframe(df_email_tipo, use_container_width=True, hide_index=True)
                 st.markdown('</div>', unsafe_allow_html=True)
 
-
         # ==================== REDES SOCIAIS ====================
         st.markdown(f'<div class="section-premium"><div class="section-icon">📱</div><div><div class="section-title-premium">Redes Sociais</div><div class="section-sub">Engajamento, alcance e análise por rede</div></div></div>', unsafe_allow_html=True)
         
-        # Cards principais de Redes Sociais
         seg_atual = get_redes_value(q, 'seguidores')
         eng_atual = get_redes_value(q, 'engajamentos')
         cli_atual = get_redes_value(q, 'cliques')
@@ -1269,10 +1408,9 @@ def main():
         with r2: render_metric_card("Engajamentos", "❤️", eng_atual, prev_eng, prev_fy25_name, eng_fy24, fy24_q_label if eng_fy24 else None)
         with r3: render_metric_card("Cliques", "🖱️", cli_atual, prev_cli, prev_fy25_name, cli_rs_fy24, fy24_q_label if cli_rs_fy24 else None)
         
-        # Tabelas detalhadas de Redes Sociais (dentro de cards)
+        # Tabelas detalhadas de Redes Sociais
         st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Análise Detalhada</div><div class="section-sub">Performance por rede e destaques de fabricantes</div></div></div>', unsafe_allow_html=True)
         
-        # Primeira linha: Performance por Rede Social
         df_redes_por_rede = get_redes_por_rede_data(q)
         if not df_redes_por_rede.empty:
             st.markdown(f"""
@@ -1282,7 +1420,6 @@ def main():
             st.dataframe(df_redes_por_rede, use_container_width=True, hide_index=True)
             st.markdown('</div>', unsafe_allow_html=True)
         
-        # Segunda linha: Top Fabricantes (dois cards lado a lado)
         top_fab = get_top_fabricantes_data(q)
         if top_fab:
             col_fab1, col_fab2 = st.columns(2)
@@ -1301,7 +1438,6 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
             
-            # Terceira linha: Distribuição por Vertical
             st.markdown(f"""
             <div class="glass-card">
                 <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#6FBF6F;border-left:3px solid #6FBF6F;padding-left:12px;">📊 Distribuição de Publicações por Vertical</div>
