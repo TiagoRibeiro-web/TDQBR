@@ -43,37 +43,39 @@ with st.sidebar:
 # ==================== CORES BASEADAS NO TEMA ====================
 if st.session_state.theme == 'dark':
     COLORS = {
-        'primary': '#0066CC',
-        'primary_dark': '#004999',
-        'primary_light': '#3399FF',
-        'secondary': '#FF6B35',
-        'secondary_light': '#FF8C5A',
-        'accent': '#7B2CBF',
-        'accent_light': '#9D4EDD',
-        'success': '#2E7D32',
+        # Cores principais da TD SYNNEX
+        'primary': '#07bed5',           # Azul TD
+        'primary_dark': '#0099b3',      # Azul escuro
+        'primary_light': '#4ad1e8',     # Azul claro
+        'secondary': '#CCD814',         # Verde claro TD
+        'secondary_light': '#e0eb4d',   # Verde claro mais suave
+        'accent': '#005758',            # Verde escuro 2
+        'accent_light': '#008080',      # Verde médio
+        'success': '#003031',           # Verde escuro 1
         'danger': '#D32F2F',
         'warning': '#FFB74D',
         'background': '#0A1929',
-        'card_bg': 'rgba(15, 43, 61, 0.85)',
+        'card_bg': 'rgba(0, 48, 49, 0.85)',      # Baseado no Verde Escuro 1
         'text': '#FFFFFF',
         'text_muted': 'rgba(255,255,255,0.75)',
         'border': 'rgba(255,255,255,0.2)',
-        'kpi_number_bg': 'linear-gradient(135deg, #FFFFFF, #E0E0E0)',
+        'kpi_number_bg': 'linear-gradient(135deg, #07bed5, #CCD814)',  # Gradiente Azul -> Verde Claro
         'kpi_number_color': 'transparent',
-        'button_bg': 'rgba(0,102,204,0.3)',
-        'button_hover': '#0066CC',
+        'button_bg': 'rgba(7, 190, 213, 0.3)',   # Azul TD com transparência
+        'button_hover': '#07bed5',
     }
-    BG_GRADIENT = "linear-gradient(135deg, #0A1929 0%, #0F2B3D 100%)"
+    BG_GRADIENT = "linear-gradient(135deg, #003031 0%, #005758 50%, #0A1929 100%)"  # Gradiente com as cores TD
 else:
     COLORS = {
-        'primary': '#0066CC',
-        'primary_dark': '#004999',
-        'primary_light': '#3399FF',
-        'secondary': '#FF6B35',
-        'secondary_light': '#FF8C5A',
-        'accent': '#7B2CBF',
-        'accent_light': '#9D4EDD',
-        'success': '#2E7D32',
+        # Cores principais da TD SYNNEX (modo claro)
+        'primary': '#07bed5',
+        'primary_dark': '#0099b3',
+        'primary_light': '#4ad1e8',
+        'secondary': '#CCD814',
+        'secondary_light': '#e0eb4d',
+        'accent': '#005758',
+        'accent_light': '#008080',
+        'success': '#003031',
         'danger': '#D32F2F',
         'warning': '#FFB74D',
         'background': '#F5F7FA',
@@ -82,11 +84,11 @@ else:
         'text_muted': '#6C757D',
         'border': '#DEE2E6',
         'kpi_number_bg': 'none',
-        'kpi_number_color': '#0066CC',
-        'button_bg': 'rgba(0,102,204,0.1)',
-        'button_hover': '#0066CC',
+        'kpi_number_color': '#07bed5',
+        'button_bg': 'rgba(7, 190, 213, 0.1)',
+        'button_hover': '#07bed5',
     }
-    BG_GRADIENT = "linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%)"
+    BG_GRADIENT = "linear-gradient(135deg, #F5F7FA 0%, #E8F0F2 100%)"
 
 # ==================== DADOS FALLBACK HARDCODED ====================
 FALLBACK_DATA = {
@@ -1079,9 +1081,14 @@ def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_
 def render_horizontal_bars(df, title):
     if df is None or df.empty:
         return
+    # Cores das verticais adaptadas para a paleta TD
     vertical_colors = {
-        'Segurança':'#D32F2F','Networking':'#0066CC','Cloud':'#3399FF',
-        'Data & AI':'#7B2CBF','Data Center':'#FF6B35','Institucional':'#2E7D32'
+        'Segurança': '#D32F2F',           # Vermelho - mantido para destaque de segurança
+        'Networking': '#07bed5',          # Azul TD
+        'Cloud': '#CCD814',               # Verde claro TD
+        'Data & AI': '#005758',           # Verde escuro 2
+        'Data Center': '#003031',         # Verde escuro 1
+        'Institucional': '#4ad1e8'        # Azul claro
     }
     df = df.copy()
     df = df.sort_values('percentual', ascending=False)
@@ -1089,7 +1096,7 @@ def render_horizontal_bars(df, title):
     st.markdown(f'<div class="glass-card"><div style="font-size:18px;font-weight:700;color:{COLORS["text"]};margin-bottom:20px;">📊 {title}</div>', unsafe_allow_html=True)
     for _, row in df.iterrows():
         pct = row['percentual']
-        color = vertical_colors.get(row['vertical'], '#0066CC')
+        color = vertical_colors.get(row['vertical'], '#07bed5')
         st.markdown(f"""
         <div class="bar-premium">
             <div class="bar-label-premium">
@@ -1480,9 +1487,9 @@ def main():
     st.markdown(CSS_STATIC, unsafe_allow_html=True)
     st.markdown(CSS_THEME, unsafe_allow_html=True)
 
-    # Header
+    # Header com gradiente TD
     st.markdown(f"""
-    <div class="premium-header">
+    <div class="premium-header" style="background: linear-gradient(135deg, #003031 0%, #005758 50%, #07bed5 100%);">
         <div class="premium-title">TD SYNNEX BR</div>
         <div class="premium-sub">Quarterly Business Review · Performance Analytics</div>
         <div class="premium-quarter">{st.session_state.get('view', 'Q1')} FY25</div>
