@@ -484,9 +484,24 @@ def _var_badge(variacao, prefix=''):
     return f'<div class="kpi-variation kpi-neutral">→ 0% {prefix}</div>'
 
 # ==================== FUNÇÕES DE RENDERIZAÇÃO ====================
+# ==================== FUNÇÕES DE RENDERIZAÇÃO CORRIGIDAS ====================
+
 def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, variacao_fy24=None, q_fy24_label=None):
+    """KPI card com badge de trimestre anterior FY25 E badge de mesmo trimestre FY24."""
     badge_fy25 = ''
     badge_fy24 = ''
+
+    # Formata o valor removendo qualquer % existente e adiciona apenas uma vez
+    valor_formatado = format_number(valor)
+    # Remove % se existir no valor (para evitar duplicação)
+    if isinstance(valor_formatado, str) and valor_formatado.endswith('%'):
+        valor_formatado = valor_formatado[:-1]
+    
+    # Detecta se é porcentagem
+    is_percentage = '%' in str(valor) or label in ['Taxa de Abertura', 'Taxa de Cliques', 'Entregas', 'Aberturas', 'Cliques', 'Opt-Out']
+    
+    # Adiciona % apenas se for porcentagem e não for '—'
+    display_value = f"{valor_formatado}%" if is_percentage and valor_formatado != '—' else valor_formatado
 
     if variacao is not None and trimestre_ref:
         badge_fy25 = _var_badge(variacao, f'<span style="font-size:9px;">vs {trimestre_ref}</span>')
@@ -502,7 +517,7 @@ def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, v
     st.html(f"""
     <div class="glass-card kpi-premium">
         <div class="kpi-icon">{icone}</div>
-        <div class="kpi-number">{format_number(valor)}</div>
+        <div class="kpi-number">{display_value}</div>
         <div class="kpi-label">{label}</div>
         {badge_fy25}
         {badge_fy24}
@@ -510,13 +525,28 @@ def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, v
     """)
 
 def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_fy25_name, prev_fy24_value=None, prev_fy24_name=None, tooltip=None):
-    cur = clean_value(current_value)
+    """Card de métrica com comparação com trimestre anterior FY25 e mesmo trimestre FY24."""
+    
+    # Limpa o valor atual
+    cur_raw = clean_value(current_value)
+    # Remove % se existir no valor (para evitar duplicação)
+    if isinstance(cur_raw, str) and cur_raw.endswith('%'):
+        cur_raw = cur_raw[:-1]
+    
     prev25 = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
+    # Remove % do valor anterior se existir
+    if isinstance(prev25, str) and prev25.endswith('%'):
+        prev25 = prev25[:-1]
 
-    var25 = calc_variacao(cur, prev25) if prev25 != '—' else None
+    var25 = calc_variacao(cur_raw, prev25) if prev25 != '—' else None
 
-    is_percentage = '%' in str(cur) or metric_name in ['Entregas', 'Aberturas', 'Cliques', 'Opt-Out', 'Taxa de Abertura', 'Taxa de Cliques']
-    suffix = '%' if is_percentage and cur != '—' else ''
+    # Detecta se é porcentagem
+    is_percentage = '%' in str(current_value) or metric_name in ['Entregas', 'Aberturas', 'Cliques', 'Opt-Out', 'Taxa de Abertura', 'Taxa de Cliques']
+    
+    # Adiciona % apenas uma vez
+    suffix = '%' if is_percentage and cur_raw != '—' else ''
+    display_cur = f"{cur_raw}{suffix}"
+    display_prev25 = f"{prev25}{suffix}" if prev25 != '—' else '—'
 
     tip_html = f'<span style="font-size:10px;opacity:0.6;margin-left:4px;" title="{tooltip}">ⓘ</span>' if tooltip else ''
 
@@ -528,8 +558,12 @@ def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_f
 
     fy24_row = ''
     if prev_fy24_value is not None and prev_fy24_name:
-        prev24_str = f"{prev_fy24_value}%" if is_percentage else str(prev_fy24_value)
-        var24 = calc_variacao(cur, prev24_str)
+        prev24_raw = str(prev_fy24_value)
+        # Remove % se existir
+        if prev24_raw.endswith('%'):
+            prev24_raw = prev24_raw[:-1]
+        prev24_str = f"{prev24_raw}{suffix}"
+        var24 = calc_variacao(cur_raw, prev24_raw)
         fy24_row = f"""
         <div class="comparison-row">
             <span class="comp-label fy24-label">📅 {prev_fy24_name}</span>
@@ -540,13 +574,13 @@ def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_f
     st.html(f"""
     <div class="glass-card" style="text-align:center;">
         <div style="font-size:34px;margin-bottom:8px;">{icon}</div>
-        <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{cur}{suffix}</div>
+        <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{display_cur}</div>
         <div style="font-size:13px;color:{COLORS['text_muted']};margin-bottom:14px;">{metric_name}{tip_html}</div>
         <div class="comparison-premium">
             <div class="comparison-header">📊 Comparativo</div>
             <div class="comparison-row">
                 <span class="comp-label">🔄 {prev_fy25_name}</span>
-                <span class="comp-value">{prev25}{suffix}</span>
+                <span class="comp-value">{display_prev25}</span>
                 {comp_badge(var25)}
             </div>
             {fy24_row}
@@ -555,11 +589,20 @@ def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_f
     """)
 
 def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_label=None, is_percentage=False, icon="📊"):
-    val_str = clean_value(value)
-    prev_str = clean_value(prev_value) if prev_value not in ('—', None) else '—'
+    val_raw = clean_value(value)
+    prev_raw = clean_value(prev_value) if prev_value not in ('—', None) else '—'
+    
+    # Remove % dos valores se existirem
+    if isinstance(val_raw, str) and val_raw.endswith('%'):
+        val_raw = val_raw[:-1]
+    if isinstance(prev_raw, str) and prev_raw.endswith('%'):
+        prev_raw = prev_raw[:-1]
 
-    var = calc_variacao(val_str, prev_str) if prev_str != '—' else None
-    suffix = '%' if is_percentage else ''
+    var = calc_variacao(val_raw, prev_raw) if prev_raw != '—' else None
+    suffix = '%' if is_percentage and val_raw != '—' else ''
+    
+    display_val = f"{val_raw}{suffix}"
+    display_prev = f"{prev_raw}{suffix}" if prev_raw != '—' else '—'
 
     def badge(v, cls_up='blog-change-up', cls_down='blog-change-down'):
         if v is None: return ''
@@ -569,16 +612,19 @@ def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_
 
     fy24_html = ''
     if fy24_value is not None and fy24_label:
-        fy24_str = f"{fy24_value}%" if is_percentage else format_number(fy24_value)
-        var24 = calc_variacao(val_str, fy24_str)
+        fy24_raw = str(fy24_value)
+        if isinstance(fy24_raw, str) and fy24_raw.endswith('%'):
+            fy24_raw = fy24_raw[:-1]
+        fy24_str = f"{fy24_raw}{suffix}"
+        var24 = calc_variacao(val_raw, fy24_raw)
         fy24_html = f'<div class="blog-compare-fy24"><span>📅 vs {fy24_label}: <strong>{fy24_str}</strong></span>{badge(var24,"blog-change-up","blog-change-down")}</div>'
 
     st.html(f"""
     <div class="blog-item-premium">
         <div class="blog-label-premium">{icon} {label}</div>
-        <div class="blog-value-premium">{val_str}{suffix}</div>
+        <div class="blog-value-premium">{display_val}</div>
         <div class="blog-compare-premium">
-            <span>🔄 vs {prev_name}: {prev_str}{suffix}</span>
+            <span>🔄 vs {prev_name}: {display_prev}</span>
             {badge(var)}
         </div>
         {fy24_html}
