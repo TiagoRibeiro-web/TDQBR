@@ -329,6 +329,479 @@ CAMPANHAS_COMPARATIVOS = {
     },
 }
 
+# ==================== DADOS DOS SLIDES POR TRIMESTRE ====================
+SLIDES_CONTENT = {
+    'Q1': {
+        'titulo': 'Q1 FY25 - Análise de Performance',
+        'secoes': {
+            'Visão Geral': {
+                'titulo': '📊 Visão Geral',
+                'conteudo': '''
+                O primeiro trimestre do FY25 apresentou resultados sólidos, com destaque para:
+                • 518 peças produzidas, demonstrando alta capacidade de produção de conteúdo
+                • 108 solicitações de campanhas, indicando forte demanda dos parceiros
+                • 4 campanhas veiculadas com sucesso
+                • Taxa de conversão de 7,26% - superando a média de mercado de 0,5% a 2%
+                
+                A vertical de Segurança liderou em produção de peças com 27% do total, seguida por Institucional (15%) e Networking (13%). Fortinet se destacou como o maior solicitante com 120 peças.
+                '''
+            },
+            'Campanhas': {
+                'titulo': '🎯 Campanhas',
+                'conteudo': '''
+                Principais campanhas do trimestre:
+                
+                🏆 Fortinet Roadshow: 56 empresas participantes
+                - Formato: Roadshow presencial
+                - Objetivo: Recrutamento de parceiros
+                - Resultado: Alta adesão e leads qualificados
+                
+                🏆 NVIDIA IA: 6 empresas qualificadas
+                - Formato: Campanha digital focada em Inteligência Artificial
+                - Objetivo: Geração de demanda
+                - Resultado: Conversão de 7,26%
+                
+                Distribuição por objetivo: 83% campanhas de conversão, 17% branding.
+                '''
+            },
+            'Email Marketing': {
+                'titulo': '📧 E-mail Marketing',
+                'conteudo': '''
+                Performance de e-mail marketing no Q1:
+                
+                • Total de envios: 169.948
+                • Taxa de entrega: 95,7% (vs 94,30% no Q4FY24)
+                • Taxa de abertura: 35,8% (vs 24,50% no Q4FY24)
+                • Taxa de cliques: 1,7% (vs 1,30% no Q4FY24)
+                
+                Destaques por vertical:
+                • Data & AI: Maior taxa de abertura (53,87%)
+                • Segurança: Maior volume de envios (48,30%)
+                
+                Por tipo de e-mail:
+                • Comunicados: Melhor taxa de abertura (52,06%)
+                • Campanhas de incentivo: Melhor taxa de entrega (99,54%)
+                
+                Recomendação: Otimizar filtros de disparo para maior relevância.
+                '''
+            },
+            'Redes Sociais': {
+                'titulo': '🌐 Redes Sociais',
+                'conteudo': '''
+                Performance nas redes sociais:
+                
+                • Novos seguidores: 1.230
+                • Total de engajamentos: 81.419
+                • Total de cliques: 6.117
+                
+                Destaques por rede:
+                • Instagram: 323 seguidores, 78.040 engajamentos
+                • LinkedIn: 830 seguidores, 5.893 cliques
+                
+                Top fabricantes mais publicados:
+                1. Fortinet (18 publicações)
+                2. AWS (13 publicações)
+                3. Zscaler (5 publicações)
+                
+                Top fabricantes mais engajados (cliques):
+                1. IBM (384 cliques)
+                2. Fortinet (208 cliques)
+                3. AWS (192 cliques)
+                
+                Distribuição por vertical: Institucional 67%, Segurança 15%, Cloud 8%
+                
+                Insight: Final e início de ano apresentam queda de engajamento. Sugestão de campanhas institucionais para manter o engajamento.
+                '''
+            },
+            'Blog & Newsletter': {
+                'titulo': '📝 Blog & Newsletter',
+                'conteudo': '''
+                Blog:
+                • Visitas: 24.926
+                • Usuários: 17.075
+                • Blogposts publicados: 31
+                • Tempo médio na página: 5:00
+                
+                Newsletter:
+                • Empresas inscritas: 416
+                • Envios: 544
+                • Taxa de abertura: 34,19%
+                • Taxa de cliques: 2,8%
+                
+                Público qualificado: 60% ensino superior, 53% classe A/B com forte intenção de compra.
+                '''
+            },
+            'Aprendizados': {
+                'titulo': '📚 Aprendizados e Recomendações',
+                'conteudo': '''
+                ✅ QUE BOM:
+                • PowerUP: Plataforma de inscrição, estratégias online e metas diárias
+                • Case Recrutamento Fortinet: 80 Leads — virou referência
+                • Segmentação Microsoft: Timing nos e-mails aumentou quórum
+                • Campanha BU Networking: Insights valiosos para futuras BUs
+                
+                ⚠️ QUE PENA:
+                • Qualidade das bases: Necessidade de segmentar melhor os parceiros
+                • Análise constante de resultados: Todos os jobs precisam ser acompanhados
+                
+                💡 QUE TAL — 2026:
+                • Intercâmbio de treinamentos: Calendário ao longo do ano
+                • Alinhamentos estratégicos recorrentes: Incluir agência no planejamento
+                • Metodologia EDGE: Otimização do formulário de briefing
+                '''
+            }
+        }
+    },
+    'Q2': {
+        'titulo': 'Q2 FY25 - Análise de Performance',
+        'secoes': {
+            'Visão Geral': {
+                'titulo': '📊 Visão Geral',
+                'conteudo': '''
+                O segundo trimestre consolidou o crescimento com números expressivos:
+                • 692 peças produzidas (+33,6% vs Q1)
+                • 159 solicitações de campanhas (+47,2% vs Q1)
+                • 9 campanhas veiculadas (+125% vs Q1)
+                
+                A vertical Cloud liderou com 27% das peças, seguida por Segurança (22%) e Networking (19%). Microsoft se destacou como maior solicitante na vertical Cloud com 115 peças.
+                '''
+            },
+            'Campanhas': {
+                'titulo': '🎯 Campanhas',
+                'conteudo': '''
+                Principais campanhas do trimestre:
+                
+                🏆 IBM IA: 55 empresas qualificadas
+                - Formato: Campanha digital focada em Inteligência Artificial
+                - Resultado: Alto engajamento e leads qualificados
+                
+                🏆 Microsoft Roadshow: 40 empresas participantes
+                - Formato: Evento presencial e online
+                - Objetivo: Geração de demanda e recrutamento
+                
+                🏆 Fortinet Recrutamento: 25 empresas
+                - Formato: Campanha de recrutamento
+                - Resultado: 25 novos parceiros qualificados
+                
+                Distribuição por vertical solicitadas: Cloud 50%, Segurança 33%, Data & AI 16%
+                Distribuição por vertical veiculadas: Cloud 43%, Segurança 43%, Data & AI 14%
+                '''
+            },
+            'Email Marketing': {
+                'titulo': '📧 E-mail Marketing',
+                'conteudo': '''
+                Performance de e-mail marketing no Q2:
+                
+                • Total de envios: 122.639
+                • Taxa de entrega: 98,4% (↑ 2,7 p.p. vs Q1)
+                • Taxa de abertura: 45,3% (↑ 9,5 p.p. vs Q1)
+                • Taxa de cliques: 2,6% (↑ 0,9 p.p. vs Q1)
+                
+                Destaques por vertical:
+                • Cloud: Maior taxa de abertura (51,48%)
+                • Segurança: Maior volume de envios (46,39%)
+                
+                Recomendação: Otimizar os filtros de disparo, considerando segmentações mais assertivas.
+                '''
+            },
+            'Redes Sociais': {
+                'titulo': '🌐 Redes Sociais',
+                'conteudo': '''
+                Performance nas redes sociais:
+                
+                • Novos seguidores: 1.688
+                • Total de engajamentos: 10.237
+                • Total de cliques: 8.585
+                
+                Destaques por rede:
+                • LinkedIn: 1.036 seguidores, 8.488 cliques
+                • Instagram: 628 seguidores, 6.813 engajamentos
+                
+                Top fabricantes mais publicados:
+                1. Broadcom (11 publicações)
+                2. Microsoft (10 publicações)
+                3. Fortinet (9 publicações)
+                
+                Top fabricantes mais engajados:
+                1. Microsoft (1.767 cliques)
+                2. Google Cloud (187 cliques)
+                3. Broadcom (182 cliques)
+                
+                Insight: Postagens de vendors que fogem do padrão estático + comercial costumam ter melhor desempenho.
+                '''
+            },
+            'Blog & Newsletter': {
+                'titulo': '📝 Blog & Newsletter',
+                'conteudo': '''
+                Blog:
+                • Visitas: 16.137
+                • Usuários: 11.295
+                • Blogposts publicados: 25
+                • Tempo médio na página: 4:04
+                
+                Newsletter:
+                • Empresas inscritas: 427
+                • Envios: 750
+                • Taxa de abertura: 35,2%
+                • Taxa de cliques: 2,8%
+                
+                Crescimento no número de envios e manutenção das taxas de engajamento.
+                '''
+            },
+            'Aprendizados': {
+                'titulo': '📚 Aprendizados e Recomendações',
+                'conteudo': '''
+                ✅ QUE BOM:
+                • IBM IA gerou 55 leads qualificados
+                • Microsoft Roadshow com alta adesão (40 empresas)
+                • Fortinet Recrutamento consolidado como formato eficaz
+                • Taxa de abertura de e-mail atingiu 45,3%
+                
+                ⚠️ QUE PENA:
+                • Necessidade de segmentação mais precisa das bases
+                • Algumas campanhas tiveram execução atrasada
+                
+                💡 QUE TAL:
+                • Utilizar conteúdo humanizado em vídeo com colaboradores
+                • Para eventos: usar fotos, chamadas em vídeo ou depoimentos
+                • Otimizar segmentação por vertical nos e-mails
+                '''
+            }
+        }
+    },
+    'Q3': {
+        'titulo': 'Q3 FY25 - Análise de Performance',
+        'secoes': {
+            'Visão Geral': {
+                'titulo': '📊 Visão Geral',
+                'conteudo': '''
+                Terceiro trimestre com foco em grandes eventos:
+                • 674 peças produzidas (-2,6% vs Q2)
+                • 100 solicitações de campanhas (-37,1% vs Q2)
+                • 7 campanhas veiculadas
+                
+                A vertical Segurança liderou com 31% das peças, seguida por Cloud (19%) e Networking (16%). Red Hat se destacou em Data & AI com 44 peças.
+                '''
+            },
+            'Campanhas': {
+                'titulo': '🎯 Campanhas',
+                'conteudo': '''
+                Principais campanhas do trimestre:
+                
+                🏆 Cloud On the Go: 383 empresas participantes
+                - Formato: Roadshow multi-cidades
+                - Objetivo: Recrutamento e qualificação
+                - Resultado: Maior campanha do ano em número de leads
+                
+                🏆 Fortinet Roadshow: 46 empresas
+                - Formato: Evento técnico
+                - Resultado: Leads qualificados para a vertical
+                
+                🏆 NVIDIA IA: 10 empresas
+                - Formato: Campanha digital
+                - Resultado: Qualificação de parceiros para IA
+                
+                Destaque: Cloud On the Go foi a campanha de maior impacto do ano.
+                '''
+            },
+            'Email Marketing': {
+                'titulo': '📧 E-mail Marketing',
+                'conteudo': '''
+                Performance de e-mail marketing no Q3:
+                
+                • Total de envios: 134.035
+                • Taxa de entrega: 96%
+                • Taxa de abertura: 38%
+                • Taxa de cliques: 6% (melhor do ano!)
+                
+                Destaques:
+                • Taxa de cliques atingiu 6% - recorde do ano
+                • Cloud: Maior taxa de cliques (12%)
+                • Eventos: Maior volume de envios (61,4%)
+                
+                Recomendação: Manter cadências nos disparos de Eventos (mostrou bons resultados em cliques).
+                '''
+            },
+            'Redes Sociais': {
+                'titulo': '🌐 Redes Sociais',
+                'conteudo': '''
+                Performance nas redes sociais:
+                
+                • Novos seguidores: 1.927
+                • Total de engajamentos: 76.102
+                • Total de cliques: 36.375 (crescimento expressivo!)
+                
+                Destaques por rede:
+                • Instagram: 949 seguidores, 64.210 engajamentos, 15.906 cliques
+                • LinkedIn: 973 seguidores, 10.591 engajamentos, 10.269 cliques
+                • Facebook: Cliques saltaram para 10.200
+                
+                Top fabricantes mais publicados:
+                1. AWS (15 publicações)
+                2. Fortinet (11 publicações)
+                3. RedHat (8 publicações)
+                
+                Top fabricantes mais engajados:
+                1. AWS (194 cliques)
+                2. Fortinet (193 cliques)
+                3. RedHat (78 cliques)
+                
+                Insight: Oportunidade de otimização com vídeos e GIFs para campanhas Institucionais e de Vendors.
+                '''
+            },
+            'Blog & Newsletter': {
+                'titulo': '📝 Blog & Newsletter',
+                'conteudo': '''
+                Blog:
+                • Visitas: 13.353
+                • Usuários: 7.037
+                • Blogposts publicados: 26
+                • Tempo médio na página: 2:35
+                
+                Newsletter:
+                • Empresas inscritas: 428
+                • Envios: 1.059
+                • Taxa de abertura: 33,1%
+                • Taxa de cliques: 1,5%
+                
+                Aumento significativo no volume de envios de newsletter (+41% vs Q2).
+                '''
+            },
+            'Aprendizados': {
+                'titulo': '📚 Aprendizados e Recomendações',
+                'conteudo': '''
+                ✅ QUE BOM:
+                • Cloud On the Go - maior campanha do ano (383 leads)
+                • Taxa de cliques em e-mail atingiu 6%
+                • Crescimento expressivo em redes sociais
+                
+                ⚠️ QUE PENA:
+                • Queda nas solicitações de campanhas
+                • Taxa de conversão com investimento reduziu para 0,54%
+                
+                💡 QUE TAL:
+                • Diversificar formatos de anúncios: inclusão de vídeos e GIFs
+                • Balancear planejamento com mais campanhas de produtos
+                • Criar conteúdos para incentivar usuários a seguir os perfis
+                '''
+            }
+        }
+    },
+    'Q4': {
+        'titulo': 'Q4 FY25 - Análise de Performance',
+        'secoes': {
+            'Visão Geral': {
+                'titulo': '📊 Visão Geral',
+                'conteudo': '''
+                Encerramento do ano fiscal com resultados consolidados:
+                • 647 peças produzidas (-4% vs Q3)
+                • 131 solicitações de campanhas (+31% vs Q3)
+                • 6 campanhas veiculadas
+                
+                A vertical Segurança liderou com 40% das peças, seguida por Cloud (21%) e Institucional (14%). Google Cloud se destacou como maior solicitante em Cloud com 28 peças.
+                '''
+            },
+            'Campanhas': {
+                'titulo': '🎯 Campanhas',
+                'conteudo': '''
+                Principais campanhas do trimestre:
+                
+                🏆 Campanha Recrutamento Fortinet: 70 empresas
+                - Formato: Campanha de recrutamento digital
+                - Resultado: 70 novos parceiros qualificados
+                
+                Destaques:
+                • Distribuição por objetivo: 66% conversão, 33% branding
+                • Taxa de conversão com investimento: 0,04%
+                • Taxa de conversão sem investimento: 0,3%
+                
+                Distribuição por vertical solicitadas: Cloud 66%, Segurança 33%
+                Distribuição por vertical veiculadas: Segurança 50%, Cloud 17%, Data & AI 17%, Networking 17%
+                '''
+            },
+            'Email Marketing': {
+                'titulo': '📧 E-mail Marketing',
+                'conteudo': '''
+                Performance de e-mail marketing no Q4:
+                
+                • Total de envios: 349.487 (maior volume do ano)
+                • Taxa de entrega: 93%
+                • Taxa de abertura: 24%
+                • Taxa de cliques: 2,2%
+                
+                Destaques por vertical:
+                • Segurança: Maior volume de envios (48,8%)
+                • Cloud: Maior taxa de abertura (46%)
+                
+                Recomendação: Atualização e higienização contínua da base de e-mails. Variar os layouts dos e-mails, explorando diferentes formatos.
+                '''
+            },
+            'Redes Sociais': {
+                'titulo': '🌐 Redes Sociais',
+                'conteudo': '''
+                Performance nas redes sociais:
+                
+                • Novos seguidores: 2.296 (melhor do ano)
+                • Total de engajamentos: 58.046
+                • Total de cliques: 51.119 (recorde!)
+                
+                Destaques por rede:
+                • Instagram: 1.223 seguidores, 46.500 engajamentos, 27.900 cliques
+                • LinkedIn: 1.028 seguidores, 5.379 engajamentos, 18.594 cliques
+                • Facebook: 45 seguidores, 6.167 engajamentos, 22.900 cliques
+                
+                Top fabricantes mais publicados:
+                1. Cisco (10 publicações)
+                2. Checkpoint (9 publicações)
+                3. Microsoft (8 publicações)
+                
+                Insight: Fortinet está mais estratégico: postando menos, porém com conteúdos mais eficazes.
+                '''
+            },
+            'Blog & Newsletter': {
+                'titulo': '📝 Blog & Newsletter',
+                'conteudo': '''
+                Blog:
+                • Visitas: 18.910
+                • Usuários: 12.348
+                • Blogposts publicados: 27
+                • Tempo médio na página: 4:36
+                
+                Newsletter:
+                • Empresas inscritas: 488
+                • Envios: 426
+                • Taxa de abertura: 32%
+                • Taxa de cliques: 1,8%
+                
+                Recuperação nas visitas e usuários do blog após queda no Q3.
+                '''
+            },
+            'Aprendizados': {
+                'titulo': '📚 Aprendizados e Recomendações',
+                'conteudo': '''
+                ✅ QUE BOM:
+                • Maior número de seguidores no ano (2.296)
+                • Recorde de cliques em redes sociais (51.119)
+                • 488 empresas inscritas na newsletter
+                
+                ⚠️ QUE PENA:
+                • Queda nas taxas de abertura e cliques de e-mail
+                • Apenas 3 campanhas ativas no período
+                
+                💡 QUE TAL:
+                • Diversificar formatos de anúncios (vídeos humanizados)
+                • Intensificar campanhas pagas e orgânicas
+                • Elaborar conteúdos para incentivar usuários a seguir os perfis
+                '''
+            }
+        }
+    }
+}
+
+def get_slides_content(q):
+    """Retorna o conteúdo completo dos slides para o trimestre selecionado"""
+    return SLIDES_CONTENT.get(q, {})
+
 # ==================== FUNÇÕES AUXILIARES ====================
 def clean_value(val):
     if val is None or (isinstance(val, float) and pd.isna(val)):
@@ -761,7 +1234,6 @@ def export_quarter_data(q, quarterly_data):
         {'Indicador': 'Top Campanhas', 'Valor': camp_data.get('top', '—').replace('<br>', ' | ')},
     ])
     
-    # Taxa conversão comparativos
     taxa_comp = get_campanhas_comparativos(q, 'taxa_conversao')
     obj_dist = get_campanhas_comparativos(q, 'objetivo')
     
@@ -1020,19 +1492,38 @@ def main():
     if 'view' not in st.session_state:
         st.session_state.view = 'Q1'
 
-    col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 1, 1, 1, 1, 1, 1])
-    buttons = [
-        (col2, 'Q1', 'q1'),
-        (col3, 'Q2', 'q2'),
-        (col4, 'Q3', 'q3'),
-        (col5, 'Q4', 'q4'),
-        (col6, '🏆 FY25', 'fy25')
-    ]
-    for col, label, key in buttons:
-        with col:
-            if st.button(label, key=key, use_container_width=True):
-                st.session_state.view = label.replace('🏆 ', '')
-                st.rerun()
+    # Botões trimestrais - 8 colunas
+    col1, col2, col3, col4, col5, col6, col7, col8 = st.columns([1, 1, 1, 1, 1, 1, 1, 1])
+    
+    with col2:
+        if st.button('Q1', key='q1', use_container_width=True):
+            st.session_state.view = 'Q1'
+            st.rerun()
+    
+    with col3:
+        if st.button('Q2', key='q2', use_container_width=True):
+            st.session_state.view = 'Q2'
+            st.rerun()
+    
+    with col4:
+        if st.button('Q3', key='q3', use_container_width=True):
+            st.session_state.view = 'Q3'
+            st.rerun()
+    
+    with col5:
+        if st.button('Q4', key='q4', use_container_width=True):
+            st.session_state.view = 'Q4'
+            st.rerun()
+    
+    with col6:
+        if st.button('🏆 FY25', key='fy25', use_container_width=True):
+            st.session_state.view = 'FY25'
+            st.rerun()
+    
+    with col7:
+        if st.button('📄 Slides', key='slides', use_container_width=True):
+            st.session_state.view = 'Slides'
+            st.rerun()
 
     st.markdown('<div style="padding:0 56px 56px 56px;">', unsafe_allow_html=True)
 
@@ -1042,8 +1533,63 @@ def main():
         for t in ['Q1', 'Q2', 'Q3', 'Q4']
     }
 
+    # ==================== VIEW SLIDES ====================
+    if q == 'Slides':
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📄</div><div><div class="section-title-premium">Conteúdo dos Slides QBR</div><div class="section-sub">Transcrição completa das apresentações por trimestre</div></div></div>', unsafe_allow_html=True)
+        
+        slide_trimestre = st.selectbox(
+            "Selecione o trimestre para visualizar o conteúdo dos slides",
+            ['Q1', 'Q2', 'Q3', 'Q4'],
+            index=0,
+            key='slide_selector'
+        )
+        
+        slides = get_slides_content(slide_trimestre)
+        
+        if slides:
+            st.markdown(f"""
+            <div style="margin-bottom: 24px;">
+                <div style="font-size:28px;font-weight:800;color:{COLORS['primary']};margin-bottom:8px;">{slides.get('titulo', '')}</div>
+                <div style="font-size:14px;color:{COLORS['text_muted']};">Documentação completa das análises e insights do trimestre</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Exibe cada seção
+            for secao_key, secao in slides.get('secoes', {}).items():
+                titulo_secao = secao.get('titulo', secao_key.replace('_', ' ').title())
+                conteudo = secao.get('conteudo', '')
+                # Remove apenas tags </div> e limpa espaços extras
+                conteudo_limpo = conteudo.replace('</div>', '').replace('<div>', '').strip()
+                
+                with st.expander(f"{titulo_secao}", expanded=True):
+                    st.markdown(f"""
+                    <div style="background:rgba(0,0,0,0.2);border-radius:16px;padding:20px;margin-bottom:8px;">
+                        <div style="font-size:14px;line-height:1.8;color:{COLORS['text']};white-space:pre-wrap;">
+                            {conteudo_limpo}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            # Botão para baixar todo o conteúdo
+            all_content = ""
+            for secao_key, secao in slides.get('secoes', {}).items():
+                titulo = secao.get('titulo', secao_key)
+                conteudo = secao.get('conteudo', '')
+                conteudo_limpo = conteudo.replace('</div>', '').replace('<div>', '').strip()
+                all_content += f"=== {titulo} ===\n{conteudo_limpo}\n\n"
+            
+            st.download_button(
+                label="📥 Baixar Conteúdo dos Slides (TXT)",
+                data=all_content,
+                file_name=f"slides_qbr_{slide_trimestre}_fy25.txt",
+                mime="text/plain",
+                key='download_slides'
+            )
+        else:
+            st.info(f"Conteúdo dos slides não disponível para {slide_trimestre}.")
+    
     # ==================== VIEW FY25 ====================
-    if q == 'FY25':
+    elif q == 'FY25':
         render_comparative_charts(quarterly_data)
 
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview Anual</div><div class="section-sub">Indicadores consolidados FY25</div></div></div>', unsafe_allow_html=True)
@@ -1116,7 +1662,7 @@ def main():
                         st.download_button("✅ Baixar Excel", buf.getvalue(), "qbr_fy25.xlsx")
 
     # ==================== VIEW Q1-Q4 ====================
-    else:
+    elif q in ['Q1', 'Q2', 'Q3', 'Q4']:
         q_num = int(q[1])
         prev_fy25_q = f'Q{q_num - 1}' if q_num > 1 else None
         prev_fy25_name = f'{prev_fy25_q} FY25' if prev_fy25_q else '—'
@@ -1215,7 +1761,7 @@ def main():
             </div>
             """)
         
-                # ==================== COMPARATIVO DE TAXA DE CONVERSÃO ====================
+        # Comparativo de Taxa de Conversão
         st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📈</div><div><div class="section-title-premium">Comparativo de Taxa de Conversão</div><div class="section-sub">Histórico e referência de mercado</div></div></div>', unsafe_allow_html=True)
         
         taxa_comp = get_campanhas_comparativos(q, 'taxa_conversao')
@@ -1249,7 +1795,6 @@ def main():
                     """, unsafe_allow_html=True)
             
             with col_comp3:
-                # Construir a lista de comparativos FY24
                 comparativos = []
                 if taxa_comp.get('q4fy24') is not None and taxa_comp.get('q4fy24') != '—':
                     comparativos.append(f'<div>vs Q4 FY24: {taxa_comp.get("q4fy24")}%</div>')
@@ -1266,7 +1811,7 @@ def main():
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-                
+        
         # Distribuição por Vertical - Campanhas
         st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">Comparativo entre solicitadas e veiculadas</div></div></div>', unsafe_allow_html=True)
         
@@ -1608,6 +2153,11 @@ def main():
                         with pd.ExcelWriter(buf, engine='openpyxl') as w: 
                             df_dl.to_excel(w, index=False, sheet_name=q)
                         st.download_button("✅ Baixar Excel", buf.getvalue(), f"qbr_{q}.xlsx")
+
+    else:
+        st.warning(f"View '{q}' não reconhecida. Selecionando Q1 como padrão.")
+        st.session_state.view = 'Q1'
+        st.rerun()
 
     # Footer
     st.markdown(f"""
