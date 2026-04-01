@@ -93,90 +93,59 @@ FALLBACK_DATA = {
     'pecas': {'Q1': 518, 'Q2': 692, 'Q3': 674, 'Q4': 647},
     'solicitacoes': {'Q1': 108, 'Q2': 159, 'Q3': 100, 'Q4': 131},
     'campanhas': {'Q1': 4, 'Q2': 9, 'Q3': 7, 'Q4': 6},
-
-    # ── FY24 reference values (mesmo trimestre do ano anterior) ──────────────
-    'pecas_fy24':        {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 838},
+    'pecas_fy24': {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 838},
     'solicitacoes_fy24': {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 193},
-    'campanhas_fy24':    {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 4},
-
+    'campanhas_fy24': {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 4},
     'email': {
         'Q1': {'entrega': 95.7, 'abertura': 35.8, 'cliques': 1.7, 'optout': 0.04},
         'Q2': {'entrega': 98.4, 'abertura': 45.3, 'cliques': 2.6, 'optout': 0.07},
         'Q3': {'entrega': 96.0, 'abertura': 38.0, 'cliques': 6.0, 'optout': 0.05},
         'Q4': {'entrega': 93.0, 'abertura': 24.0, 'cliques': 2.2, 'optout': 0.02},
     },
-    'email_envios': {
-        'Q1': 169948, 'Q2': 122639, 'Q3': 134035, 'Q4': 349487
-    },
+    'email_envios': {'Q1': 169948, 'Q2': 122639, 'Q3': 134035, 'Q4': 349487},
     'email_fy24': {
-        'Q1': {'entrega': 99.44, 'abertura': 44.11, 'cliques': 2.03,  'optout': 0.07},
-        'Q2': {'entrega': 96.96, 'abertura': 30.01, 'cliques': 1.94,  'optout': 0.14},
-        'Q3': {'entrega': 94.0,  'abertura': 42.0,  'cliques': 1.36,  'optout': 0.06},
-        'Q4': {'entrega': 94.0,  'abertura': 24.0,  'cliques': 1.3,   'optout': 0.04},
+        'Q1': {'entrega': 99.44, 'abertura': 44.11, 'cliques': 2.03, 'optout': 0.07},
+        'Q2': {'entrega': 96.96, 'abertura': 30.01, 'cliques': 1.94, 'optout': 0.14},
+        'Q3': {'entrega': 94.0, 'abertura': 42.0, 'cliques': 1.36, 'optout': 0.06},
+        'Q4': {'entrega': 94.0, 'abertura': 24.0, 'cliques': 1.3, 'optout': 0.04},
     },
-    'email_envios_fy24': {
-        'Q1': 169948, 'Q2': 122639, 'Q3': 134035, 'Q4': 349487
-    },
-
+    'email_envios_fy24': {'Q1': 169948, 'Q2': 122639, 'Q3': 134035, 'Q4': 349487},
     'redes': {
         'Q1': {'seguidores': 1230, 'engajamentos': 81419, 'cliques': 6117},
         'Q2': {'seguidores': 1688, 'engajamentos': 10237, 'cliques': 8585},
         'Q3': {'seguidores': 1927, 'engajamentos': 76102, 'cliques': 36375},
         'Q4': {'seguidores': 2296, 'engajamentos': 58046, 'cliques': 51119},
     },
-    'redes_por_rede': {
-        'Q1': {
-            'Instagram': {'seguidores': 323, 'engajamentos': 78040, 'cliques': 192},
-            'LinkedIn': {'seguidores': 830, 'engajamentos': 3175, 'cliques': 5893},
-            'Facebook': {'seguidores': 35, 'engajamentos': 204, 'cliques': 32}
-        },
-        'Q2': {
-            'Instagram': {'seguidores': 628, 'engajamentos': 6813, 'cliques': 94},
-            'LinkedIn': {'seguidores': 1036, 'engajamentos': 3150, 'cliques': 8488},
-            'Facebook': {'seguidores': 20, 'engajamentos': 274, 'cliques': 3}
-        },
-        'Q3': {
-            'Instagram': {'seguidores': 949, 'engajamentos': 64210, 'cliques': 15906},
-            'LinkedIn': {'seguidores': 973, 'engajamentos': 10591, 'cliques': 10269},
-            'Facebook': {'seguidores': 5, 'engajamentos': 1301, 'cliques': 10200}
-        },
-        'Q4': {
-            'Instagram': {'seguidores': 1223, 'engajamentos': 46500, 'cliques': 27900},
-            'LinkedIn': {'seguidores': 1028, 'engajamentos': 5379, 'cliques': 18594},
-            'Facebook': {'seguidores': 45, 'engajamentos': 6167, 'cliques': 22900}
-        }
-    },
     'redes_fy24': {
         'Q1': {'seguidores': 1361, 'engajamentos': 17583, 'cliques': 12983},
         'Q2': {'seguidores': 1361, 'engajamentos': 17583, 'cliques': 12983},
         'Q3': {'seguidores': 1361, 'engajamentos': 17583, 'cliques': 12983},
-        'Q4': {'seguidores': 764,  'engajamentos': 19348, 'cliques': 23131},
+        'Q4': {'seguidores': 764, 'engajamentos': 19348, 'cliques': 23131},
     },
     'blog': {
         'Q1': {'visitas': 24926, 'usuarios': 17075, 'blogposts': 31, 'tempo_medio': '5:00'},
         'Q2': {'visitas': 16137, 'usuarios': 11295, 'blogposts': 25, 'tempo_medio': '4:04'},
-        'Q3': {'visitas': 13353, 'usuarios': 7037,  'blogposts': 26, 'tempo_medio': '2:35'},
+        'Q3': {'visitas': 13353, 'usuarios': 7037, 'blogposts': 26, 'tempo_medio': '2:35'},
         'Q4': {'visitas': 18910, 'usuarios': 12348, 'blogposts': 27, 'tempo_medio': '4:36'},
     },
     'blog_fy24': {
-        'Q1': {'visitas': None, 'usuarios': 794,  'blogposts': None, 'tempo_medio': None},
-        'Q2': {'visitas': None, 'usuarios': 868,  'blogposts': None, 'tempo_medio': None},
+        'Q1': {'visitas': None, 'usuarios': 794, 'blogposts': None, 'tempo_medio': None},
+        'Q2': {'visitas': None, 'usuarios': 868, 'blogposts': None, 'tempo_medio': None},
         'Q3': {'visitas': None, 'usuarios': 1049, 'blogposts': None, 'tempo_medio': None},
         'Q4': {'visitas': None, 'usuarios': 1049, 'blogposts': None, 'tempo_medio': None},
     },
     'newsletter': {
-        'Q1': {'empresas': 416,  'envios': 544,  'abertura': 34.19, 'cliques': 2.8},
-        'Q2': {'empresas': 427,  'envios': 750,  'abertura': 35.2,  'cliques': 2.8},
-        'Q3': {'empresas': 428,  'envios': 1059, 'abertura': 33.1,  'cliques': 1.5},
-        'Q4': {'empresas': 488,  'envios': 426,  'abertura': 32.0,  'cliques': 1.8},
+        'Q1': {'empresas': 416, 'envios': 544, 'abertura': 34.19, 'cliques': 2.8},
+        'Q2': {'empresas': 427, 'envios': 750, 'abertura': 35.2, 'cliques': 2.8},
+        'Q3': {'empresas': 428, 'envios': 1059, 'abertura': 33.1, 'cliques': 1.5},
+        'Q4': {'empresas': 488, 'envios': 426, 'abertura': 32.0, 'cliques': 1.8},
     },
     'newsletter_fy24': {
         'Q1': {'empresas': None, 'envios': None, 'abertura': 71.03, 'cliques': 3.90},
         'Q2': {'empresas': None, 'envios': None, 'abertura': 65.09, 'cliques': 7.96},
-        'Q3': {'empresas': None, 'envios': 1049, 'abertura': 62.0,  'cliques': 2.12},
-        'Q4': {'empresas': None, 'envios': 1049, 'abertura': 62.0,  'cliques': 2.2},
+        'Q3': {'empresas': None, 'envios': 1049, 'abertura': 62.0, 'cliques': 2.12},
+        'Q4': {'empresas': None, 'envios': 1049, 'abertura': 62.0, 'cliques': 2.2},
     },
-
     'vertical_distribution': {
         'Q1': [('Segurança',27.0),('Networking',13.0),('Cloud',13.0),('Data & AI',10.0),('Data Center',9.0),('Institucional',15.0)],
         'Q2': [('Cloud',27.0),('Segurança',22.0),('Networking',19.0),('Data & AI',14.0),('Data Center',10.0),('Institucional',8.0)],
@@ -219,6 +188,117 @@ FALLBACK_DATA = {
         'Q3': {'solicitadas': 7, 'veiculadas': 6, 'taxa_conversao': 0.54, 'leads': 439, 'top': '🏆 Cloud On the Go (383 empresas)<br>🏆 Fortinet Roadshow (46 empresas)<br>🏆 NVIDIA IA (10 empresas)'},
         'Q4': {'solicitadas': 6, 'veiculadas': 3, 'taxa_conversao': 0.04, 'leads': 70, 'top': '🏆 Campanha Recrutamento Fortinet (70 empresas)'},
     }
+}
+
+# ==================== DADOS DETALHADOS DE EMAIL MARKETING ====================
+EMAIL_VERTICAL_DATA = {
+    'Q1': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': '48,30%', 'entrega': '97,78%', 'abertura': '45,05%', 'clique': '2,7%', 'opt_out': '0,03%'},
+        {'vertical_tipo': 'Networking', 'percent_envio': '29,93%', 'entrega': '94,92%', 'abertura': '31,15%', 'clique': '1,24%', 'opt_out': '0,04%'},
+        {'vertical_tipo': 'Cloud', 'percent_envio': '8,84%', 'entrega': '95,95%', 'abertura': '41,27%', 'clique': '1,59%', 'opt_out': '0,05%'},
+        {'vertical_tipo': 'Data Center', 'percent_envio': '7,48%', 'entrega': '94,74%', 'abertura': '41,80%', 'clique': '1,59%', 'opt_out': '0%'},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': '5,44%', 'entrega': '99,35%', 'abertura': '53,87%', 'clique': '3,17%', 'opt_out': '0%'},
+    ]),
+    'Q2': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': '46,39%', 'entrega': '99,20%', 'abertura': '48,21%', 'clique': '3,50%', 'opt_out': '0,06%'},
+        {'vertical_tipo': 'Cloud', 'percent_envio': '26,80%', 'entrega': '99,23%', 'abertura': '51,48%', 'clique': '3,57%', 'opt_out': '0,06%'},
+        {'vertical_tipo': 'Networking', 'percent_envio': '10,05%', 'entrega': '96,72%', 'abertura': '37,81%', 'clique': '1,59%', 'opt_out': '0,10%'},
+        {'vertical_tipo': 'Data Center', 'percent_envio': '7,73%', 'entrega': '97,93%', 'abertura': '40,20%', 'clique': '2,30%', 'opt_out': '0,30%'},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': '6,70%', 'entrega': '98,27%', 'abertura': '39,97%', 'clique': '1,53%', 'opt_out': '0,01%'},
+    ]),
+    'Q3': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': '48,8%', 'entrega': '98%', 'abertura': '36%', 'clique': '6%', 'opt_out': '0,01%'},
+        {'vertical_tipo': 'Cloud', 'percent_envio': '21,9%', 'entrega': '97%', 'abertura': '46%', 'clique': '12%', 'opt_out': '0%'},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': '14,6%', 'entrega': '95%', 'abertura': '24%', 'clique': '2%', 'opt_out': '0,02%'},
+        {'vertical_tipo': 'Data Center', 'percent_envio': '7,9%', 'entrega': '96%', 'abertura': '35%', 'clique': '6%', 'opt_out': '0,01%'},
+        {'vertical_tipo': 'Networking', 'percent_envio': '6,6%', 'entrega': '99%', 'abertura': '33%', 'clique': '2%', 'opt_out': '0%'},
+    ]),
+    'Q4': pd.DataFrame([
+        {'vertical_tipo': 'Segurança', 'percent_envio': '48,8%', 'entrega': '98%', 'abertura': '36%', 'clique': '6%', 'opt_out': '0,01%'},
+        {'vertical_tipo': 'Cloud', 'percent_envio': '21,9%', 'entrega': '97%', 'abertura': '46%', 'clique': '12%', 'opt_out': '0%'},
+        {'vertical_tipo': 'Data & AI', 'percent_envio': '14,6%', 'entrega': '95%', 'abertura': '24%', 'clique': '2%', 'opt_out': '0,02%'},
+        {'vertical_tipo': 'Data Center', 'percent_envio': '7,9%', 'entrega': '96%', 'abertura': '35%', 'clique': '6%', 'opt_out': '0,01%'},
+        {'vertical_tipo': 'Networking', 'percent_envio': '6,6%', 'entrega': '99%', 'abertura': '33%', 'clique': '2%', 'opt_out': '0%'},
+    ]),
+}
+
+EMAIL_TIPO_DATA = {
+    'Q1': pd.DataFrame([
+        {'tipo_email': 'Eventos', 'percent_envio': '62,89%', 'entrega': '94,86%', 'abertura': '30,92%', 'clique': '1,39%', 'opt_out': '0,03%'},
+        {'tipo_email': 'Camp. Digital', 'percent_envio': '14,47%', 'entrega': '95,10%', 'abertura': '35%', 'clique': '2,15%', 'opt_out': '0,07%'},
+        {'tipo_email': 'Promocional e Estoque', 'percent_envio': '13,21%', 'entrega': '97,55%', 'abertura': '43,77%', 'clique': '1,92%', 'opt_out': '0,04%'},
+        {'tipo_email': 'Comunicado', 'percent_envio': '6,29%', 'entrega': '98,72%', 'abertura': '52,06%', 'clique': '2,38%', 'opt_out': '0,04%'},
+        {'tipo_email': 'Camp. Incentivo', 'percent_envio': '3,14%', 'entrega': '99,54%', 'abertura': '51,17%', 'clique': '1,48%', 'opt_out': '0%'},
+    ]),
+    'Q2': pd.DataFrame([
+        {'tipo_email': 'Eventos', 'percent_envio': '67,27%', 'entrega': '98,69%', 'abertura': '44,61%', 'clique': '2,72%', 'opt_out': '0,05%'},
+        {'tipo_email': 'Camp. Digital', 'percent_envio': '23,71%', 'entrega': '97,84%', 'abertura': '45,34%', 'clique': '2,57%', 'opt_out': '0,07%'},
+        {'tipo_email': 'Prom. e Estoque', 'percent_envio': '5,15%', 'entrega': '99,57%', 'abertura': '54,39%', 'clique': '4,10%', 'opt_out': '0,07%'},
+        {'tipo_email': 'Camp. Incentivo', 'percent_envio': '2,32%', 'entrega': '97,49%', 'abertura': '40,78%', 'clique': '4,58%', 'opt_out': '0,12%'},
+        {'tipo_email': 'Comunicado', 'percent_envio': '1,55%', 'entrega': '99,40%', 'abertura': '53,36%', 'clique': '1,51%', 'opt_out': '0,06%'},
+    ]),
+    'Q3': pd.DataFrame([
+        {'tipo_email': 'Eventos', 'percent_envio': '61,4%', 'entrega': '97%', 'abertura': '35%', 'clique': '7%', 'opt_out': '0,01%'},
+        {'tipo_email': 'Comunicado', 'percent_envio': '14,9%', 'entrega': '97%', 'abertura': '42%', 'clique': '1%', 'opt_out': '0%'},
+        {'tipo_email': 'Camp. Digital', 'percent_envio': '11,6%', 'entrega': '97%', 'abertura': '31%', 'clique': '3%', 'opt_out': '0%'},
+        {'tipo_email': 'Prom. e Estoque', 'percent_envio': '9,3%', 'entrega': '97%', 'abertura': '43%', 'clique': '5%', 'opt_out': '0%'},
+        {'tipo_email': 'Camp. Incentivo', 'percent_envio': '2,9%', 'entrega': '97%', 'abertura': '38%', 'clique': '2%', 'opt_out': '0%'},
+    ]),
+    'Q4': pd.DataFrame([
+        {'tipo_email': 'Eventos', 'percent_envio': '61,4%', 'entrega': '97%', 'abertura': '35%', 'clique': '7%', 'opt_out': '0,01%'},
+        {'tipo_email': 'Comunicado', 'percent_envio': '14,9%', 'entrega': '97%', 'abertura': '42%', 'clique': '1%', 'opt_out': '0%'},
+        {'tipo_email': 'Camp. Digital', 'percent_envio': '11,6%', 'entrega': '97%', 'abertura': '31%', 'clique': '3%', 'opt_out': '0%'},
+        {'tipo_email': 'Prom. e Estoque', 'percent_envio': '9,3%', 'entrega': '97%', 'abertura': '43%', 'clique': '5%', 'opt_out': '0%'},
+        {'tipo_email': 'Camp. Incentivo', 'percent_envio': '2,9%', 'entrega': '97%', 'abertura': '38%', 'clique': '2%', 'opt_out': '0%'},
+    ]),
+}
+
+# ==================== DADOS DETALHADOS DE REDES SOCIAIS ====================
+REDES_POR_REDE_DATA = {
+    'Q1': pd.DataFrame([
+        {'rede': 'Instagram', 'seguidores': 323, 'media_seguidores': 450, 'engajamentos': 78040, 'cliques': 192},
+        {'rede': 'LinkedIn', 'seguidores': 830, 'media_seguidores': 871, 'engajamentos': 3175, 'cliques': 5893},
+        {'rede': 'Facebook', 'seguidores': 35, 'media_seguidores': 40, 'engajamentos': 204, 'cliques': 32},
+        {'rede': 'YouTube', 'seguidores': 42, 'media_seguidores': 32, 'engajamentos': 0, 'cliques': 0},
+    ]),
+    'Q2': pd.DataFrame([
+        {'rede': 'Instagram', 'seguidores': 628, 'media_seguidores': 450, 'engajamentos': 6813, 'cliques': 94},
+        {'rede': 'LinkedIn', 'seguidores': 1036, 'media_seguidores': 871, 'engajamentos': 3150, 'cliques': 8488},
+        {'rede': 'Facebook', 'seguidores': 20, 'media_seguidores': 40, 'engajamentos': 274, 'cliques': 3},
+    ]),
+    'Q3': pd.DataFrame([
+        {'rede': 'Instagram', 'seguidores': 949, 'media_seguidores': 450, 'engajamentos': 64210, 'cliques': 15906},
+        {'rede': 'LinkedIn', 'seguidores': 973, 'media_seguidores': 871, 'engajamentos': 10591, 'cliques': 10269},
+        {'rede': 'Facebook', 'seguidores': 5, 'media_seguidores': 40, 'engajamentos': 1301, 'cliques': 10200},
+    ]),
+    'Q4': pd.DataFrame([
+        {'rede': 'Instagram', 'seguidores': 1223, 'media_seguidores': 407, 'engajamentos': 46500, 'cliques': 27900},
+        {'rede': 'LinkedIn', 'seguidores': 1028, 'media_seguidores': 342, 'engajamentos': 5379, 'cliques': 18594},
+        {'rede': 'Facebook', 'seguidores': 45, 'media_seguidores': 15, 'engajamentos': 6167, 'cliques': 22900},
+    ]),
+}
+
+TOP_FABRICANTES_DATA = {
+    'Q1': {
+        'mais_publicados': 'Fortinet (18), AWS (13), Zscaler (5)',
+        'mais_engajados': 'IBM (384 cliques), Fortinet (208 cliques), AWS (192 cliques)',
+        'distribuicao_vertical': 'Institucional 67%, Segurança 15%, Cloud 8%, Networking 5%, Data & AI 4%, Data Center 1%'
+    },
+    'Q2': {
+        'mais_publicados': 'Broadcom (11), Microsoft (10), Fortinet (9)',
+        'mais_engajados': 'Microsoft (1.767 cliques), Google Cloud (187), Broadcom (182)',
+        'distribuicao_vertical': 'Institucional 56%, Cloud 20%, Data & AI 18%, Data Center 3%, Segurança 2%, Networking 1%'
+    },
+    'Q3': {
+        'mais_publicados': 'AWS (15), Fortinet (11), RedHat (8)',
+        'mais_engajados': 'AWS (194 cliques), Fortinet (193), RedHat (78)',
+        'distribuicao_vertical': 'Institucional 34%, Segurança 33%, Data & AI 17%, Cloud 10%, Networking 5%, Data Center 2%'
+    },
+    'Q4': {
+        'mais_publicados': 'Cisco (10), Checkpoint (9), Microsoft (8)',
+        'mais_engajados': 'Cisco, Microsoft, Fortinet',
+        'distribuicao_vertical': 'Institucional 58%, Cloud 20%, Segurança 14%, Data & AI 5%, Data Center 2%, Networking 2%'
+    },
 }
 
 # ==================== FUNÇÕES AUXILIARES ====================
@@ -332,146 +412,21 @@ def get_redes_fy24(q, metric):
         return format_number(FALLBACK_DATA['redes_fy24'][q].get(metric, '—'))
     return '—'
 
-def get_redes_by_network(q, rede, metric):
-    """Busca dados por rede social específica"""
-    if q in FALLBACK_DATA['redes_por_rede'] and rede in FALLBACK_DATA['redes_por_rede'][q]:
-        return FALLBACK_DATA['redes_por_rede'][q][rede].get(metric, '—')
-    return '—'
+def get_email_vertical_data(q):
+    """Retorna dados de email marketing por vertical"""
+    return EMAIL_VERTICAL_DATA.get(q, pd.DataFrame())
 
-# ==================== FUNÇÃO DE EXPORTAÇÃO COMPLETA ====================
-def export_quarter_data(q, quarterly_data):
-    """
-    Exporta todos os dados do trimestre selecionado para CSV/Excel
-    """
-    
-    # 1. Dados de Overview (KPIs principais)
-    overview_data = {
-        'Categoria': ['Peças Produzidas', 'Solicitações', 'Campanhas'],
-        'Valor FY25': [
-            quarterly_data[q]['pecas'],
-            quarterly_data[q]['solic'],
-            quarterly_data[q]['camp']
-        ],
-        'Valor FY24 (mesmo trimestre)': [
-            get_pecas_fy24(q) if get_pecas_fy24(q) else '—',
-            get_solicitacoes_fy24(q) if get_solicitacoes_fy24(q) else '—',
-            get_campanhas_fy24(q) if get_campanhas_fy24(q) else '—'
-        ]
-    }
-    df_overview = pd.DataFrame(overview_data)
-    
-    # 2. Distribuição por Vertical
-    df_vertical = get_vertical_distribution(q)
-    df_vertical.columns = ['Vertical', 'Percentual (%)']
-    
-    # 3. Dados de Campanhas
-    camp_data = get_campanhas_detalhes(q)
-    df_campanhas = pd.DataFrame([
-        {'Indicador': 'Campanhas Solicitadas', 'Valor': camp_data.get('solicitadas', '—')},
-        {'Indicador': 'Campanhas Veiculadas', 'Valor': camp_data.get('veiculadas', '—')},
-        {'Indicador': 'Taxa de Conversão (%)', 'Valor': camp_data.get('taxa_conversao', '—')},
-        {'Indicador': 'Leads Gerados', 'Valor': camp_data.get('leads', '—')},
-        {'Indicador': 'Top Campanhas', 'Valor': camp_data.get('top', '—').replace('<br>', ' | ')},
-        {'Indicador': 'Distribuição - Conversão (%)', 'Valor': '83%'},
-        {'Indicador': 'Distribuição - Branding (%)', 'Valor': '17%'},
-    ])
-    
-    # 4. Dados de Email Marketing
-    df_email = pd.DataFrame([
-        {'Métrica': 'Total de Envios', 'Valor FY25': get_email_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'envios')},
-        {'Métrica': 'Taxa de Entrega (%)', 'Valor FY25': get_email_value(q, 'entrega'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'entrega')},
-        {'Métrica': 'Taxa de Abertura (%)', 'Valor FY25': get_email_value(q, 'abertura'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'abertura')},
-        {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_email_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'cliques')},
-        {'Métrica': 'Taxa de Opt-Out (%)', 'Valor FY25': get_email_value(q, 'optout'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'optout')},
-    ])
-    
-    # 5. Dados de Redes Sociais - Geral
-    df_redes_geral = pd.DataFrame([
-        {'Métrica': 'Novos Seguidores', 'Valor FY25': get_redes_value(q, 'seguidores'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'seguidores')},
-        {'Métrica': 'Total de Engajamentos', 'Valor FY25': get_redes_value(q, 'engajamentos'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'engajamentos')},
-        {'Métrica': 'Total de Cliques', 'Valor FY25': get_redes_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'cliques')},
-    ])
-    
-    # 6. Dados de Redes Sociais - por Rede
-    redes_por_rede = []
-    for rede in ['Instagram', 'LinkedIn', 'Facebook']:
-        redes_por_rede.append({
-            'Rede Social': rede,
-            'Seguidores': get_redes_by_network(q, rede, 'seguidores'),
-            'Engajamentos': get_redes_by_network(q, rede, 'engajamentos'),
-            'Cliques': get_redes_by_network(q, rede, 'cliques')
-        })
-    df_redes_por_rede = pd.DataFrame(redes_por_rede)
-    
-    # 7. Dados do Blog
-    df_blog = pd.DataFrame([
-        {'Métrica': 'Visitas', 'Valor FY25': get_blog_value(q, 'visitas'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'visitas') if get_blog_fy24(q, 'visitas') else '—'},
-        {'Métrica': 'Usuários', 'Valor FY25': get_blog_value(q, 'usuarios'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'usuarios') if get_blog_fy24(q, 'usuarios') else '—'},
-        {'Métrica': 'Blogposts Publicados', 'Valor FY25': get_blog_value(q, 'blogposts'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'blogposts') if get_blog_fy24(q, 'blogposts') else '—'},
-        {'Métrica': 'Tempo Médio na Página', 'Valor FY25': get_blog_value(q, 'tempo_medio'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'tempo_medio') if get_blog_fy24(q, 'tempo_medio') else '—'},
-    ])
-    
-    # 8. Dados da Newsletter
-    df_newsletter = pd.DataFrame([
-        {'Métrica': 'Empresas Inscritas', 'Valor FY25': get_newsletter_value(q, 'empresas'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'empresas') if get_newsletter_fy24(q, 'empresas') else '—'},
-        {'Métrica': 'Total de Envios', 'Valor FY25': get_newsletter_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'envios') if get_newsletter_fy24(q, 'envios') else '—'},
-        {'Métrica': 'Taxa de Abertura (%)', 'Valor FY25': get_newsletter_value(q, 'abertura'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'abertura') if get_newsletter_fy24(q, 'abertura') else '—'},
-        {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_newsletter_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'cliques') if get_newsletter_fy24(q, 'cliques') else '—'},
-    ])
-    
-    # 9. Dados de Fabricantes
-    df_fabricantes = get_fabricantes_data(q)
-    
-    # 10. Insights do trimestre
-    insights_map = {
-        'Q1': [
-            "Fortinet foi o maior solicitante com 120 peças na vertical Segurança",
-            "AWS liderou em Cloud com 43 peças solicitadas",
-            "IBM teve destaque em Data & AI com 40 peças",
-            "Cisco liderou em Networking com 132 peças",
-            "Taxa de conversão de campanhas atingiu 7,26%",
-            "Blog registrou 24.926 visitas e 17.075 usuários"
-        ],
-        'Q2': [
-            "Fortinet liderou em Segurança com 117 peças solicitadas",
-            "Microsoft foi destaque em Cloud com 115 peças",
-            "IBM liderou em Data & AI com 59 peças",
-            "Cisco continuou forte em Networking com 63 peças",
-            "Campanha IBM IA gerou 55 leads qualificados",
-            "Taxa de abertura de e-mail atingiu 45,3%"
-        ],
-        'Q3': [
-            "Fortinet manteve liderança em Segurança com 129 peças",
-            "Microsoft liderou Cloud com 69 peças",
-            "Red Hat teve destaque em Data & AI com 44 peças",
-            "Cisco liderou Networking com 82 peças",
-            "Cloud On the Go gerou 383 leads, maior campanha do ano",
-            "Taxa de cliques em e-mail atingiu 6% no Q3"
-        ],
-        'Q4': [
-            "Fortinet continuou líder em Segurança com 75 peças",
-            "Google Cloud liderou em Cloud com 28 peças",
-            "IBM foi destaque em Data & AI com 25 peças",
-            "Cisco liderou Networking com 17 peças",
-            "Campanha de recrutamento Fortinet gerou 70 leads",
-            "Total de envios de e-mail atingiu 349.487 no Q4"
-        ]
-    }
-    df_insights = pd.DataFrame({'Insights e Recomendações FY25': insights_map.get(q, ['Nenhum insight disponível para este trimestre'])})
-    
-    # Retorna todas as abas
-    return {
-        '1_Overview': df_overview,
-        '2_Distribuicao_Vertical': df_vertical,
-        '3_Campanhas': df_campanhas,
-        '4_Email_Marketing': df_email,
-        '5_Redes_Sociais_Geral': df_redes_geral,
-        '6_Redes_Sociais_Por_Rede': df_redes_por_rede,
-        '7_Blog': df_blog,
-        '8_Newsletter': df_newsletter,
-        '9_Fabricantes': df_fabricantes if not df_fabricantes.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis para este trimestre']}),
-        '10_Insights': df_insights
-    }
+def get_email_tipo_data(q):
+    """Retorna dados de email marketing por tipo"""
+    return EMAIL_TIPO_DATA.get(q, pd.DataFrame())
+
+def get_redes_por_rede_data(q):
+    """Retorna dados de redes sociais por rede"""
+    return REDES_POR_REDE_DATA.get(q, pd.DataFrame())
+
+def get_top_fabricantes_data(q):
+    """Retorna dados de top fabricantes por rede social"""
+    return TOP_FABRICANTES_DATA.get(q, {})
 
 # ==================== BADGE HELPERS ====================
 def _var_badge(variacao, prefix=''):
@@ -484,23 +439,15 @@ def _var_badge(variacao, prefix=''):
     return f'<div class="kpi-variation kpi-neutral">→ 0% {prefix}</div>'
 
 # ==================== FUNÇÕES DE RENDERIZAÇÃO ====================
-# ==================== FUNÇÕES DE RENDERIZAÇÃO CORRIGIDAS ====================
-
 def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, variacao_fy24=None, q_fy24_label=None):
-    """KPI card com badge de trimestre anterior FY25 E badge de mesmo trimestre FY24."""
     badge_fy25 = ''
     badge_fy24 = ''
 
-    # Formata o valor removendo qualquer % existente e adiciona apenas uma vez
     valor_formatado = format_number(valor)
-    # Remove % se existir no valor (para evitar duplicação)
     if isinstance(valor_formatado, str) and valor_formatado.endswith('%'):
         valor_formatado = valor_formatado[:-1]
     
-    # Detecta se é porcentagem
     is_percentage = '%' in str(valor) or label in ['Taxa de Abertura', 'Taxa de Cliques', 'Entregas', 'Aberturas', 'Cliques', 'Opt-Out']
-    
-    # Adiciona % apenas se for porcentagem e não for '—'
     display_value = f"{valor_formatado}%" if is_percentage and valor_formatado != '—' else valor_formatado
 
     if variacao is not None and trimestre_ref:
@@ -525,25 +472,17 @@ def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, v
     """)
 
 def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_fy25_name, prev_fy24_value=None, prev_fy24_name=None, tooltip=None):
-    """Card de métrica com comparação com trimestre anterior FY25 e mesmo trimestre FY24."""
-    
-    # Limpa o valor atual
     cur_raw = clean_value(current_value)
-    # Remove % se existir no valor (para evitar duplicação)
     if isinstance(cur_raw, str) and cur_raw.endswith('%'):
         cur_raw = cur_raw[:-1]
     
     prev25 = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
-    # Remove % do valor anterior se existir
     if isinstance(prev25, str) and prev25.endswith('%'):
         prev25 = prev25[:-1]
 
     var25 = calc_variacao(cur_raw, prev25) if prev25 != '—' else None
 
-    # Detecta se é porcentagem
     is_percentage = '%' in str(current_value) or metric_name in ['Entregas', 'Aberturas', 'Cliques', 'Opt-Out', 'Taxa de Abertura', 'Taxa de Cliques']
-    
-    # Adiciona % apenas uma vez
     suffix = '%' if is_percentage and cur_raw != '—' else ''
     display_cur = f"{cur_raw}{suffix}"
     display_prev25 = f"{prev25}{suffix}" if prev25 != '—' else '—'
@@ -559,7 +498,6 @@ def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_f
     fy24_row = ''
     if prev_fy24_value is not None and prev_fy24_name:
         prev24_raw = str(prev_fy24_value)
-        # Remove % se existir
         if prev24_raw.endswith('%'):
             prev24_raw = prev24_raw[:-1]
         prev24_str = f"{prev24_raw}{suffix}"
@@ -592,7 +530,6 @@ def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_
     val_raw = clean_value(value)
     prev_raw = clean_value(prev_value) if prev_value not in ('—', None) else '—'
     
-    # Remove % dos valores se existirem
     if isinstance(val_raw, str) and val_raw.endswith('%'):
         val_raw = val_raw[:-1]
     if isinstance(prev_raw, str) and prev_raw.endswith('%'):
@@ -757,6 +694,152 @@ def render_campanhas_card(q, is_annual=False):
             </div>
             """)
 
+# ==================== FUNÇÃO DE EXPORTAÇÃO COMPLETA ====================
+def export_quarter_data(q, quarterly_data):
+    """Exporta todos os dados do trimestre selecionado para CSV/Excel"""
+    
+    # 1. Dados de Overview
+    overview_data = {
+        'Categoria': ['Peças Produzidas', 'Solicitações', 'Campanhas'],
+        'Valor FY25': [
+            quarterly_data[q]['pecas'],
+            quarterly_data[q]['solic'],
+            quarterly_data[q]['camp']
+        ],
+        'Valor FY24 (mesmo trimestre)': [
+            get_pecas_fy24(q) if get_pecas_fy24(q) else '—',
+            get_solicitacoes_fy24(q) if get_solicitacoes_fy24(q) else '—',
+            get_campanhas_fy24(q) if get_campanhas_fy24(q) else '—'
+        ]
+    }
+    df_overview = pd.DataFrame(overview_data)
+    
+    # 2. Distribuição por Vertical
+    df_vertical = get_vertical_distribution(q)
+    df_vertical.columns = ['Vertical', 'Percentual (%)']
+    
+    # 3. Dados de Campanhas
+    camp_data = get_campanhas_detalhes(q)
+    df_campanhas = pd.DataFrame([
+        {'Indicador': 'Campanhas Solicitadas', 'Valor': camp_data.get('solicitadas', '—')},
+        {'Indicador': 'Campanhas Veiculadas', 'Valor': camp_data.get('veiculadas', '—')},
+        {'Indicador': 'Taxa de Conversão (%)', 'Valor': camp_data.get('taxa_conversao', '—')},
+        {'Indicador': 'Leads Gerados', 'Valor': camp_data.get('leads', '—')},
+        {'Indicador': 'Top Campanhas', 'Valor': camp_data.get('top', '—').replace('<br>', ' | ')},
+        {'Indicador': 'Distribuição - Conversão (%)', 'Valor': '83%'},
+        {'Indicador': 'Distribuição - Branding (%)', 'Valor': '17%'},
+    ])
+    
+    # 4. Dados de Email Marketing - Geral
+    df_email = pd.DataFrame([
+        {'Métrica': 'Total de Envios', 'Valor FY25': get_email_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'envios')},
+        {'Métrica': 'Taxa de Entrega (%)', 'Valor FY25': get_email_value(q, 'entrega'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'entrega')},
+        {'Métrica': 'Taxa de Abertura (%)', 'Valor FY25': get_email_value(q, 'abertura'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'abertura')},
+        {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_email_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'cliques')},
+        {'Métrica': 'Taxa de Opt-Out (%)', 'Valor FY25': get_email_value(q, 'optout'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'optout')},
+    ])
+    
+    # 5. Dados de Redes Sociais - Geral
+    df_redes_geral = pd.DataFrame([
+        {'Métrica': 'Novos Seguidores', 'Valor FY25': get_redes_value(q, 'seguidores'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'seguidores')},
+        {'Métrica': 'Total de Engajamentos', 'Valor FY25': get_redes_value(q, 'engajamentos'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'engajamentos')},
+        {'Métrica': 'Total de Cliques', 'Valor FY25': get_redes_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'cliques')},
+    ])
+    
+    # 6. Dados do Blog
+    df_blog = pd.DataFrame([
+        {'Métrica': 'Visitas', 'Valor FY25': get_blog_value(q, 'visitas'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'visitas') if get_blog_fy24(q, 'visitas') else '—'},
+        {'Métrica': 'Usuários', 'Valor FY25': get_blog_value(q, 'usuarios'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'usuarios') if get_blog_fy24(q, 'usuarios') else '—'},
+        {'Métrica': 'Blogposts Publicados', 'Valor FY25': get_blog_value(q, 'blogposts'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'blogposts') if get_blog_fy24(q, 'blogposts') else '—'},
+        {'Métrica': 'Tempo Médio na Página', 'Valor FY25': get_blog_value(q, 'tempo_medio'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'tempo_medio') if get_blog_fy24(q, 'tempo_medio') else '—'},
+    ])
+    
+    # 7. Dados da Newsletter
+    df_newsletter = pd.DataFrame([
+        {'Métrica': 'Empresas Inscritas', 'Valor FY25': get_newsletter_value(q, 'empresas'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'empresas') if get_newsletter_fy24(q, 'empresas') else '—'},
+        {'Métrica': 'Total de Envios', 'Valor FY25': get_newsletter_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'envios') if get_newsletter_fy24(q, 'envios') else '—'},
+        {'Métrica': 'Taxa de Abertura (%)', 'Valor FY25': get_newsletter_value(q, 'abertura'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'abertura') if get_newsletter_fy24(q, 'abertura') else '—'},
+        {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_newsletter_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'cliques') if get_newsletter_fy24(q, 'cliques') else '—'},
+    ])
+    
+    # 8. Dados de Fabricantes
+    df_fabricantes = get_fabricantes_data(q)
+    
+    # 9. Insights do trimestre
+    insights_map = {
+        'Q1': [
+            "Fortinet foi o maior solicitante com 120 peças na vertical Segurança",
+            "AWS liderou em Cloud com 43 peças solicitadas",
+            "IBM teve destaque em Data & AI com 40 peças",
+            "Cisco liderou em Networking com 132 peças",
+            "Taxa de conversão de campanhas atingiu 7,26%",
+            "Blog registrou 24.926 visitas e 17.075 usuários"
+        ],
+        'Q2': [
+            "Fortinet liderou em Segurança com 117 peças solicitadas",
+            "Microsoft foi destaque em Cloud com 115 peças",
+            "IBM liderou em Data & AI com 59 peças",
+            "Cisco continuou forte em Networking com 63 peças",
+            "Campanha IBM IA gerou 55 leads qualificados",
+            "Taxa de abertura de e-mail atingiu 45,3%"
+        ],
+        'Q3': [
+            "Fortinet manteve liderança em Segurança com 129 peças",
+            "Microsoft liderou Cloud com 69 peças",
+            "Red Hat teve destaque em Data & AI com 44 peças",
+            "Cisco liderou Networking com 82 peças",
+            "Cloud On the Go gerou 383 leads, maior campanha do ano",
+            "Taxa de cliques em e-mail atingiu 6% no Q3"
+        ],
+        'Q4': [
+            "Fortinet continuou líder em Segurança com 75 peças",
+            "Google Cloud liderou em Cloud com 28 peças",
+            "IBM foi destaque em Data & AI com 25 peças",
+            "Cisco liderou Networking com 17 peças",
+            "Campanha de recrutamento Fortinet gerou 70 leads",
+            "Total de envios de e-mail atingiu 349.487 no Q4"
+        ]
+    }
+    df_insights = pd.DataFrame({'Insights e Recomendações FY25': insights_map.get(q, ['Nenhum insight disponível para este trimestre'])})
+    
+    # 10. Dados de Email Marketing por Vertical
+    df_email_vertical = get_email_vertical_data(q)
+    
+    # 11. Dados de Email Marketing por Tipo
+    df_email_tipo = get_email_tipo_data(q)
+    
+    # 12. Dados de Redes Sociais por Rede
+    df_redes_por_rede = get_redes_por_rede_data(q)
+    
+    # 13. Top Fabricantes
+    top_fab = get_top_fabricantes_data(q)
+    if top_fab:
+        df_top_fabricantes = pd.DataFrame([
+            {'Categoria': 'Mais Publicados', 'Detalhes': top_fab.get('mais_publicados', '—')},
+            {'Categoria': 'Mais Engajados', 'Detalhes': top_fab.get('mais_engajados', '—')},
+            {'Categoria': 'Distribuição por Vertical', 'Detalhes': top_fab.get('distribuicao_vertical', '—')},
+        ])
+    else:
+        df_top_fabricantes = pd.DataFrame({'Mensagem': ['Sem dados disponíveis']})
+    
+    all_data = {
+        '1_Overview': df_overview,
+        '2_Distribuicao_Vertical': df_vertical,
+        '3_Campanhas': df_campanhas,
+        '4_Email_Marketing_Geral': df_email,
+        '5_Redes_Sociais_Geral': df_redes_geral,
+        '6_Blog': df_blog,
+        '7_Newsletter': df_newsletter,
+        '8_Fabricantes': df_fabricantes if not df_fabricantes.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis para este trimestre']}),
+        '9_Insights': df_insights,
+        '10_Email_Marketing_Por_Vertical': df_email_vertical if not df_email_vertical.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '11_Email_Marketing_Por_Tipo': df_email_tipo if not df_email_tipo.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '12_Redes_Sociais_Por_Rede': df_redes_por_rede if not df_redes_por_rede.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis']}),
+        '13_Top_Fabricantes_Redes': df_top_fabricantes
+    }
+    
+    return all_data
+
 # ==================== CSS ====================
 CSS_STATIC = """
 <style>
@@ -853,6 +936,56 @@ CSS_STATIC = """
     .stDataFrame { border-radius: 16px !important; overflow: hidden !important; }
     .stDataFrame thead th { background: linear-gradient(135deg, rgba(0,102,204,0.4), rgba(123,44,191,0.3)) !important; color: #FFFFFF !important; font-weight: 600 !important; }
     .stDataFrame tbody td { background: rgba(15,43,61,0.6) !important; color: #FFFFFF !important; }
+
+        /* Melhorias de espaçamento e organização */
+    .section-premium {
+        margin: 48px 0 24px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 12px;
+    }
+    
+    .section-premium:first-of-type {
+        margin-top: 0;
+    }
+    
+    .glass-card {
+        transition: all 0.3s ease;
+    }
+    
+    .glass-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    
+    /* Cores diferenciadas para os subtítulos dos cards */
+    .glass-card [style*="border-left"] {
+        transition: all 0.2s ease;
+    }
+    
+    .glass-card:hover [style*="border-left"] {
+        padding-left: 16px;
+    }
+    
+    /* Melhor espaçamento entre os cards */
+    .stColumns {
+        gap: 20px;
+    }
+    
+    /* Estilo para os cards de métricas */
+    .kpi-premium, .glass-card {
+        animation: fadeInUp 0.4s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 """
 
@@ -926,12 +1059,12 @@ def main():
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview Anual</div><div class="section-sub">Indicadores consolidados FY25</div></div></div>', unsafe_allow_html=True)
         pecas_tot = sum(quarterly_data[t]['pecas'] for t in ['Q1','Q2','Q3','Q4'])
         solic_tot = sum(quarterly_data[t]['solic'] for t in ['Q1','Q2','Q3','Q4'])
-        camp_tot  = sum(quarterly_data[t]['camp']  for t in ['Q1','Q2','Q3','Q4'])
+        camp_tot = sum(quarterly_data[t]['camp'] for t in ['Q1','Q2','Q3','Q4'])
 
         k1, k2, k3 = st.columns(3)
         with k1: render_kpi_premium(pecas_tot, "Total Peças", "📦")
         with k2: render_kpi_premium(solic_tot, "Total Solicitações", "📋")
-        with k3: render_kpi_premium(camp_tot,  "Total Campanhas", "🎯")
+        with k3: render_kpi_premium(camp_tot, "Total Campanhas", "🎯")
 
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">Média anual</div></div></div>', unsafe_allow_html=True)
         vert_vals = {}
@@ -957,7 +1090,7 @@ def main():
             
             if st.button("📥 Baixar FY25", key="btn_dl_fy25"):
                 if export_completo:
-                    all_data = export_quarter_data('Q4', quarterly_data)  # Usa Q4 como referência para FY25
+                    all_data = export_quarter_data('Q4', quarterly_data)
                     
                     if dl_fmt == "CSV":
                         zip_buffer = io.BytesIO()
@@ -995,30 +1128,30 @@ def main():
     # ==================== VIEW Q1-Q4 ====================
     else:
         q_num = int(q[1])
-        prev_fy25_q    = f'Q{q_num - 1}' if q_num > 1 else None
+        prev_fy25_q = f'Q{q_num - 1}' if q_num > 1 else None
         prev_fy25_name = f'{prev_fy25_q} FY25' if prev_fy25_q else '—'
-        fy24_q_label   = f'{q} FY24'
+        fy24_q_label = f'{q} FY24'
 
         pecas_val = quarterly_data[q]['pecas']
         solic_val = quarterly_data[q]['solic']
-        camp_val  = quarterly_data[q]['camp']
+        camp_val = quarterly_data[q]['camp']
 
         if prev_fy25_q:
             pecas_var = calc_variacao(pecas_val, quarterly_data[prev_fy25_q]['pecas'])
             solic_var = calc_variacao(solic_val, quarterly_data[prev_fy25_q]['solic'])
-            camp_var  = calc_variacao(camp_val,  quarterly_data[prev_fy25_q]['camp'])
-            kpi_ref   = prev_fy25_name
+            camp_var = calc_variacao(camp_val, quarterly_data[prev_fy25_q]['camp'])
+            kpi_ref = prev_fy25_name
         else:
             pecas_var = solic_var = camp_var = None
             kpi_ref = None
 
         pecas_fy24 = get_pecas_fy24(q)
         solic_fy24 = get_solicitacoes_fy24(q)
-        camp_fy24  = get_campanhas_fy24(q)
+        camp_fy24 = get_campanhas_fy24(q)
 
         pecas_var_fy24 = calc_variacao(pecas_val, pecas_fy24) if pecas_fy24 else None
         solic_var_fy24 = calc_variacao(solic_val, solic_fy24) if solic_fy24 else None
-        camp_var_fy24  = calc_variacao(camp_val,  camp_fy24)  if camp_fy24  else None
+        camp_var_fy24 = calc_variacao(camp_val, camp_fy24) if camp_fy24 else None
 
         # Overview KPIs
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview</div><div class="section-sub">Indicadores de performance · {q} FY25</div></div></div>', unsafe_allow_html=True)
@@ -1050,26 +1183,28 @@ def main():
         if not df_fab.empty:
             render_table(df_fab, "🏭 Fabricantes por Vertical")
 
-        # Email Marketing
-        st.markdown(f'<div class="section-premium"><div class="section-icon">📧</div><div><div class="section-title-premium">E-mail Marketing</div><div class="section-sub">Métricas de performance</div></div></div>', unsafe_allow_html=True)
-
+# ==================== EMAIL MARKETING ====================
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📧</div><div><div class="section-title-premium">E-mail Marketing</div><div class="section-sub">Métricas de performance e análise detalhada</div></div></div>', unsafe_allow_html=True)
+        
+        # Cards principais de Email Marketing
         entrega_atual = get_email_value(q, 'entrega')
         abertura_atual = get_email_value(q, 'abertura')
-        cliques_atual  = get_email_value(q, 'cliques')
-        optout_atual   = get_email_value(q, 'optout')
+        cliques_atual = get_email_value(q, 'cliques')
+        optout_atual = get_email_value(q, 'optout')
 
         prev_entrega = get_email_value(prev_fy25_q, 'entrega') if prev_fy25_q else '—'
         prev_abertura = get_email_value(prev_fy25_q, 'abertura') if prev_fy25_q else '—'
-        prev_cliques  = get_email_value(prev_fy25_q, 'cliques')  if prev_fy25_q else '—'
-        prev_optout   = get_email_value(prev_fy25_q, 'optout')   if prev_fy25_q else '—'
+        prev_cliques = get_email_value(prev_fy25_q, 'cliques') if prev_fy25_q else '—'
+        prev_optout = get_email_value(prev_fy25_q, 'optout') if prev_fy25_q else '—'
 
-        ent_fy24  = get_email_fy24(q, 'entrega')
-        abe_fy24  = get_email_fy24(q, 'abertura')
-        cli_fy24  = get_email_fy24(q, 'cliques')
-        opt_fy24  = get_email_fy24(q, 'optout')
+        ent_fy24 = get_email_fy24(q, 'entrega')
+        abe_fy24 = get_email_fy24(q, 'abertura')
+        cli_fy24 = get_email_fy24(q, 'cliques')
+        opt_fy24 = get_email_fy24(q, 'optout')
 
         def fmt_pct(v): return f"{v}%" if v not in ('—', None, '') else '—'
 
+        # Linha dos cards principais
         e1, e2, e3, e4 = st.columns(4)
         with e1:
             render_metric_card("Entregas", "✅",
@@ -1087,16 +1222,43 @@ def main():
             render_metric_card("Opt-Out", "🚫",
                                fmt_pct(optout_atual), fmt_pct(prev_optout), prev_fy25_name,
                                opt_fy24, fy24_q_label if opt_fy24 else None)
+        
+        # Tabelas detalhadas de Email Marketing (dentro de cards)
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Análise Detalhada</div><div class="section-sub">Métricas por Vertical e Tipo de E-mail</div></div></div>', unsafe_allow_html=True)
+        
+        col_email_vert, col_email_tipo = st.columns(2)
+        
+        with col_email_vert:
+            df_email_vertical = get_email_vertical_data(q)
+            if not df_email_vertical.empty:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📊 Por Vertical</div>
+                """, unsafe_allow_html=True)
+                st.dataframe(df_email_vertical, use_container_width=True, hide_index=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col_email_tipo:
+            df_email_tipo = get_email_tipo_data(q)
+            if not df_email_tipo.empty:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📧 Por Tipo de E-mail</div>
+                """, unsafe_allow_html=True)
+                st.dataframe(df_email_tipo, use_container_width=True, hide_index=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
-        # Redes Sociais
-        st.markdown(f'<div class="section-premium"><div class="section-icon">📱</div><div><div class="section-title-premium">Redes Sociais</div><div class="section-sub">Engajamento e alcance</div></div></div>', unsafe_allow_html=True)
 
+        # ==================== REDES SOCIAIS ====================
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📱</div><div><div class="section-title-premium">Redes Sociais</div><div class="section-sub">Engajamento, alcance e análise por rede</div></div></div>', unsafe_allow_html=True)
+        
+        # Cards principais de Redes Sociais
         seg_atual = get_redes_value(q, 'seguidores')
         eng_atual = get_redes_value(q, 'engajamentos')
         cli_atual = get_redes_value(q, 'cliques')
-        prev_seg  = get_redes_value(prev_fy25_q, 'seguidores')    if prev_fy25_q else '—'
-        prev_eng  = get_redes_value(prev_fy25_q, 'engajamentos')  if prev_fy25_q else '—'
-        prev_cli  = get_redes_value(prev_fy25_q, 'cliques')       if prev_fy25_q else '—'
+        prev_seg = get_redes_value(prev_fy25_q, 'seguidores') if prev_fy25_q else '—'
+        prev_eng = get_redes_value(prev_fy25_q, 'engajamentos') if prev_fy25_q else '—'
+        prev_cli = get_redes_value(prev_fy25_q, 'cliques') if prev_fy25_q else '—'
 
         seg_fy24 = get_redes_fy24(q, "seguidores")
         eng_fy24 = get_redes_fy24(q, "engajamentos")
@@ -1106,6 +1268,46 @@ def main():
         with r1: render_metric_card("Novos Seguidores", "👥", seg_atual, prev_seg, prev_fy25_name, seg_fy24, fy24_q_label if seg_fy24 else None)
         with r2: render_metric_card("Engajamentos", "❤️", eng_atual, prev_eng, prev_fy25_name, eng_fy24, fy24_q_label if eng_fy24 else None)
         with r3: render_metric_card("Cliques", "🖱️", cli_atual, prev_cli, prev_fy25_name, cli_rs_fy24, fy24_q_label if cli_rs_fy24 else None)
+        
+        # Tabelas detalhadas de Redes Sociais (dentro de cards)
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Análise Detalhada</div><div class="section-sub">Performance por rede e destaques de fabricantes</div></div></div>', unsafe_allow_html=True)
+        
+        # Primeira linha: Performance por Rede Social
+        df_redes_por_rede = get_redes_por_rede_data(q)
+        if not df_redes_por_rede.empty:
+            st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📈 Performance por Rede Social</div>
+            """, unsafe_allow_html=True)
+            st.dataframe(df_redes_por_rede, use_container_width=True, hide_index=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Segunda linha: Top Fabricantes (dois cards lado a lado)
+        top_fab = get_top_fabricantes_data(q)
+        if top_fab:
+            col_fab1, col_fab2 = st.columns(2)
+            with col_fab1:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#FFD966;border-left:3px solid #FFD966;padding-left:12px;">📸 Top Fabricantes Mais Publicados</div>
+                    <div style="font-size:14px;line-height:1.6;color:{COLORS['text']};">{top_fab.get('mais_publicados', '—')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with col_fab2:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#FF8C5A;border-left:3px solid #FF8C5A;padding-left:12px;">🔥 Top Fabricantes Mais Engajados</div>
+                    <div style="font-size:14px;line-height:1.6;color:{COLORS['text']};">{top_fab.get('mais_engajados', '—')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            # Terceira linha: Distribuição por Vertical
+            st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#6FBF6F;border-left:3px solid #6FBF6F;padding-left:12px;">📊 Distribuição de Publicações por Vertical</div>
+                <div style="font-size:14px;line-height:1.6;color:{COLORS['text']};">{top_fab.get('distribuicao_vertical', '—')}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
         # Blog & Newsletter
         st.markdown(f'<div class="section-premium"><div class="section-icon">📝</div><div><div class="section-title-premium">Blog &amp; Newsletter</div><div class="section-sub">Conteúdo e engajamento</div></div></div>', unsafe_allow_html=True)
@@ -1125,22 +1327,22 @@ def main():
             </div>
             """)
 
-            blog_visitas  = get_blog_value(q, 'visitas')
+            blog_visitas = get_blog_value(q, 'visitas')
             blog_usuarios = get_blog_value(q, 'usuarios')
-            blog_posts    = get_blog_value(q, 'blogposts')
-            blog_tempo    = get_blog_value(q, 'tempo_medio')
+            blog_posts = get_blog_value(q, 'blogposts')
+            blog_tempo = get_blog_value(q, 'tempo_medio')
 
-            prev_visitas  = get_blog_value(prev_fy25_q, 'visitas')    if prev_fy25_q else '—'
-            prev_usuarios = get_blog_value(prev_fy25_q, 'usuarios')   if prev_fy25_q else '—'
-            prev_posts    = get_blog_value(prev_fy25_q, 'blogposts')  if prev_fy25_q else '—'
-            prev_tempo    = get_blog_value(prev_fy25_q, 'tempo_medio') if prev_fy25_q else '—'
+            prev_visitas = get_blog_value(prev_fy25_q, 'visitas') if prev_fy25_q else '—'
+            prev_usuarios = get_blog_value(prev_fy25_q, 'usuarios') if prev_fy25_q else '—'
+            prev_posts = get_blog_value(prev_fy25_q, 'blogposts') if prev_fy25_q else '—'
+            prev_tempo = get_blog_value(prev_fy25_q, 'tempo_medio') if prev_fy25_q else '—'
 
             vis_fy24 = get_blog_fy24(q, 'visitas')
             usu_fy24 = get_blog_fy24(q, 'usuarios')
             pos_fy24 = get_blog_fy24(q, 'blogposts')
             tmp_fy24 = get_blog_fy24(q, 'tempo_medio')
 
-            render_blog_item("Visitas",  blog_visitas,  prev_visitas,  prev_fy25_name, vis_fy24, fy24_q_label if vis_fy24 else None, icon="👁️")
+            render_blog_item("Visitas", blog_visitas, prev_visitas, prev_fy25_name, vis_fy24, fy24_q_label if vis_fy24 else None, icon="👁️")
             render_blog_item("Usuários", blog_usuarios, prev_usuarios, prev_fy25_name, usu_fy24, fy24_q_label if usu_fy24 else None, icon="👥")
             render_blog_item("Blogposts Publicados", blog_posts, prev_posts, prev_fy25_name, pos_fy24, fy24_q_label if pos_fy24 else None, icon="📝")
             render_blog_item("Tempo Médio na Página", blog_tempo, prev_tempo, prev_fy25_name, tmp_fy24, fy24_q_label if tmp_fy24 else None, icon="⏱️")
@@ -1159,24 +1361,24 @@ def main():
             """)
 
             nw_empresas = get_newsletter_value(q, 'empresas')
-            nw_envios   = get_newsletter_value(q, 'envios')
+            nw_envios = get_newsletter_value(q, 'envios')
             nw_abertura = get_newsletter_value(q, 'abertura')
-            nw_cliques  = get_newsletter_value(q, 'cliques')
+            nw_cliques = get_newsletter_value(q, 'cliques')
 
             prev_empresas = get_newsletter_value(prev_fy25_q, 'empresas') if prev_fy25_q else '—'
-            prev_envios   = get_newsletter_value(prev_fy25_q, 'envios')   if prev_fy25_q else '—'
+            prev_envios = get_newsletter_value(prev_fy25_q, 'envios') if prev_fy25_q else '—'
             prev_abertura = get_newsletter_value(prev_fy25_q, 'abertura') if prev_fy25_q else '—'
-            prev_cliques  = get_newsletter_value(prev_fy25_q, 'cliques')  if prev_fy25_q else '—'
+            prev_cliques = get_newsletter_value(prev_fy25_q, 'cliques') if prev_fy25_q else '—'
 
             emp_fy24 = get_newsletter_fy24(q, 'empresas')
             env_fy24 = get_newsletter_fy24(q, 'envios')
             abe_nw_fy24 = get_newsletter_fy24(q, 'abertura')
             cli_nw_fy24 = get_newsletter_fy24(q, 'cliques')
 
-            render_blog_item("Empresas",        nw_empresas, prev_empresas, prev_fy25_name, emp_fy24, fy24_q_label if emp_fy24 else None, icon="🏢")
-            render_blog_item("Envios",          nw_envios,   prev_envios,   prev_fy25_name, env_fy24, fy24_q_label if env_fy24 else None, icon="📨")
-            render_blog_item("Taxa de Abertura",nw_abertura, prev_abertura, prev_fy25_name, abe_nw_fy24, fy24_q_label if abe_nw_fy24 else None, is_percentage=True, icon="📊")
-            render_blog_item("Taxa de Cliques", nw_cliques,  prev_cliques,  prev_fy25_name, cli_nw_fy24, fy24_q_label if cli_nw_fy24 else None, is_percentage=True, icon="🖱️")
+            render_blog_item("Empresas", nw_empresas, prev_empresas, prev_fy25_name, emp_fy24, fy24_q_label if emp_fy24 else None, icon="🏢")
+            render_blog_item("Envios", nw_envios, prev_envios, prev_fy25_name, env_fy24, fy24_q_label if env_fy24 else None, icon="📨")
+            render_blog_item("Taxa de Abertura", nw_abertura, prev_abertura, prev_fy25_name, abe_nw_fy24, fy24_q_label if abe_nw_fy24 else None, is_percentage=True, icon="📊")
+            render_blog_item("Taxa de Cliques", nw_cliques, prev_cliques, prev_fy25_name, cli_nw_fy24, fy24_q_label if cli_nw_fy24 else None, is_percentage=True, icon="🖱️")
 
         # Aprendizados
         st.markdown(f'<div class="section-premium"><div class="section-icon">📚</div><div><div class="section-title-premium">Aprendizados FY25</div><div class="section-sub">Principais lições do ano</div></div></div>', unsafe_allow_html=True)
