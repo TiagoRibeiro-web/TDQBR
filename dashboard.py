@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import os
 import re
 import io
+import zipfile
 from pathlib import Path
 from datetime import datetime
 
@@ -94,11 +95,6 @@ FALLBACK_DATA = {
     'campanhas': {'Q1': 4, 'Q2': 9, 'Q3': 7, 'Q4': 6},
 
     # ── FY24 reference values (mesmo trimestre do ano anterior) ──────────────
-    # Derivados das variações registradas nos CSVs:
-    #   Q4FY25 pecas=647 / (1-0.2279) ≈ 838
-    #   Q4FY25 solic=131 / (1-0.32)   ≈ 193
-    #   Q4FY25 camp=6    / 1.50        ≈ 4
-    # Q1/Q2/Q3 FY24 não têm variacao_anual nos CSVs → marcamos como None
     'pecas_fy24':        {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 838},
     'solicitacoes_fy24': {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 193},
     'campanhas_fy24':    {'Q1': None, 'Q2': None, 'Q3': None, 'Q4': 4},
@@ -109,16 +105,17 @@ FALLBACK_DATA = {
         'Q3': {'entrega': 96.0, 'abertura': 38.0, 'cliques': 6.0, 'optout': 0.05},
         'Q4': {'entrega': 93.0, 'abertura': 24.0, 'cliques': 2.2, 'optout': 0.02},
     },
-    # ── FY24 email: extraídos das tabelas dos slides PPT
-    # Q1FY25 slide → referências Q1FY24 e Q4FY24
-    # Q2FY25 slide → referências Q2FY24
-    # Q3FY25 slide → referências Q3FY24
-    # Q4FY25 slide → referências Q4FY24
+    'email_envios': {
+        'Q1': 169948, 'Q2': 122639, 'Q3': 134035, 'Q4': 349487
+    },
     'email_fy24': {
         'Q1': {'entrega': 99.44, 'abertura': 44.11, 'cliques': 2.03,  'optout': 0.07},
         'Q2': {'entrega': 96.96, 'abertura': 30.01, 'cliques': 1.94,  'optout': 0.14},
         'Q3': {'entrega': 94.0,  'abertura': 42.0,  'cliques': 1.36,  'optout': 0.06},
         'Q4': {'entrega': 94.0,  'abertura': 24.0,  'cliques': 1.3,   'optout': 0.04},
+    },
+    'email_envios_fy24': {
+        'Q1': 169948, 'Q2': 122639, 'Q3': 134035, 'Q4': 349487
     },
 
     'redes': {
@@ -127,10 +124,28 @@ FALLBACK_DATA = {
         'Q3': {'seguidores': 1927, 'engajamentos': 76102, 'cliques': 36375},
         'Q4': {'seguidores': 2296, 'engajamentos': 58046, 'cliques': 51119},
     },
-    # ── Redes Sociais FY24: extraído da coluna "Média" (benchmark FY24) das
-    # tabelas dos slides PPT. Soma das médias por rede (Instagram+LinkedIn+Facebook).
-    # Q1/Q2/Q3: médias Seg=450+871+40=1.361 | Eng=11.595+5.725+263=17.583 | Cli=122+12.753+108=12.983
-    # Q4: médias Seg=407+342+15=764 | Eng=15.500+1.793+2.055=19.348 | Cli=9.300+6.198+7.633=23.131
+    'redes_por_rede': {
+        'Q1': {
+            'Instagram': {'seguidores': 323, 'engajamentos': 78040, 'cliques': 192},
+            'LinkedIn': {'seguidores': 830, 'engajamentos': 3175, 'cliques': 5893},
+            'Facebook': {'seguidores': 35, 'engajamentos': 204, 'cliques': 32}
+        },
+        'Q2': {
+            'Instagram': {'seguidores': 628, 'engajamentos': 6813, 'cliques': 94},
+            'LinkedIn': {'seguidores': 1036, 'engajamentos': 3150, 'cliques': 8488},
+            'Facebook': {'seguidores': 20, 'engajamentos': 274, 'cliques': 3}
+        },
+        'Q3': {
+            'Instagram': {'seguidores': 949, 'engajamentos': 64210, 'cliques': 15906},
+            'LinkedIn': {'seguidores': 973, 'engajamentos': 10591, 'cliques': 10269},
+            'Facebook': {'seguidores': 5, 'engajamentos': 1301, 'cliques': 10200}
+        },
+        'Q4': {
+            'Instagram': {'seguidores': 1223, 'engajamentos': 46500, 'cliques': 27900},
+            'LinkedIn': {'seguidores': 1028, 'engajamentos': 5379, 'cliques': 18594},
+            'Facebook': {'seguidores': 45, 'engajamentos': 6167, 'cliques': 22900}
+        }
+    },
     'redes_fy24': {
         'Q1': {'seguidores': 1361, 'engajamentos': 17583, 'cliques': 12983},
         'Q2': {'seguidores': 1361, 'engajamentos': 17583, 'cliques': 12983},
@@ -143,7 +158,6 @@ FALLBACK_DATA = {
         'Q3': {'visitas': 13353, 'usuarios': 7037,  'blogposts': 26, 'tempo_medio': '2:35'},
         'Q4': {'visitas': 18910, 'usuarios': 12348, 'blogposts': 27, 'tempo_medio': '4:36'},
     },
-    # ── Blog FY24: coluna q_ano_anterior do CSV ──────────────────────────────
     'blog_fy24': {
         'Q1': {'visitas': None, 'usuarios': 794,  'blogposts': None, 'tempo_medio': None},
         'Q2': {'visitas': None, 'usuarios': 868,  'blogposts': None, 'tempo_medio': None},
@@ -156,7 +170,6 @@ FALLBACK_DATA = {
         'Q3': {'empresas': 428,  'envios': 1059, 'abertura': 33.1,  'cliques': 1.5},
         'Q4': {'empresas': 488,  'envios': 426,  'abertura': 32.0,  'cliques': 1.8},
     },
-    # ── Newsletter FY24: coluna q_ano_anterior do CSV ────────────────────────
     'newsletter_fy24': {
         'Q1': {'empresas': None, 'envios': None, 'abertura': 71.03, 'cliques': 3.90},
         'Q2': {'empresas': None, 'envios': None, 'abertura': 65.09, 'cliques': 7.96},
@@ -267,10 +280,14 @@ def get_campanhas_detalhes(q):
 
 def get_email_value(q, metric):
     if q and q in FALLBACK_DATA['email']:
+        if metric == 'envios':
+            return format_number(FALLBACK_DATA['email_envios'].get(q, '—'))
         return FALLBACK_DATA['email'][q].get(metric, '—')
     return '—'
 
 def get_email_fy24(q, metric):
+    if metric == 'envios':
+        return format_number(FALLBACK_DATA['email_envios_fy24'].get(q, '—'))
     if q and q in FALLBACK_DATA['email_fy24']:
         return FALLBACK_DATA['email_fy24'][q].get(metric)
     return None
@@ -298,7 +315,11 @@ def get_newsletter_value(q, metric):
 
 def get_newsletter_fy24(q, metric):
     if q and q in FALLBACK_DATA['newsletter_fy24']:
-        return FALLBACK_DATA['newsletter_fy24'][q].get(metric)
+        val = FALLBACK_DATA['newsletter_fy24'][q].get(metric)
+        if val is not None:
+            if metric in ['abertura', 'cliques']:
+                return f"{val}%"
+            return format_number(val)
     return None
 
 def get_redes_value(q, metric):
@@ -307,9 +328,150 @@ def get_redes_value(q, metric):
     return '—'
 
 def get_redes_fy24(q, metric):
-    if q and q in FALLBACK_DATA["redes_fy24"]:
-        return FALLBACK_DATA["redes_fy24"][q].get(metric)
-    return None
+    if q and q in FALLBACK_DATA['redes_fy24']:
+        return format_number(FALLBACK_DATA['redes_fy24'][q].get(metric, '—'))
+    return '—'
+
+def get_redes_by_network(q, rede, metric):
+    """Busca dados por rede social específica"""
+    if q in FALLBACK_DATA['redes_por_rede'] and rede in FALLBACK_DATA['redes_por_rede'][q]:
+        return FALLBACK_DATA['redes_por_rede'][q][rede].get(metric, '—')
+    return '—'
+
+# ==================== FUNÇÃO DE EXPORTAÇÃO COMPLETA ====================
+def export_quarter_data(q, quarterly_data):
+    """
+    Exporta todos os dados do trimestre selecionado para CSV/Excel
+    """
+    
+    # 1. Dados de Overview (KPIs principais)
+    overview_data = {
+        'Categoria': ['Peças Produzidas', 'Solicitações', 'Campanhas'],
+        'Valor FY25': [
+            quarterly_data[q]['pecas'],
+            quarterly_data[q]['solic'],
+            quarterly_data[q]['camp']
+        ],
+        'Valor FY24 (mesmo trimestre)': [
+            get_pecas_fy24(q) if get_pecas_fy24(q) else '—',
+            get_solicitacoes_fy24(q) if get_solicitacoes_fy24(q) else '—',
+            get_campanhas_fy24(q) if get_campanhas_fy24(q) else '—'
+        ]
+    }
+    df_overview = pd.DataFrame(overview_data)
+    
+    # 2. Distribuição por Vertical
+    df_vertical = get_vertical_distribution(q)
+    df_vertical.columns = ['Vertical', 'Percentual (%)']
+    
+    # 3. Dados de Campanhas
+    camp_data = get_campanhas_detalhes(q)
+    df_campanhas = pd.DataFrame([
+        {'Indicador': 'Campanhas Solicitadas', 'Valor': camp_data.get('solicitadas', '—')},
+        {'Indicador': 'Campanhas Veiculadas', 'Valor': camp_data.get('veiculadas', '—')},
+        {'Indicador': 'Taxa de Conversão (%)', 'Valor': camp_data.get('taxa_conversao', '—')},
+        {'Indicador': 'Leads Gerados', 'Valor': camp_data.get('leads', '—')},
+        {'Indicador': 'Top Campanhas', 'Valor': camp_data.get('top', '—').replace('<br>', ' | ')},
+        {'Indicador': 'Distribuição - Conversão (%)', 'Valor': '83%'},
+        {'Indicador': 'Distribuição - Branding (%)', 'Valor': '17%'},
+    ])
+    
+    # 4. Dados de Email Marketing
+    df_email = pd.DataFrame([
+        {'Métrica': 'Total de Envios', 'Valor FY25': get_email_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'envios')},
+        {'Métrica': 'Taxa de Entrega (%)', 'Valor FY25': get_email_value(q, 'entrega'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'entrega')},
+        {'Métrica': 'Taxa de Abertura (%)', 'Valor FY25': get_email_value(q, 'abertura'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'abertura')},
+        {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_email_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'cliques')},
+        {'Métrica': 'Taxa de Opt-Out (%)', 'Valor FY25': get_email_value(q, 'optout'), 'Valor FY24 (mesmo trimestre)': get_email_fy24(q, 'optout')},
+    ])
+    
+    # 5. Dados de Redes Sociais - Geral
+    df_redes_geral = pd.DataFrame([
+        {'Métrica': 'Novos Seguidores', 'Valor FY25': get_redes_value(q, 'seguidores'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'seguidores')},
+        {'Métrica': 'Total de Engajamentos', 'Valor FY25': get_redes_value(q, 'engajamentos'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'engajamentos')},
+        {'Métrica': 'Total de Cliques', 'Valor FY25': get_redes_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_redes_fy24(q, 'cliques')},
+    ])
+    
+    # 6. Dados de Redes Sociais - por Rede
+    redes_por_rede = []
+    for rede in ['Instagram', 'LinkedIn', 'Facebook']:
+        redes_por_rede.append({
+            'Rede Social': rede,
+            'Seguidores': get_redes_by_network(q, rede, 'seguidores'),
+            'Engajamentos': get_redes_by_network(q, rede, 'engajamentos'),
+            'Cliques': get_redes_by_network(q, rede, 'cliques')
+        })
+    df_redes_por_rede = pd.DataFrame(redes_por_rede)
+    
+    # 7. Dados do Blog
+    df_blog = pd.DataFrame([
+        {'Métrica': 'Visitas', 'Valor FY25': get_blog_value(q, 'visitas'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'visitas') if get_blog_fy24(q, 'visitas') else '—'},
+        {'Métrica': 'Usuários', 'Valor FY25': get_blog_value(q, 'usuarios'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'usuarios') if get_blog_fy24(q, 'usuarios') else '—'},
+        {'Métrica': 'Blogposts Publicados', 'Valor FY25': get_blog_value(q, 'blogposts'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'blogposts') if get_blog_fy24(q, 'blogposts') else '—'},
+        {'Métrica': 'Tempo Médio na Página', 'Valor FY25': get_blog_value(q, 'tempo_medio'), 'Valor FY24 (mesmo trimestre)': get_blog_fy24(q, 'tempo_medio') if get_blog_fy24(q, 'tempo_medio') else '—'},
+    ])
+    
+    # 8. Dados da Newsletter
+    df_newsletter = pd.DataFrame([
+        {'Métrica': 'Empresas Inscritas', 'Valor FY25': get_newsletter_value(q, 'empresas'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'empresas') if get_newsletter_fy24(q, 'empresas') else '—'},
+        {'Métrica': 'Total de Envios', 'Valor FY25': get_newsletter_value(q, 'envios'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'envios') if get_newsletter_fy24(q, 'envios') else '—'},
+        {'Métrica': 'Taxa de Abertura (%)', 'Valor FY25': get_newsletter_value(q, 'abertura'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'abertura') if get_newsletter_fy24(q, 'abertura') else '—'},
+        {'Métrica': 'Taxa de Cliques (%)', 'Valor FY25': get_newsletter_value(q, 'cliques'), 'Valor FY24 (mesmo trimestre)': get_newsletter_fy24(q, 'cliques') if get_newsletter_fy24(q, 'cliques') else '—'},
+    ])
+    
+    # 9. Dados de Fabricantes
+    df_fabricantes = get_fabricantes_data(q)
+    
+    # 10. Insights do trimestre
+    insights_map = {
+        'Q1': [
+            "Fortinet foi o maior solicitante com 120 peças na vertical Segurança",
+            "AWS liderou em Cloud com 43 peças solicitadas",
+            "IBM teve destaque em Data & AI com 40 peças",
+            "Cisco liderou em Networking com 132 peças",
+            "Taxa de conversão de campanhas atingiu 7,26%",
+            "Blog registrou 24.926 visitas e 17.075 usuários"
+        ],
+        'Q2': [
+            "Fortinet liderou em Segurança com 117 peças solicitadas",
+            "Microsoft foi destaque em Cloud com 115 peças",
+            "IBM liderou em Data & AI com 59 peças",
+            "Cisco continuou forte em Networking com 63 peças",
+            "Campanha IBM IA gerou 55 leads qualificados",
+            "Taxa de abertura de e-mail atingiu 45,3%"
+        ],
+        'Q3': [
+            "Fortinet manteve liderança em Segurança com 129 peças",
+            "Microsoft liderou Cloud com 69 peças",
+            "Red Hat teve destaque em Data & AI com 44 peças",
+            "Cisco liderou Networking com 82 peças",
+            "Cloud On the Go gerou 383 leads, maior campanha do ano",
+            "Taxa de cliques em e-mail atingiu 6% no Q3"
+        ],
+        'Q4': [
+            "Fortinet continuou líder em Segurança com 75 peças",
+            "Google Cloud liderou em Cloud com 28 peças",
+            "IBM foi destaque em Data & AI com 25 peças",
+            "Cisco liderou Networking com 17 peças",
+            "Campanha de recrutamento Fortinet gerou 70 leads",
+            "Total de envios de e-mail atingiu 349.487 no Q4"
+        ]
+    }
+    df_insights = pd.DataFrame({'Insights e Recomendações FY25': insights_map.get(q, ['Nenhum insight disponível para este trimestre'])})
+    
+    # Retorna todas as abas
+    return {
+        '1_Overview': df_overview,
+        '2_Distribuicao_Vertical': df_vertical,
+        '3_Campanhas': df_campanhas,
+        '4_Email_Marketing': df_email,
+        '5_Redes_Sociais_Geral': df_redes_geral,
+        '6_Redes_Sociais_Por_Rede': df_redes_por_rede,
+        '7_Blog': df_blog,
+        '8_Newsletter': df_newsletter,
+        '9_Fabricantes': df_fabricantes if not df_fabricantes.empty else pd.DataFrame({'Mensagem': ['Sem dados disponíveis para este trimestre']}),
+        '10_Insights': df_insights
+    }
 
 # ==================== BADGE HELPERS ====================
 def _var_badge(variacao, prefix=''):
@@ -323,7 +485,6 @@ def _var_badge(variacao, prefix=''):
 
 # ==================== FUNÇÕES DE RENDERIZAÇÃO ====================
 def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, variacao_fy24=None, q_fy24_label=None):
-    """KPI card com badge de trimestre anterior FY25 E badge de mesmo trimestre FY24."""
     badge_fy25 = ''
     badge_fy24 = ''
 
@@ -348,9 +509,7 @@ def render_kpi_premium(valor, label, icone, variacao=None, trimestre_ref=None, v
     </div>
     """)
 
-
 def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_fy25_name, prev_fy24_value=None, prev_fy24_name=None, tooltip=None):
-    """Card de métrica com comparação com trimestre anterior FY25 e mesmo trimestre FY24."""
     cur = clean_value(current_value)
     prev25 = clean_value(prev_fy25_value) if prev_fy25_value not in ('—', None) else '—'
 
@@ -367,7 +526,6 @@ def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_f
         if v < 0: return f'<span class="comp-badge badge-down">▼ {abs(v):.1f}%</span>'
         return f'<span class="comp-badge badge-flat">→ 0%</span>'
 
-    # FY24 row
     fy24_row = ''
     if prev_fy24_value is not None and prev_fy24_name:
         prev24_str = f"{prev_fy24_value}%" if is_percentage else str(prev_fy24_value)
@@ -396,7 +554,6 @@ def render_metric_card(metric_name, icon, current_value, prev_fy25_value, prev_f
     </div>
     """)
 
-
 def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_label=None, is_percentage=False, icon="📊"):
     val_str = clean_value(value)
     prev_str = clean_value(prev_value) if prev_value not in ('—', None) else '—'
@@ -410,7 +567,6 @@ def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_
         cls = cls_up if v > 0 else cls_down
         return f'<span class="blog-change-premium {cls}">{arrow} {abs(v):.1f}%</span>'
 
-    # FY24 comparison row
     fy24_html = ''
     if fy24_value is not None and fy24_label:
         fy24_str = f"{fy24_value}%" if is_percentage else format_number(fy24_value)
@@ -428,7 +584,6 @@ def render_blog_item(label, value, prev_value, prev_name, fy24_value=None, fy24_
         {fy24_html}
     </div>
     """)
-
 
 def render_horizontal_bars(df, title):
     if df is None or df.empty:
@@ -457,7 +612,6 @@ def render_horizontal_bars(df, title):
         """, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 def render_table(df, title=None):
     if df.empty:
         return
@@ -466,7 +620,6 @@ def render_table(df, title=None):
         st.markdown(f'<div style="font-size:18px;font-weight:700;color:{COLORS["text"]};margin-bottom:16px;">{title}</div>', unsafe_allow_html=True)
     st.dataframe(df, use_container_width=True, hide_index=True)
     st.markdown('</div>', unsafe_allow_html=True)
-
 
 def render_comparative_charts(quarterly_data):
     st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Comparativo Trimestral</div><div class="section-sub">Análise Q1 a Q4</div></div></div>', unsafe_allow_html=True)
@@ -486,7 +639,6 @@ def render_comparative_charts(quarterly_data):
                           yaxis=dict(tickfont_color=COLORS['text'], gridcolor=COLORS['border']),
                           legend=dict(font_color=COLORS['text']), height=400)
         st.plotly_chart(fig, use_container_width=True)
-
 
 def render_campanhas_card(q, is_annual=False):
     if is_annual:
@@ -604,11 +756,9 @@ CSS_STATIC = """
         display: inline-block; padding: 4px 12px; border-radius: 20px;
         font-size: 11px; font-weight: 600; margin-top: 8px;
     }
-    /* FY25 prev quarter badges */
     .kpi-up   { background: rgba(46,125,50,0.3);   color: #6FBF6F; border: 1px solid rgba(76,175,80,0.4); }
     .kpi-down { background: rgba(211,47,47,0.3);   color: #FF8A80; border: 1px solid rgba(239,83,80,0.4); }
     .kpi-neutral { background: rgba(136,146,160,0.3); color: #B0BEC5; border: 1px solid rgba(136,146,160,0.4); }
-    /* FY24 same quarter badges — uses amber/gold palette to visually distinguish */
     .kpi-fy24-up      { background: rgba(255,183,77,0.2);  color: #FFD54F; border: 1px solid rgba(255,183,77,0.4); }
     .kpi-fy24-down    { background: rgba(255,112,67,0.2);  color: #FFAB91; border: 1px solid rgba(255,112,67,0.4); }
     .kpi-fy24-neutral { background: rgba(189,189,189,0.2); color: #E0E0E0; border: 1px solid rgba(189,189,189,0.4); }
@@ -618,7 +768,6 @@ CSS_STATIC = """
     .comparison-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 12px; }
     .comp-label { color: rgba(255,255,255,0.7); }
     .comp-value { font-weight: 700; color: #FFFFFF; }
-    /* FY24 row in metric cards */
     .fy24-label { color: #FFD54F !important; }
     .fy24-value { color: #FFD54F !important; }
     .comp-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
@@ -633,7 +782,7 @@ CSS_STATIC = """
 
     .bar-premium { margin-bottom: 20px; }
     .bar-track-premium { border-radius: 12px; height: 40px; overflow: hidden; background: rgba(0,0,0,0.3); }
-    .bar-fill-premium { height: 100%; border-radius: 12px; }
+    .bar-fill-premium { height: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: flex-end; padding-right: 16px; color: white; font-size: 14px; font-weight: 600; }
     .bar-label-premium { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
 
     .blog-premium { border-radius: 24px; padding: 28px; transition: all 0.4s ease; height: 100%; position: relative; overflow: hidden; margin-bottom: 24px; background: rgba(15,43,61,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); }
@@ -758,28 +907,56 @@ def main():
             st.markdown("---")
             st.markdown("### 📥 Exportar Dados")
             dl_fmt = st.selectbox("Formato", ["CSV", "Excel"], key="dl_fy25")
-            dl_rows = [{'Trimestre':t,'Peças':quarterly_data[t]['pecas'],'Solicitações':quarterly_data[t]['solic'],'Campanhas':quarterly_data[t]['camp']} for t in ['Q1','Q2','Q3','Q4']]
-            df_dl = pd.DataFrame(dl_rows)
+            export_completo = st.checkbox("📋 Exportar todas as abas (completo)", value=True)
+            
             if st.button("📥 Baixar FY25", key="btn_dl_fy25"):
-                if dl_fmt == "CSV":
-                    st.download_button("✅ Baixar CSV", df_dl.to_csv(index=False), "qbr_fy25.csv", "text/csv")
+                if export_completo:
+                    all_data = export_quarter_data('Q4', quarterly_data)  # Usa Q4 como referência para FY25
+                    
+                    if dl_fmt == "CSV":
+                        zip_buffer = io.BytesIO()
+                        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                            for sheet_name, df in all_data.items():
+                                csv_data = df.to_csv(index=False)
+                                zip_file.writestr(f"{sheet_name}.csv", csv_data)
+                        st.download_button(
+                            "✅ Baixar Todos (ZIP)", 
+                            zip_buffer.getvalue(), 
+                            "qbr_fy25_completo.zip", 
+                            "application/zip"
+                        )
+                    else:
+                        buf = io.BytesIO()
+                        with pd.ExcelWriter(buf, engine='openpyxl') as writer:
+                            for sheet_name, df in all_data.items():
+                                df.to_excel(writer, sheet_name=sheet_name[:31], index=False)
+                        st.download_button(
+                            "✅ Baixar Excel Completo", 
+                            buf.getvalue(), 
+                            "qbr_fy25_completo.xlsx",
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        )
                 else:
-                    buf = io.BytesIO()
-                    with pd.ExcelWriter(buf, engine='openpyxl') as w: df_dl.to_excel(w, index=False)
-                    st.download_button("✅ Baixar Excel", buf.getvalue(), "qbr_fy25.xlsx")
+                    dl_rows = [{'Trimestre':t,'Peças':quarterly_data[t]['pecas'],'Solicitações':quarterly_data[t]['solic'],'Campanhas':quarterly_data[t]['camp']} for t in ['Q1','Q2','Q3','Q4']]
+                    df_dl = pd.DataFrame(dl_rows)
+                    if dl_fmt == "CSV":
+                        st.download_button("✅ Baixar CSV", df_dl.to_csv(index=False), "qbr_fy25.csv", "text/csv")
+                    else:
+                        buf = io.BytesIO()
+                        with pd.ExcelWriter(buf, engine='openpyxl') as w: df_dl.to_excel(w, index=False)
+                        st.download_button("✅ Baixar Excel", buf.getvalue(), "qbr_fy25.xlsx")
 
     # ==================== VIEW Q1-Q4 ====================
     else:
         q_num = int(q[1])
         prev_fy25_q    = f'Q{q_num - 1}' if q_num > 1 else None
         prev_fy25_name = f'{prev_fy25_q} FY25' if prev_fy25_q else '—'
-        fy24_q_label   = f'{q} FY24'   # mesmo trimestre do ano anterior
+        fy24_q_label   = f'{q} FY24'
 
         pecas_val = quarterly_data[q]['pecas']
         solic_val = quarterly_data[q]['solic']
         camp_val  = quarterly_data[q]['camp']
 
-        # ── Variações vs trimestre anterior FY25 ────────────────────────────
         if prev_fy25_q:
             pecas_var = calc_variacao(pecas_val, quarterly_data[prev_fy25_q]['pecas'])
             solic_var = calc_variacao(solic_val, quarterly_data[prev_fy25_q]['solic'])
@@ -789,7 +966,6 @@ def main():
             pecas_var = solic_var = camp_var = None
             kpi_ref = None
 
-        # ── Variações vs mesmo trimestre FY24 ───────────────────────────────
         pecas_fy24 = get_pecas_fy24(q)
         solic_fy24 = get_solicitacoes_fy24(q)
         camp_fy24  = get_campanhas_fy24(q)
@@ -841,7 +1017,6 @@ def main():
         prev_cliques  = get_email_value(prev_fy25_q, 'cliques')  if prev_fy25_q else '—'
         prev_optout   = get_email_value(prev_fy25_q, 'optout')   if prev_fy25_q else '—'
 
-        # FY24 email references
         ent_fy24  = get_email_fy24(q, 'entrega')
         abe_fy24  = get_email_fy24(q, 'abertura')
         cli_fy24  = get_email_fy24(q, 'cliques')
@@ -877,7 +1052,6 @@ def main():
         prev_eng  = get_redes_value(prev_fy25_q, 'engajamentos')  if prev_fy25_q else '—'
         prev_cli  = get_redes_value(prev_fy25_q, 'cliques')       if prev_fy25_q else '—'
 
-        # FY24 redes references
         seg_fy24 = get_redes_fy24(q, "seguidores")
         eng_fy24 = get_redes_fy24(q, "engajamentos")
         cli_rs_fy24 = get_redes_fy24(q, "cliques")
@@ -915,7 +1089,6 @@ def main():
             prev_posts    = get_blog_value(prev_fy25_q, 'blogposts')  if prev_fy25_q else '—'
             prev_tempo    = get_blog_value(prev_fy25_q, 'tempo_medio') if prev_fy25_q else '—'
 
-            # FY24 blog references
             vis_fy24 = get_blog_fy24(q, 'visitas')
             usu_fy24 = get_blog_fy24(q, 'usuarios')
             pos_fy24 = get_blog_fy24(q, 'blogposts')
@@ -949,7 +1122,6 @@ def main():
             prev_abertura = get_newsletter_value(prev_fy25_q, 'abertura') if prev_fy25_q else '—'
             prev_cliques  = get_newsletter_value(prev_fy25_q, 'cliques')  if prev_fy25_q else '—'
 
-            # FY24 newsletter references
             emp_fy24 = get_newsletter_fy24(q, 'empresas')
             env_fy24 = get_newsletter_fy24(q, 'envios')
             abe_nw_fy24 = get_newsletter_fy24(q, 'abertura')
@@ -1002,25 +1174,56 @@ def main():
             st.markdown("---")
             st.markdown("### 📥 Exportar Dados")
             dl_fmt = st.selectbox("Formato", ["CSV", "Excel"], key="dl_q")
+            export_completo = st.checkbox("📋 Exportar todas as abas (completo)", value=True)
+            
             if st.button(f"📥 Baixar {q}", key="btn_dl_q"):
-                rows = [
-                    {'Categoria':'Peças Produzidas','Valor':pecas_val},
-                    {'Categoria':'Solicitações','Valor':solic_val},
-                    {'Categoria':'Campanhas','Valor':camp_val},
-                    {'Categoria':'Taxa Entrega E-mail','Valor':entrega_atual},
-                    {'Categoria':'Taxa Abertura E-mail','Valor':abertura_atual},
-                    {'Categoria':'Taxa Cliques E-mail','Valor':cliques_atual},
-                    {'Categoria':'Novos Seguidores','Valor':seg_atual},
-                    {'Categoria':'Total Engajamentos','Valor':eng_atual},
-                    {'Categoria':'Total Cliques','Valor':cli_atual},
-                ]
-                df_dl = pd.DataFrame(rows)
-                if dl_fmt == "CSV":
-                    st.download_button("✅ Baixar CSV", df_dl.to_csv(index=False), f"qbr_{q}.csv", "text/csv")
+                if export_completo:
+                    all_data = export_quarter_data(q, quarterly_data)
+                    
+                    if dl_fmt == "CSV":
+                        zip_buffer = io.BytesIO()
+                        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                            for sheet_name, df in all_data.items():
+                                csv_data = df.to_csv(index=False)
+                                zip_file.writestr(f"{sheet_name}.csv", csv_data)
+                        st.download_button(
+                            "✅ Baixar Todos (ZIP)", 
+                            zip_buffer.getvalue(), 
+                            f"qbr_{q}_completo.zip", 
+                            "application/zip"
+                        )
+                    else:
+                        buf = io.BytesIO()
+                        with pd.ExcelWriter(buf, engine='openpyxl') as writer:
+                            for sheet_name, df in all_data.items():
+                                df.to_excel(writer, sheet_name=sheet_name[:31], index=False)
+                        st.download_button(
+                            "✅ Baixar Excel Completo", 
+                            buf.getvalue(), 
+                            f"qbr_{q}_completo.xlsx",
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        )
                 else:
-                    buf = io.BytesIO()
-                    with pd.ExcelWriter(buf, engine='openpyxl') as w: df_dl.to_excel(w, index=False, sheet_name=q)
-                    st.download_button("✅ Baixar Excel", buf.getvalue(), f"qbr_{q}.xlsx")
+                    rows = [
+                        {'Categoria':'Peças Produzidas','Valor':pecas_val},
+                        {'Categoria':'Solicitações','Valor':solic_val},
+                        {'Categoria':'Campanhas','Valor':camp_val},
+                        {'Categoria':'Taxa Entrega E-mail','Valor':entrega_atual},
+                        {'Categoria':'Taxa Abertura E-mail','Valor':abertura_atual},
+                        {'Categoria':'Taxa Cliques E-mail','Valor':cliques_atual},
+                        {'Categoria':'Novos Seguidores','Valor':seg_atual},
+                        {'Categoria':'Total Engajamentos','Valor':eng_atual},
+                        {'Categoria':'Total Cliques','Valor':cli_atual},
+                    ]
+                    df_dl = pd.DataFrame(rows)
+                    
+                    if dl_fmt == "CSV":
+                        st.download_button("✅ Baixar CSV", df_dl.to_csv(index=False), f"qbr_{q}.csv", "text/csv")
+                    else:
+                        buf = io.BytesIO()
+                        with pd.ExcelWriter(buf, engine='openpyxl') as w: 
+                            df_dl.to_excel(w, index=False, sheet_name=q)
+                        st.download_button("✅ Baixar Excel", buf.getvalue(), f"qbr_{q}.xlsx")
 
     # Footer
     st.markdown(f"""
