@@ -13,7 +13,8 @@ from datetime import datetime
 st.set_page_config(
     page_title="TD SYNNEX Dashboard",
     page_icon="📊",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # ==================== TEMA ====================
