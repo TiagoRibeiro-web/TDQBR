@@ -1900,7 +1900,25 @@ CSS_STATIC = """
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     * { font-family: 'Inter', sans-serif; }
     .main .block-container { padding: 0; max-width: 100%; }
-    #MainMenu, header, footer { visibility: hidden; }
+    
+    /* Esconde APENAS header padrão, NÃO o sidebar */
+    header[data-testid="stHeader"] { display: none; }
+    footer { visibility: hidden; }
+    #MainMenu { visibility: hidden; }
+    
+    /* Garante sidebar sempre visível */
+    [data-testid="stSidebar"] {
+        visibility: visible !important;
+        display: flex !important;
+    }
+    
+    /* Força sidebar visível em fullscreen */
+    @media all {
+        [data-testid="stSidebar"] {
+            visibility: visible !important;
+            display: flex !important;
+        }
+    }
 
     .premium-header {
         background: linear-gradient(135deg, rgba(0,102,204,0.95) 0%, rgba(123,44,191,0.85) 50%, rgba(255,107,53,0.75) 100%);
@@ -2061,6 +2079,19 @@ def main():
     st.markdown(CSS_STATIC, unsafe_allow_html=True)
     st.markdown(CSS_THEME, unsafe_allow_html=True)
 
+       # ========== NOVO: Inicializa estado do sidebar ==========
+    if 'sidebar_expanded' not in st.session_state:
+        st.session_state.sidebar_expanded = True
+    
+    # ========== NOVO: CSS para esconder sidebar se colapsado ==========
+    if not st.session_state.sidebar_expanded:
+        st.markdown("""
+        <style>
+            [data-testid="stSidebar"] { display: none !important; }
+        </style>
+        """, unsafe_allow_html=True)
+    # =========================================================
+    
     # Header
     st.markdown(f"""
     <div class="premium-header" style="background: linear-gradient(135deg, #003031 0%, #005758 50%, #07bed5 100%);">
@@ -2070,6 +2101,17 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
+        # ========== NOVO: Botão toggle sidebar ==========
+    col_toggle1, col_toggle2 = st.columns([0.96, 0.04])
+    with col_toggle2:
+        if st.button('☰' if not st.session_state.sidebar_expanded else '✕', 
+                     key='btn_toggle_sidebar',
+                     help='Mostrar/Ocultar menu lateral',
+                     use_container_width=True):
+            st.session_state.sidebar_expanded = not st.session_state.sidebar_expanded
+            st.rerun()
+    # =================================================
+    
     if 'view' not in st.session_state:
         st.session_state.view = 'Q1FY26'
 
