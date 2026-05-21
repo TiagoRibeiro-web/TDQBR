@@ -13,8 +13,7 @@ from datetime import datetime
 st.set_page_config(
     page_title="TD SYNNEX Dashboard",
     page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # ==================== TEMA ====================
@@ -1907,10 +1906,18 @@ CSS_STATIC = """
     footer { visibility: hidden; }
     #MainMenu { visibility: hidden; }
     
-    /* Sidebar: apenas estilo visual, sem forçar display/visibility */
+    /* Garante sidebar sempre visível */
     [data-testid="stSidebar"] {
-        background: var(--sidebar-bg, rgba(0, 48, 49, 0.85));
-        border-right: 1px solid var(--border, rgba(255,255,255,0.2));
+        visibility: visible !important;
+        display: flex !important;
+    }
+    
+    /* Força sidebar visível em fullscreen */
+    @media all {
+        [data-testid="stSidebar"] {
+            visibility: visible !important;
+            display: flex !important;
+        }
     }
 
     .premium-header {
@@ -2045,27 +2052,47 @@ CSS_STATIC = """
 
 # ==================== MAIN ====================
 def main():
-    # Aplica CSS com variáveis de cor do tema
-    theme_vars = f"""
+    CSS_THEME = f"""
     <style>
-        :root {{
-            --card-bg: {COLORS['card_bg']};
-            --border: {COLORS['border']};
-            --text: {COLORS['text']};
-            --text-muted: {COLORS['text_muted']};
-            --primary: {COLORS['primary']};
-        }}
+        .stApp {{ background: {BG_GRADIENT}; }}
         [data-testid="stSidebar"] {{
             background: {COLORS['card_bg']};
             border-right: 1px solid {COLORS['border']};
         }}
-        .stApp {{ background: {BG_GRADIENT}; }}
+        [data-testid="stSidebar"] * {{ color: {COLORS['text']}; }}
+        .glass-card {{
+            background: {COLORS['card_bg']};
+            backdrop-filter: blur(12px);
+            border: 1px solid {COLORS['border']};
+        }}
+        .kpi-number {{
+            background: {COLORS['kpi_number_bg']};
+            -webkit-background-clip: text; background-clip: text;
+            color: {COLORS['kpi_number_color']};
+        }}
+        .kpi-label, .section-sub, .comparison-header, .blog-label-premium {{ color: {COLORS['text_muted']}; }}
+        .section-title-premium, .blog-title-premium, .blog-value-premium {{ color: {COLORS['text']}; }}
+        .bar-label-premium span:first-child {{ color: {COLORS['text']}; }}
     </style>
     """
-    st.markdown(CSS_STATIC, unsafe_allow_html=True)
-    st.markdown(theme_vars, unsafe_allow_html=True)
 
-    # Header (sem o botão de toggle)
+    st.markdown(CSS_STATIC, unsafe_allow_html=True)
+    st.markdown(CSS_THEME, unsafe_allow_html=True)
+
+       # ========== NOVO: Inicializa estado do sidebar ==========
+    if 'sidebar_expanded' not in st.session_state:
+        st.session_state.sidebar_expanded = True
+    
+    # ========== NOVO: CSS para esconder sidebar se colapsado ==========
+    if not st.session_state.sidebar_expanded:
+        st.markdown("""
+        <style>
+            [data-testid="stSidebar"] { display: none !important; }
+        </style>
+        """, unsafe_allow_html=True)
+    # =========================================================
+    
+    # Header
     st.markdown(f"""
     <div class="premium-header" style="background: linear-gradient(135deg, #003031 0%, #005758 50%, #07bed5 100%);">
         <div class="premium-title">TD SYNNEX BR</div>
@@ -2074,33 +2101,21 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # Botões de navegação (FY25/FY26) – igual ao original
+        # ========== NOVO: Botão toggle sidebar ==========
+    col_toggle1, col_toggle2 = st.columns([0.96, 0.04])
+    with col_toggle2:
+        if st.button('☰' if not st.session_state.sidebar_expanded else '✕', 
+                     key='btn_toggle_sidebar',
+                     help='Mostrar/Ocultar menu lateral',
+                     use_container_width=True):
+            st.session_state.sidebar_expanded = not st.session_state.sidebar_expanded
+            st.rerun()
+    # =================================================
+    
     if 'view' not in st.session_state:
         st.session_state.view = 'Q1FY26'
 
-    st.markdown("### 📆 Navegação")
-    if st.session_state.ano_selecionado == 'FY25':
-        cols = st.columns(6)
-        labels = ['📌 Q1', '📌 Q2', '📌 Q3', '📌 Q4', '🏆 Visão Anual', '📄 Slides']
-        views = ['Q1', 'Q2', 'Q3', 'Q4', 'FY25', 'Slides']
-        for col, label, view in zip(cols, labels, views):
-            if col.button(label, use_container_width=True):
-                st.session_state.view = view
-                st.rerun()
-    else:
-        cols = st.columns(3)
-        labels = ['🔷 Q1 FY26', '🏆 Visão Anual', '📄 Slides']
-        views = ['Q1FY26', 'FY26', 'Slides']
-        for col, label, view in zip(cols, labels, views):
-            if col.button(label, use_container_width=True):
-                st.session_state.view = view
-                st.rerun()
-    # ==========================================
-
-    if 'view' not in st.session_state:
-        st.session_state.view = 'Q1FY26'
-
-    # ==================== BOTÕES DINÂMICOS ====================
+# ==================== BOTÕES DINÂMICOS ====================
     st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
 
     if st.session_state.ano_selecionado == 'FY25':
@@ -2148,7 +2163,7 @@ def main():
                 st.session_state.view = 'Slides'
                 st.rerun()
 
-    st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
 
     q = st.session_state.view
     
