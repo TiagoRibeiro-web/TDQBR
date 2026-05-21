@@ -1907,9 +1907,11 @@ CSS_STATIC = """
     footer { visibility: hidden; }
     #MainMenu { visibility: hidden; }
     
-    /* CORREÇÃO: Removemos as regras que forçavam display: flex no sidebar
-       para evitar conflito com o toggle. O Streamlit gerencia a visibilidade padrão.
-       Agora apenas aplicamos CSS condicionalmente no main(). */
+    /* Sidebar: apenas estilo visual, sem forçar display/visibility */
+    [data-testid="stSidebar"] {
+        background: var(--sidebar-bg, rgba(0, 48, 49, 0.85));
+        border-right: 1px solid var(--border, rgba(255,255,255,0.2));
+    }
 
     .premium-header {
         background: linear-gradient(135deg, rgba(0,102,204,0.95) 0%, rgba(123,44,191,0.85) 50%, rgba(255,107,53,0.75) 100%);
@@ -2043,54 +2045,27 @@ CSS_STATIC = """
 
 # ==================== MAIN ====================
 def main():
-    CSS_THEME = f"""
+    # Aplica CSS com variáveis de cor do tema
+    theme_vars = f"""
     <style>
-        .stApp {{ background: {BG_GRADIENT}; }}
+        :root {{
+            --card-bg: {COLORS['card_bg']};
+            --border: {COLORS['border']};
+            --text: {COLORS['text']};
+            --text-muted: {COLORS['text_muted']};
+            --primary: {COLORS['primary']};
+        }}
         [data-testid="stSidebar"] {{
             background: {COLORS['card_bg']};
             border-right: 1px solid {COLORS['border']};
         }}
-        [data-testid="stSidebar"] * {{ color: {COLORS['text']}; }}
-        .glass-card {{
-            background: {COLORS['card_bg']};
-            backdrop-filter: blur(12px);
-            border: 1px solid {COLORS['border']};
-        }}
-        .kpi-number {{
-            background: {COLORS['kpi_number_bg']};
-            -webkit-background-clip: text; background-clip: text;
-            color: {COLORS['kpi_number_color']};
-        }}
-        .kpi-label, .section-sub, .comparison-header, .blog-label-premium {{ color: {COLORS['text_muted']}; }}
-        .section-title-premium, .blog-title-premium, .blog-value-premium {{ color: {COLORS['text']}; }}
-        .bar-label-premium span:first-child {{ color: {COLORS['text']}; }}
+        .stApp {{ background: {BG_GRADIENT}; }}
     </style>
     """
-
     st.markdown(CSS_STATIC, unsafe_allow_html=True)
-    st.markdown(CSS_THEME, unsafe_allow_html=True)
+    st.markdown(theme_vars, unsafe_allow_html=True)
 
-    # ========== CORREÇÃO: Inicializa estado do sidebar ==========
-    if 'sidebar_expanded' not in st.session_state:
-        st.session_state.sidebar_expanded = True
-    
-    # ========== CORREÇÃO: CSS condicional para ocultar/exibir sidebar ==========
-    if not st.session_state.sidebar_expanded:
-        st.markdown("""
-        <style>
-            [data-testid="stSidebar"] { display: none !important; }
-        </style>
-        """, unsafe_allow_html=True)
-    else:
-        # Garante que o sidebar seja exibido normalmente (sem forçar !important conflitante)
-        st.markdown("""
-        <style>
-            [data-testid="stSidebar"] { display: flex !important; }
-        </style>
-        """, unsafe_allow_html=True)
-    # ========================================================================
-
-    # Header
+    # Header (sem o botão de toggle)
     st.markdown(f"""
     <div class="premium-header" style="background: linear-gradient(135deg, #003031 0%, #005758 50%, #07bed5 100%);">
         <div class="premium-title">TD SYNNEX BR</div>
@@ -2099,15 +2074,27 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # ========== Botão toggle sidebar ==========
-    col_toggle1, col_toggle2 = st.columns([0.96, 0.04])
-    with col_toggle2:
-        if st.button('☰' if not st.session_state.sidebar_expanded else '✕', 
-                     key='btn_toggle_sidebar',
-                     help='Mostrar/Ocultar menu lateral',
-                     use_container_width=True):
-            st.session_state.sidebar_expanded = not st.session_state.sidebar_expanded
-            st.rerun()
+    # Botões de navegação (FY25/FY26) – igual ao original
+    if 'view' not in st.session_state:
+        st.session_state.view = 'Q1FY26'
+
+    st.markdown("### 📆 Navegação")
+    if st.session_state.ano_selecionado == 'FY25':
+        cols = st.columns(6)
+        labels = ['📌 Q1', '📌 Q2', '📌 Q3', '📌 Q4', '🏆 Visão Anual', '📄 Slides']
+        views = ['Q1', 'Q2', 'Q3', 'Q4', 'FY25', 'Slides']
+        for col, label, view in zip(cols, labels, views):
+            if col.button(label, use_container_width=True):
+                st.session_state.view = view
+                st.rerun()
+    else:
+        cols = st.columns(3)
+        labels = ['🔷 Q1 FY26', '🏆 Visão Anual', '📄 Slides']
+        views = ['Q1FY26', 'FY26', 'Slides']
+        for col, label, view in zip(cols, labels, views):
+            if col.button(label, use_container_width=True):
+                st.session_state.view = view
+                st.rerun()
     # ==========================================
 
     if 'view' not in st.session_state:
