@@ -13,8 +13,7 @@ from datetime import datetime
 st.set_page_config(
     page_title="TD SYNNEX Dashboard",
     page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # ==================== TEMA ====================
@@ -1530,11 +1529,15 @@ def render_table(df, title=None):
     st.dataframe(df, use_container_width=True, hide_index=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
+# ==================== FUNÇÃO RENDER_COMPARATIVE_CHARTS MODIFICADA ====================
 def render_comparative_charts(quarterly_data):
-    st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Comparativo Trimestral</div><div class="section-sub">Análise Q1 FY25 a Q1 FY26</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Comparativo Trimestral FY25</div><div class="section-sub">Análise Q1 a Q4 FY25</div></div></div>', unsafe_allow_html=True)
 
+    # Filtrar apenas Q1-Q4 (sem Q1FY26)
+    fy25_quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+    
     for key, label, color in [('pecas','Peças',COLORS['primary']),('solic','Solicitações',COLORS['secondary']),('camp','Campanhas',COLORS['success'])]:
-        df_c = pd.DataFrame([{'trimestre': t, 'valor': quarterly_data[t][key]} for t in ['Q1', 'Q2', 'Q3', 'Q4', 'Q1FY26']])
+        df_c = pd.DataFrame([{'trimestre': t, 'valor': quarterly_data[t][key]} for t in fy25_quarters])
         fig = go.Figure()
         fig.add_trace(go.Bar(x=df_c['trimestre'], y=df_c['valor'], name=label,
                              marker=dict(color=color), text=df_c['valor'], textposition='outside',
@@ -1549,28 +1552,35 @@ def render_comparative_charts(quarterly_data):
                           legend=dict(font_color=COLORS['text']), height=400)
         st.plotly_chart(fig, use_container_width=True)
 
+# ==================== FUNÇÃO RENDER_CAMPANHAS_CARD CORRIGIDA ====================
 def render_campanhas_card(q, is_annual=False):
     if is_annual:
-        st.markdown(f"""
+        html_content = f"""
         <div class="glass-card">
             <div style="text-align:center; margin-bottom:20px;">
-                <div style="font-size:20px;font-weight:700;color:{COLORS['text']};">🎯 Campanhas por Trimestre</div>
+                <div style="font-size:20px;font-weight:700;color:{COLORS['text']};">🎯 Campanhas por Trimestre FY25</div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;">
-        """, unsafe_allow_html=True)
-
-        for t in ['Q1', 'Q2', 'Q3', 'Q4', 'Q1FY26']:
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+        """
+        
+        for t in ['Q1', 'Q2', 'Q3', 'Q4']:
             camp = get_campanhas_detalhes(t)
-            st.markdown(f"""
+            html_content += f"""
                 <div style="text-align:center; padding:16px; background:rgba(0,0,0,0.2); border-radius:16px;">
                     <div style="font-size:18px;font-weight:700;color:{COLORS['primary']};margin-bottom:12px;">{t}</div>
                     <div style="font-size:13px;color:{COLORS['text_muted']};margin-bottom:8px;">Solicitadas: <strong style="color:{COLORS['text']};">{camp.get('solicitadas', '—')}</strong></div>
                     <div style="font-size:13px;color:{COLORS['text_muted']};margin-bottom:8px;">Veiculadas: <strong style="color:{COLORS['text']};">{camp.get('veiculadas', '—')}</strong></div>
                     <div style="font-size:13px;color:{COLORS['text_muted']};">Leads: <strong style="color:{COLORS['text']};">{camp.get('leads', '—')}</strong></div>
                 </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown('</div></div>', unsafe_allow_html=True)
+            """
+        
+        html_content += """
+            </div>
+        </div>
+        """
+        
+        st.html(html_content)
+        
     else:
         camp = get_campanhas_detalhes(q)
         obj_dist = get_campanhas_comparativos(q, 'objetivo')
@@ -1620,168 +1630,8 @@ def render_campanhas_card(q, is_annual=False):
                 </div>
             </div>
             """)
-
-def render_aprendizados_consolidados(trimestres, titulo):
-    """
-    Renderiza aprendizado consolidado para um conjunto de trimestres.
-    """
-    # Dados de aprendizado por trimestre
-    aprendizados_raw = {
-        'Q1': {
-            'bom': [
-                'PowerUP: Plataforma de inscrição, estratégias online e metas diárias',
-                'Case Recrutamento Fortinet: 80 Leads — virou referência',
-                'Segmentação Microsoft: Timing nos e-mails aumentou quórum',
-                'Campanha BU Networking: Insights valiosos para futuras BUs'
-            ],
-            'pena': [
-                'Qualidade das bases: Necessidade de segmentar melhor os parceiros',
-                'Análise constante de resultados: Todos os jobs precisam ser acompanhados'
-            ],
-            'tal': [
-                'Intercâmbio de treinamentos: Calendário ao longo do ano',
-                'Alinhamentos estratégicos recorrentes: Incluir agência no planejamento',
-                'Metodologia EDGE: Otimização do formulário de briefing'
-            ]
-        },
-        'Q2': {
-            'bom': [
-                'IBM IA gerou 55 leads qualificados',
-                'Microsoft Roadshow com alta adesão (40 empresas)',
-                'Fortinet Recrutamento consolidado como formato eficaz',
-                'Taxa de abertura de e-mail atingiu 45,3%'
-            ],
-            'pena': [
-                'Necessidade de segmentação mais precisa das bases',
-                'Algumas campanhas tiveram execução atrasada'
-            ],
-            'tal': [
-                'Utilizar conteúdo humanizado em vídeo com colaboradores',
-                'Para eventos: usar fotos, chamadas em vídeo ou depoimentos',
-                'Otimizar segmentação por vertical nos e-mails'
-            ]
-        },
-        'Q3': {
-            'bom': [
-                'Cloud On the Go - maior campanha do ano (383 leads)',
-                'Taxa de cliques em e-mail atingiu 6%',
-                'Crescimento expressivo em redes sociais'
-            ],
-            'pena': [
-                'Queda nas solicitações de campanhas',
-                'Taxa de conversão com investimento reduziu para 0,54%'
-            ],
-            'tal': [
-                'Diversificar formatos de anúncios: inclusão de vídeos e GIFs',
-                'Balancear planejamento com mais campanhas de produtos',
-                'Criar conteúdos para incentivar usuários a seguir os perfis'
-            ]
-        },
-        'Q4': {
-            'bom': [
-                'Maior número de seguidores no ano (2.296)',
-                'Recorde de cliques em redes sociais (51.119)',
-                '488 empresas inscritas na newsletter',
-                'Maior volume de envios de e-mail (349.487)'
-            ],
-            'pena': [
-                'Queda nas taxas de abertura e cliques de e-mail',
-                'Apenas 3 campanhas ativas no período',
-                'Taxa de conversão com investimento muito baixa (0,04%)'
-            ],
-            'tal': [
-                'Diversificar formatos de anúncios (vídeos humanizados)',
-                'Intensificar campanhas pagas e orgânicas',
-                'Elaborar conteúdos para incentivar usuários a seguir os perfis',
-                'Melhorar segmentação para aumentar taxa de conversão'
-            ]
-        },
-        'Q1FY26': {
-            'bom': [
-                'Blog com crescimento expressivo: +21,5% em visitas vs Q4FY25',
-                'Newsletter com aumento de 150% nos envios vs Q4FY25',
-                'Taxa de entrega de e-mail melhorou para 97%',
-                '94,7% de aproveitamento nas publicações de redes sociais'
-            ],
-            'pena': [
-                'Queda de 36,4% na produção de peças vs Q4FY25',
-                'Taxa de conversão de campanhas muito abaixo da média de mercado (0,01% vs 0,5-2%)',
-                'Apenas 3 campanhas veiculadas no período',
-                'Redes sociais com queda natural no início do ano'
-            ],
-            'tal': [
-                'Criar campanhas com mote de começo de ano vinculando oportunidades de negócios',
-                'Ativar campanha institucional para aquisição de leads para TD SYNNEX',
-                'Voltar a utilizar o blog de forma estratégica',
-                'Utilizar newsletter do LinkedIn como canal adicional de comunicação',
-                'Manter higienização contínua da base de e-mails'
-            ]
-        }
-    }
-    
-    st.markdown(f'<div class="section-premium"><div class="section-icon">📚</div><div><div class="section-title-premium">{titulo}</div><div class="section-sub">Consolidado de lições e recomendações</div></div></div>', unsafe_allow_html=True)
-    
-    # Acumuladores
-    todos_bom = []
-    todos_pena = []
-    todos_tal = []
-    
-    for t in trimestres:
-        if t in aprendizados_raw:
-            for item in aprendizados_raw[t].get('bom', []):
-                todos_bom.append(f'[{t}] {item}')
-            for item in aprendizados_raw[t].get('pena', []):
-                todos_pena.append(f'[{t}] {item}')
-            for item in aprendizados_raw[t].get('tal', []):
-                todos_tal.append(f'[{t}] {item}')
-    
-    # Remover duplicatas mantendo ordem
-    def unique_ordered(items):
-        seen = set()
-        result = []
-        for item in items:
-            # Remove o prefixo [Q?] para comparar
-            core = item.split('] ', 1)[1] if '] ' in item else item
-            if core not in seen:
-                seen.add(core)
-                result.append(item)
-        return result
-    
-    todos_bom = unique_ordered(todos_bom)
-    todos_pena = unique_ordered(todos_pena)
-    todos_tal = unique_ordered(todos_tal)
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 3px solid #6FBF6F;">
-            <div style="font-size:18px;font-weight:700;color:#6FBF6F;margin-bottom:16px;">✅ QUE BOM</div>
-            <div style="font-size:12px;line-height:1.8;color:{COLORS['text_muted']};">
-                {"".join(f'• {item}<br>' for item in todos_bom) if todos_bom else '• Nenhum destaque registrado'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 3px solid #FF8C5A;">
-            <div style="font-size:18px;font-weight:700;color:#FF8C5A;margin-bottom:16px;">⚠️ QUE PENA</div>
-            <div style="font-size:12px;line-height:1.8;color:{COLORS['text_muted']};">
-                {"".join(f'• {item}<br>' for item in todos_pena) if todos_pena else '• Nenhum ponto negativo registrado'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 3px solid #3399FF;">
-            <div style="font-size:18px;font-weight:700;color:#3399FF;margin-bottom:16px;">💡 QUE TAL</div>
-            <div style="font-size:12px;line-height:1.8;color:{COLORS['text_muted']};">
-                {"".join(f'• {item}<br>' for item in todos_tal) if todos_tal else '• Nenhuma recomendação registrada'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+# ==================== FUNÇÃO RENDER_APRENDIZADOS_REMOVIDA (não será mais usada) ====================
+# A função render_aprendizados_consolidados foi completamente removida
 
 def export_quarter_data(q, quarterly_data):
     """Exporta todos os dados do trimestre selecionado para CSV/Excel"""
@@ -1900,56 +1750,114 @@ CSS_STATIC = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     * { font-family: 'Inter', sans-serif; }
-    .main .block-container { padding: 0; max-width: 100%; }
+    
+    /* Ajuste principal do container */
+    .main .block-container {
+        padding: 0 1rem 1rem 1rem;
+        max-width: 100%;
+    }
     
     /* Esconde APENAS header padrão, NÃO o sidebar */
-    header[data-testid="stHeader"] { display: none; }
-    footer { visibility: hidden; }
-    #MainMenu { visibility: hidden; }
+    header[data-testid="stHeader"] { 
+        display: none; 
+    }
+    footer { 
+        visibility: hidden; 
+    }
+    #MainMenu { 
+        visibility: hidden; 
+    }
     
-    /* CORREÇÃO: Removemos as regras que forçavam display: flex no sidebar
-       para evitar conflito com o toggle. O Streamlit gerencia a visibilidade padrão.
-       Agora apenas aplicamos CSS condicionalmente no main(). */
+    /* Sidebar: apenas estilo visual */
+    [data-testid="stSidebar"] {
+        background: var(--sidebar-bg, rgba(0, 48, 49, 0.85));
+        border-right: 1px solid var(--border, rgba(255,255,255,0.2));
+    }
+    
+    /* Garante que o conteúdo principal ocupe o espaço restante corretamente */
+    [data-testid="stSidebar"][aria-expanded="true"] + .main .block-container {
+        max-width: calc(100% - 1rem);
+    }
+    
+    section.main > div {
+        padding-top: 0;
+    }
 
     .premium-header {
-        background: linear-gradient(135deg, rgba(0,102,204,0.95) 0%, rgba(123,44,191,0.85) 50%, rgba(255,107,53,0.75) 100%);
-        backdrop-filter: blur(10px);
-        padding: 48px 56px 40px 56px;
-        margin-bottom: 32px;
+        background: linear-gradient(135deg, #003031 0%, #005758 50%, #07bed5 100%);
+        padding: 32px 48px 28px 48px;
+        margin-bottom: 24px;
+        border-radius: 0 0 20px 20px;
         position: relative;
         overflow: hidden;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     .premium-title {
-        font-size: 52px; font-weight: 800;
+        font-size: 42px; 
+        font-weight: 800;
         background: linear-gradient(135deg, #FFFFFF, #E0E0E0);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        background-clip: text; margin: 0; letter-spacing: -1px;
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent;
+        background-clip: text; 
+        margin: 0; 
+        letter-spacing: -1px;
     }
-    .premium-sub { font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 8px; }
+    .premium-sub { 
+        font-size: 13px; 
+        color: rgba(255,255,255,0.9); 
+        margin-top: 6px; 
+    }
     .premium-quarter {
-        font-size: 24px; font-weight: 600; margin-top: 16px; display: inline-block;
-        background: rgba(0,0,0,0.4); padding: 6px 24px; border-radius: 40px;
+        font-size: 20px; 
+        font-weight: 600; 
+        margin-top: 12px; 
+        display: inline-block;
+        background: rgba(0,0,0,0.3); 
+        padding: 4px 20px; 
+        border-radius: 40px;
         color: #FFFFFF;
     }
 
     .glass-card {
-        border-radius: 24px; padding: 24px;
+        border-radius: 20px; 
+        padding: 20px;
         transition: all 0.3s ease;
-        margin-bottom: 24px; height: 100%;
+        margin-bottom: 20px; 
+        height: 100%;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
     }
     .glass-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
-    .kpi-premium { text-align: center; }
-    .kpi-icon { font-size: 40px; margin-bottom: 12px; }
-    .kpi-number { font-size: 48px; font-weight: 800; line-height: 1; }
-    .kpi-label { font-size: 13px; margin-top: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+    .kpi-premium { 
+        text-align: center; 
+    }
+    .kpi-icon { 
+        font-size: 36px; 
+        margin-bottom: 10px; 
+    }
+    .kpi-number { 
+        font-size: 44px; 
+        font-weight: 800; 
+        line-height: 1; 
+    }
+    .kpi-label { 
+        font-size: 12px; 
+        margin-top: 10px; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        font-weight: 500; 
+    }
     .kpi-variation {
-        display: inline-block; padding: 4px 12px; border-radius: 20px;
-        font-size: 11px; font-weight: 600; margin-top: 8px;
+        display: inline-block; 
+        padding: 3px 10px; 
+        border-radius: 20px;
+        font-size: 10px; 
+        font-weight: 600; 
+        margin-top: 6px;
     }
     .kpi-up   { background: rgba(46,125,50,0.3);   color: #6FBF6F; border: 1px solid rgba(76,175,80,0.4); }
     .kpi-down { background: rgba(211,47,47,0.3);   color: #FF8A80; border: 1px solid rgba(239,83,80,0.4); }
@@ -1958,14 +1866,50 @@ CSS_STATIC = """
     .kpi-fy24-down    { background: rgba(255,112,67,0.2);  color: #FFAB91; border: 1px solid rgba(255,112,67,0.4); }
     .kpi-fy24-neutral { background: rgba(189,189,189,0.2); color: #E0E0E0; border: 1px solid rgba(189,189,189,0.4); }
 
-    .comparison-premium { border-radius: 16px; padding: 12px; text-align: left; margin-top: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); }
-    .comparison-header { font-size: 10px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
-    .comparison-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 12px; }
-    .comp-label { color: rgba(255,255,255,0.7); }
-    .comp-value { font-weight: 700; color: #FFFFFF; }
-    .fy24-label { color: #FFD54F !important; }
-    .fy24-value { color: #FFD54F !important; }
-    .comp-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+    .comparison-premium { 
+        border-radius: 14px; 
+        padding: 10px; 
+        text-align: left; 
+        margin-top: 10px; 
+        background: rgba(0,0,0,0.2); 
+        border: 1px solid rgba(255,255,255,0.1); 
+    }
+    .comparison-header { 
+        font-size: 10px; 
+        margin-bottom: 8px; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        color: rgba(255,255,255,0.6); 
+    }
+    .comparison-row { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        margin-bottom: 6px; 
+        font-size: 11px; 
+    }
+    .comp-label { 
+        color: rgba(255,255,255,0.7); 
+    }
+    .comp-value { 
+        font-weight: 700; 
+        color: #FFFFFF; 
+    }
+    .fy24-label { 
+        color: #FFD54F !important; 
+    }
+    .fy24-value { 
+        color: #FFD54F !important; 
+    }
+    .comp-badge { 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 3px; 
+        padding: 2px 6px; 
+        border-radius: 20px; 
+        font-size: 9px; 
+        font-weight: 700; 
+    }
     .badge-up   { background: rgba(46,125,50,0.35);  color: #6FBF6F; }
     .badge-down { background: rgba(211,47,47,0.35);  color: #FF8A80; }
     .badge-flat { background: rgba(136,146,160,0.3); color: #B0BEC5; }
@@ -1973,52 +1917,188 @@ CSS_STATIC = """
     .section-premium {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin: 48px 0 24px 0;
+        gap: 10px;
+        margin: 32px 0 20px 0;
         border-bottom: 1px solid rgba(255,255,255,0.1);
-        padding-bottom: 12px;
+        padding-bottom: 10px;
     }
     .section-premium:first-of-type {
         margin-top: 0;
     }
-    .section-icon { font-size: 32px; background: rgba(0,102,204,0.25); padding: 12px; border-radius: 16px; }
-    .section-title-premium { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #FFFFFF; }
-    .section-sub { font-size: 13px; margin-top: 4px; color: rgba(255,255,255,0.7); }
+    .section-icon { 
+        font-size: 28px; 
+        background: rgba(7,190,213,0.2); 
+        padding: 8px; 
+        border-radius: 14px; 
+    }
+    .section-title-premium { 
+        font-size: 22px; 
+        font-weight: 700; 
+        letter-spacing: -0.5px; 
+        color: var(--text); 
+    }
+    .section-sub { 
+        font-size: 12px; 
+        margin-top: 3px; 
+        color: var(--text-muted); 
+    }
 
-    .bar-premium { margin-bottom: 20px; }
-    .bar-track-premium { border-radius: 12px; height: 40px; overflow: hidden; background: rgba(0,0,0,0.3); }
-    .bar-fill-premium { height: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: flex-end; padding-right: 16px; color: white; font-size: 14px; font-weight: 600; }
-    .bar-label-premium { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
+    .bar-premium { 
+        margin-bottom: 16px; 
+    }
+    .bar-track-premium { 
+        border-radius: 10px; 
+        height: 36px; 
+        overflow: hidden; 
+        background: rgba(0,0,0,0.3); 
+    }
+    .bar-fill-premium { 
+        height: 100%; 
+        border-radius: 10px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: flex-end; 
+        padding-right: 14px; 
+        color: white; 
+        font-size: 13px; 
+        font-weight: 600; 
+    }
+    .bar-label-premium { 
+        display: flex; 
+        justify-content: space-between; 
+        margin-bottom: 6px; 
+        font-size: 13px; 
+        font-weight: 500; 
+    }
 
-    .blog-premium { border-radius: 24px; padding: 28px; transition: all 0.4s ease; height: 100%; position: relative; overflow: hidden; margin-bottom: 24px; background: rgba(15,43,61,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); }
-    .blog-premium::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0066CC, #FF6B35, #7B2CBF); }
-    .blog-premium:hover { transform: translateY(-4px); }
-    .blog-header-premium { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); }
-    .blog-icon-premium { font-size: 36px; }
-    .blog-title-premium { font-size: 20px; font-weight: 700; color: #FFFFFF; }
-    .blog-sub-premium { font-size: 11px; margin-top: 2px; color: rgba(255,255,255,0.7); }
-    .blog-item-premium { margin-bottom: 24px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .blog-item-premium:last-child { margin-bottom: 0; border-bottom: none; }
-    .blog-label-premium { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; color: rgba(255,255,255,0.7); }
-    .blog-value-premium { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 8px; color: #FFFFFF; }
-    .blog-compare-premium { font-size: 11px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; color: rgba(255,255,255,0.7); }
-    .blog-compare-fy24 { font-size: 11px; display: flex; align-items: center; gap: 8px; margin-top: 4px; color: #FFD54F; }
-    .blog-change-premium { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
+    .blog-premium { 
+        border-radius: 20px; 
+        padding: 24px; 
+        transition: all 0.4s ease; 
+        height: 100%; 
+        position: relative; 
+        overflow: hidden; 
+        margin-bottom: 20px; 
+        background: rgba(15,43,61,0.8); 
+        backdrop-filter: blur(10px); 
+        border: 1px solid rgba(255,255,255,0.15); 
+    }
+    .blog-premium::before { 
+        content: ''; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 3px; 
+        background: linear-gradient(90deg, #07bed5, #CCD814, #005758); 
+    }
+    .blog-premium:hover { 
+        transform: translateY(-3px); 
+    }
+    .blog-header-premium { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        margin-bottom: 20px; 
+        padding-bottom: 12px; 
+        border-bottom: 1px solid rgba(255,255,255,0.15); 
+    }
+    .blog-icon-premium { 
+        font-size: 32px; 
+    }
+    .blog-title-premium { 
+        font-size: 18px; 
+        font-weight: 700; 
+        color: #FFFFFF; 
+    }
+    .blog-sub-premium { 
+        font-size: 10px; 
+        margin-top: 2px; 
+        color: rgba(255,255,255,0.7); 
+    }
+    .blog-item-premium { 
+        margin-bottom: 20px; 
+        padding: 10px 0; 
+        border-bottom: 1px solid rgba(255,255,255,0.1); 
+    }
+    .blog-item-premium:last-child { 
+        margin-bottom: 0; 
+        border-bottom: none; 
+    }
+    .blog-label-premium { 
+        font-size: 10px; 
+        font-weight: 600; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        margin-bottom: 5px; 
+        color: rgba(255,255,255,0.7); 
+    }
+    .blog-value-premium { 
+        font-size: 28px; 
+        font-weight: 800; 
+        line-height: 1.1; 
+        margin-bottom: 6px; 
+        color: #FFFFFF; 
+    }
+    .blog-compare-premium { 
+        font-size: 10px; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        flex-wrap: wrap; 
+        color: rgba(255,255,255,0.7); 
+    }
+    .blog-compare-fy24 { 
+        font-size: 10px; 
+        display: flex; 
+        align-items: center; 
+        gap: 6px; 
+        margin-top: 4px; 
+        color: #FFD54F; 
+    }
+    .blog-change-premium { 
+        font-size: 9px; 
+        font-weight: 700; 
+        padding: 2px 6px; 
+        border-radius: 20px; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 3px; 
+    }
     .blog-change-up   { background: rgba(46,125,50,0.4);  color: #6FBF6F; }
     .blog-change-down { background: rgba(211,47,47,0.4);  color: #FF8A80; }
 
-    .footer-premium { margin-top: 60px; padding: 24px; text-align: center; font-size: 12px; border-top: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+    .footer-premium { 
+        margin-top: 40px; 
+        padding: 20px; 
+        text-align: center; 
+        font-size: 11px; 
+        border-top: 1px solid rgba(255,255,255,0.15); 
+        color: rgba(255,255,255,0.7); 
+    }
 
-    .stDataFrame { border-radius: 16px !important; overflow: hidden !important; }
-    .stDataFrame thead th { background: linear-gradient(135deg, rgba(0,102,204,0.4), rgba(123,44,191,0.3)) !important; color: #FFFFFF !important; font-weight: 600 !important; }
-    .stDataFrame tbody td { background: rgba(15,43,61,0.6) !important; color: #FFFFFF !important; }
+    .stDataFrame { 
+        border-radius: 14px !important; 
+        overflow: hidden !important; 
+    }
+    .stDataFrame thead th { 
+        background: linear-gradient(135deg, rgba(7,190,213,0.4), rgba(204,216,20,0.3)) !important; 
+        color: #FFFFFF !important; 
+        font-weight: 600 !important; 
+    }
+    .stDataFrame tbody td { 
+        background: rgba(15,43,61,0.6) !important; 
+        color: #FFFFFF !important; 
+    }
 
     .stColumns {
-        gap: 20px;
+        gap: 16px;
     }
+    
     .kpi-premium, .glass-card {
         animation: fadeInUp 0.4s ease-out;
     }
+    
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -2031,12 +2111,23 @@ CSS_STATIC = """
     }
     
     .streamlit-expanderHeader {
-        font-size: 16px !important;
+        font-size: 15px !important;
         font-weight: 600 !important;
     }
     
     .streamlit-expanderContent .stMarkdown {
-        padding: 16px !important;
+        padding: 14px !important;
+    }
+    
+    /* Botões de navegação */
+    .stButton button {
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    .stButton button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 </style>
 """
@@ -2063,33 +2154,46 @@ def main():
         }}
         .kpi-label, .section-sub, .comparison-header, .blog-label-premium {{ color: {COLORS['text_muted']}; }}
         .section-title-premium, .blog-title-premium, .blog-value-premium {{ color: {COLORS['text']}; }}
-        .bar-label-premium span:first-child {{ color: {COLORS['text']}; }}
+        .bar-label-premium span:first-child {{ color: {COLORS['text']}; }};
+        
+            /* Botões - sobrescreve vermelho padrão do Streamlit */
+        .stButton button {{
+            background: {COLORS['button_bg']} !important;
+            border: 1px solid rgba(7, 190, 213, 0.3) !important;
+            color: {COLORS['text']} !important;
+        }}
+        .stButton button:hover {{
+            background: rgba(7, 190, 213, 0.35) !important;
+            border: 1px solid {COLORS['primary']} !important;
+            color: {COLORS['text']} !important;
+        }}
+        .stButton button:active,
+        .stButton button:focus,
+        .stButton button:focus:not(:active) {{
+            background: rgba(7, 190, 213, 0.4) !important;
+            border: 1px solid {COLORS['primary']} !important;
+            color: {COLORS['text']} !important;
+            box-shadow: 0 0 0 2px rgba(7, 190, 213, 0.25) !important;
+        }}
     </style>
     """
 
     st.markdown(CSS_STATIC, unsafe_allow_html=True)
     st.markdown(CSS_THEME, unsafe_allow_html=True)
 
-    # ========== CORREÇÃO: Inicializa estado do sidebar ==========
+    # ========== NOVO: Inicializa estado do sidebar ==========
     if 'sidebar_expanded' not in st.session_state:
         st.session_state.sidebar_expanded = True
     
-    # ========== CORREÇÃO: CSS condicional para ocultar/exibir sidebar ==========
+    # ========== NOVO: CSS para esconder sidebar se colapsado ==========
     if not st.session_state.sidebar_expanded:
         st.markdown("""
         <style>
             [data-testid="stSidebar"] { display: none !important; }
         </style>
         """, unsafe_allow_html=True)
-    else:
-        # Garante que o sidebar seja exibido normalmente (sem forçar !important conflitante)
-        st.markdown("""
-        <style>
-            [data-testid="stSidebar"] { display: flex !important; }
-        </style>
-        """, unsafe_allow_html=True)
-    # ========================================================================
-
+    # =========================================================
+    
     # Header
     st.markdown(f"""
     <div class="premium-header" style="background: linear-gradient(135deg, #003031 0%, #005758 50%, #07bed5 100%);">
@@ -2099,7 +2203,7 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # ========== Botão toggle sidebar ==========
+    # ========== NOVO: Botão toggle sidebar ==========
     col_toggle1, col_toggle2 = st.columns([0.96, 0.04])
     with col_toggle2:
         if st.button('☰' if not st.session_state.sidebar_expanded else '✕', 
@@ -2108,8 +2212,8 @@ def main():
                      use_container_width=True):
             st.session_state.sidebar_expanded = not st.session_state.sidebar_expanded
             st.rerun()
-    # ==========================================
-
+    # =================================================
+    
     if 'view' not in st.session_state:
         st.session_state.view = 'Q1FY26'
 
@@ -2161,7 +2265,7 @@ def main():
                 st.session_state.view = 'Slides'
                 st.rerun()
 
-    st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
 
     q = st.session_state.view
     
@@ -2253,8 +2357,7 @@ def main():
         if not df_fab.empty:
             render_table(df_fab, "🏭 Fabricantes por Vertical (Q4 FY25)")
 
-        # Aprendizados Consolidados FY25
-        render_aprendizados_consolidados(['Q1', 'Q2', 'Q3', 'Q4'], '📚 Aprendizados Consolidados FY25')
+        # Aprendizados Consolidados FY25 - REMOVIDO conforme solicitado
 
     elif q == 'FY26':
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview FY26 (parcial)</div><div class="section-sub">Indicadores disponíveis - Q1 FY26</div></div></div>', unsafe_allow_html=True)
@@ -2284,10 +2387,8 @@ def main():
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical - Q1 FY26</div><div class="section-sub">% Peças por vertical</div></div></div>', unsafe_allow_html=True)
         render_horizontal_bars(get_vertical_distribution('Q1FY26'), "% Peças por Vertical - Q1 FY26")
         
-        # Aprendizados Consolidados FY26
-        render_aprendizados_consolidados(['Q1FY26'], '📚 Aprendizados Consolidados FY26')
-    
-    
+        # Aprendizados Consolidados FY26 - REMOVIDO conforme solicitado
+
     # ==================== VIEW Q1FY26 ====================
     elif q == 'Q1FY26':
         prev_fy25_q = 'Q4'

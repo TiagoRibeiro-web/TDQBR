@@ -1529,11 +1529,15 @@ def render_table(df, title=None):
     st.dataframe(df, use_container_width=True, hide_index=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
+# ==================== FUNÇÃO RENDER_COMPARATIVE_CHARTS MODIFICADA ====================
 def render_comparative_charts(quarterly_data):
-    st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Comparativo Trimestral</div><div class="section-sub">Análise Q1 FY25 a Q1 FY26</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Comparativo Trimestral FY25</div><div class="section-sub">Análise Q1 a Q4 FY25</div></div></div>', unsafe_allow_html=True)
 
+    # Filtrar apenas Q1-Q4 (sem Q1FY26)
+    fy25_quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+    
     for key, label, color in [('pecas','Peças',COLORS['primary']),('solic','Solicitações',COLORS['secondary']),('camp','Campanhas',COLORS['success'])]:
-        df_c = pd.DataFrame([{'trimestre': t, 'valor': quarterly_data[t][key]} for t in ['Q1', 'Q2', 'Q3', 'Q4', 'Q1FY26']])
+        df_c = pd.DataFrame([{'trimestre': t, 'valor': quarterly_data[t][key]} for t in fy25_quarters])
         fig = go.Figure()
         fig.add_trace(go.Bar(x=df_c['trimestre'], y=df_c['valor'], name=label,
                              marker=dict(color=color), text=df_c['valor'], textposition='outside',
@@ -1548,28 +1552,35 @@ def render_comparative_charts(quarterly_data):
                           legend=dict(font_color=COLORS['text']), height=400)
         st.plotly_chart(fig, use_container_width=True)
 
+# ==================== FUNÇÃO RENDER_CAMPANHAS_CARD CORRIGIDA ====================
 def render_campanhas_card(q, is_annual=False):
     if is_annual:
-        st.markdown(f"""
+        html_content = f"""
         <div class="glass-card">
             <div style="text-align:center; margin-bottom:20px;">
-                <div style="font-size:20px;font-weight:700;color:{COLORS['text']};">🎯 Campanhas por Trimestre</div>
+                <div style="font-size:20px;font-weight:700;color:{COLORS['text']};">🎯 Campanhas por Trimestre FY25</div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;">
-        """, unsafe_allow_html=True)
-
-        for t in ['Q1', 'Q2', 'Q3', 'Q4', 'Q1FY26']:
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+        """
+        
+        for t in ['Q1', 'Q2', 'Q3', 'Q4']:
             camp = get_campanhas_detalhes(t)
-            st.markdown(f"""
+            html_content += f"""
                 <div style="text-align:center; padding:16px; background:rgba(0,0,0,0.2); border-radius:16px;">
                     <div style="font-size:18px;font-weight:700;color:{COLORS['primary']};margin-bottom:12px;">{t}</div>
                     <div style="font-size:13px;color:{COLORS['text_muted']};margin-bottom:8px;">Solicitadas: <strong style="color:{COLORS['text']};">{camp.get('solicitadas', '—')}</strong></div>
                     <div style="font-size:13px;color:{COLORS['text_muted']};margin-bottom:8px;">Veiculadas: <strong style="color:{COLORS['text']};">{camp.get('veiculadas', '—')}</strong></div>
                     <div style="font-size:13px;color:{COLORS['text_muted']};">Leads: <strong style="color:{COLORS['text']};">{camp.get('leads', '—')}</strong></div>
                 </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown('</div></div>', unsafe_allow_html=True)
+            """
+        
+        html_content += """
+            </div>
+        </div>
+        """
+        
+        st.html(html_content)
+        
     else:
         camp = get_campanhas_detalhes(q)
         obj_dist = get_campanhas_comparativos(q, 'objetivo')
@@ -1619,168 +1630,8 @@ def render_campanhas_card(q, is_annual=False):
                 </div>
             </div>
             """)
-
-def render_aprendizados_consolidados(trimestres, titulo):
-    """
-    Renderiza aprendizado consolidado para um conjunto de trimestres.
-    """
-    # Dados de aprendizado por trimestre
-    aprendizados_raw = {
-        'Q1': {
-            'bom': [
-                'PowerUP: Plataforma de inscrição, estratégias online e metas diárias',
-                'Case Recrutamento Fortinet: 80 Leads — virou referência',
-                'Segmentação Microsoft: Timing nos e-mails aumentou quórum',
-                'Campanha BU Networking: Insights valiosos para futuras BUs'
-            ],
-            'pena': [
-                'Qualidade das bases: Necessidade de segmentar melhor os parceiros',
-                'Análise constante de resultados: Todos os jobs precisam ser acompanhados'
-            ],
-            'tal': [
-                'Intercâmbio de treinamentos: Calendário ao longo do ano',
-                'Alinhamentos estratégicos recorrentes: Incluir agência no planejamento',
-                'Metodologia EDGE: Otimização do formulário de briefing'
-            ]
-        },
-        'Q2': {
-            'bom': [
-                'IBM IA gerou 55 leads qualificados',
-                'Microsoft Roadshow com alta adesão (40 empresas)',
-                'Fortinet Recrutamento consolidado como formato eficaz',
-                'Taxa de abertura de e-mail atingiu 45,3%'
-            ],
-            'pena': [
-                'Necessidade de segmentação mais precisa das bases',
-                'Algumas campanhas tiveram execução atrasada'
-            ],
-            'tal': [
-                'Utilizar conteúdo humanizado em vídeo com colaboradores',
-                'Para eventos: usar fotos, chamadas em vídeo ou depoimentos',
-                'Otimizar segmentação por vertical nos e-mails'
-            ]
-        },
-        'Q3': {
-            'bom': [
-                'Cloud On the Go - maior campanha do ano (383 leads)',
-                'Taxa de cliques em e-mail atingiu 6%',
-                'Crescimento expressivo em redes sociais'
-            ],
-            'pena': [
-                'Queda nas solicitações de campanhas',
-                'Taxa de conversão com investimento reduziu para 0,54%'
-            ],
-            'tal': [
-                'Diversificar formatos de anúncios: inclusão de vídeos e GIFs',
-                'Balancear planejamento com mais campanhas de produtos',
-                'Criar conteúdos para incentivar usuários a seguir os perfis'
-            ]
-        },
-        'Q4': {
-            'bom': [
-                'Maior número de seguidores no ano (2.296)',
-                'Recorde de cliques em redes sociais (51.119)',
-                '488 empresas inscritas na newsletter',
-                'Maior volume de envios de e-mail (349.487)'
-            ],
-            'pena': [
-                'Queda nas taxas de abertura e cliques de e-mail',
-                'Apenas 3 campanhas ativas no período',
-                'Taxa de conversão com investimento muito baixa (0,04%)'
-            ],
-            'tal': [
-                'Diversificar formatos de anúncios (vídeos humanizados)',
-                'Intensificar campanhas pagas e orgânicas',
-                'Elaborar conteúdos para incentivar usuários a seguir os perfis',
-                'Melhorar segmentação para aumentar taxa de conversão'
-            ]
-        },
-        'Q1FY26': {
-            'bom': [
-                'Blog com crescimento expressivo: +21,5% em visitas vs Q4FY25',
-                'Newsletter com aumento de 150% nos envios vs Q4FY25',
-                'Taxa de entrega de e-mail melhorou para 97%',
-                '94,7% de aproveitamento nas publicações de redes sociais'
-            ],
-            'pena': [
-                'Queda de 36,4% na produção de peças vs Q4FY25',
-                'Taxa de conversão de campanhas muito abaixo da média de mercado (0,01% vs 0,5-2%)',
-                'Apenas 3 campanhas veiculadas no período',
-                'Redes sociais com queda natural no início do ano'
-            ],
-            'tal': [
-                'Criar campanhas com mote de começo de ano vinculando oportunidades de negócios',
-                'Ativar campanha institucional para aquisição de leads para TD SYNNEX',
-                'Voltar a utilizar o blog de forma estratégica',
-                'Utilizar newsletter do LinkedIn como canal adicional de comunicação',
-                'Manter higienização contínua da base de e-mails'
-            ]
-        }
-    }
-    
-    st.markdown(f'<div class="section-premium"><div class="section-icon">📚</div><div><div class="section-title-premium">{titulo}</div><div class="section-sub">Consolidado de lições e recomendações</div></div></div>', unsafe_allow_html=True)
-    
-    # Acumuladores
-    todos_bom = []
-    todos_pena = []
-    todos_tal = []
-    
-    for t in trimestres:
-        if t in aprendizados_raw:
-            for item in aprendizados_raw[t].get('bom', []):
-                todos_bom.append(f'[{t}] {item}')
-            for item in aprendizados_raw[t].get('pena', []):
-                todos_pena.append(f'[{t}] {item}')
-            for item in aprendizados_raw[t].get('tal', []):
-                todos_tal.append(f'[{t}] {item}')
-    
-    # Remover duplicatas mantendo ordem
-    def unique_ordered(items):
-        seen = set()
-        result = []
-        for item in items:
-            # Remove o prefixo [Q?] para comparar
-            core = item.split('] ', 1)[1] if '] ' in item else item
-            if core not in seen:
-                seen.add(core)
-                result.append(item)
-        return result
-    
-    todos_bom = unique_ordered(todos_bom)
-    todos_pena = unique_ordered(todos_pena)
-    todos_tal = unique_ordered(todos_tal)
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 3px solid #6FBF6F;">
-            <div style="font-size:18px;font-weight:700;color:#6FBF6F;margin-bottom:16px;">✅ QUE BOM</div>
-            <div style="font-size:12px;line-height:1.8;color:{COLORS['text_muted']};">
-                {"".join(f'• {item}<br>' for item in todos_bom) if todos_bom else '• Nenhum destaque registrado'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 3px solid #FF8C5A;">
-            <div style="font-size:18px;font-weight:700;color:#FF8C5A;margin-bottom:16px;">⚠️ QUE PENA</div>
-            <div style="font-size:12px;line-height:1.8;color:{COLORS['text_muted']};">
-                {"".join(f'• {item}<br>' for item in todos_pena) if todos_pena else '• Nenhum ponto negativo registrado'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"""
-        <div class="glass-card" style="border-top: 3px solid #3399FF;">
-            <div style="font-size:18px;font-weight:700;color:#3399FF;margin-bottom:16px;">💡 QUE TAL</div>
-            <div style="font-size:12px;line-height:1.8;color:{COLORS['text_muted']};">
-                {"".join(f'• {item}<br>' for item in todos_tal) if todos_tal else '• Nenhuma recomendação registrada'}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+# ==================== FUNÇÃO RENDER_APRENDIZADOS_REMOVIDA (não será mais usada) ====================
+# A função render_aprendizados_consolidados foi completamente removida
 
 def export_quarter_data(q, quarterly_data):
     """Exporta todos os dados do trimestre selecionado para CSV/Excel"""
@@ -2303,14 +2154,34 @@ def main():
         }}
         .kpi-label, .section-sub, .comparison-header, .blog-label-premium {{ color: {COLORS['text_muted']}; }}
         .section-title-premium, .blog-title-premium, .blog-value-premium {{ color: {COLORS['text']}; }}
-        .bar-label-premium span:first-child {{ color: {COLORS['text']}; }}
+        .bar-label-premium span:first-child {{ color: {COLORS['text']}; }};
+        
+            /* Botões - sobrescreve vermelho padrão do Streamlit */
+        .stButton button {{
+            background: {COLORS['button_bg']} !important;
+            border: 1px solid rgba(7, 190, 213, 0.3) !important;
+            color: {COLORS['text']} !important;
+        }}
+        .stButton button:hover {{
+            background: rgba(7, 190, 213, 0.35) !important;
+            border: 1px solid {COLORS['primary']} !important;
+            color: {COLORS['text']} !important;
+        }}
+        .stButton button:active,
+        .stButton button:focus,
+        .stButton button:focus:not(:active) {{
+            background: rgba(7, 190, 213, 0.4) !important;
+            border: 1px solid {COLORS['primary']} !important;
+            color: {COLORS['text']} !important;
+            box-shadow: 0 0 0 2px rgba(7, 190, 213, 0.25) !important;
+        }}
     </style>
     """
 
     st.markdown(CSS_STATIC, unsafe_allow_html=True)
     st.markdown(CSS_THEME, unsafe_allow_html=True)
 
-       # ========== NOVO: Inicializa estado do sidebar ==========
+    # ========== NOVO: Inicializa estado do sidebar ==========
     if 'sidebar_expanded' not in st.session_state:
         st.session_state.sidebar_expanded = True
     
@@ -2332,7 +2203,7 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-        # ========== NOVO: Botão toggle sidebar ==========
+    # ========== NOVO: Botão toggle sidebar ==========
     col_toggle1, col_toggle2 = st.columns([0.96, 0.04])
     with col_toggle2:
         if st.button('☰' if not st.session_state.sidebar_expanded else '✕', 
@@ -2346,7 +2217,7 @@ def main():
     if 'view' not in st.session_state:
         st.session_state.view = 'Q1FY26'
 
-# ==================== BOTÕES DINÂMICOS ====================
+    # ==================== BOTÕES DINÂMICOS ====================
     st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
 
     if st.session_state.ano_selecionado == 'FY25':
@@ -2486,8 +2357,7 @@ def main():
         if not df_fab.empty:
             render_table(df_fab, "🏭 Fabricantes por Vertical (Q4 FY25)")
 
-        # Aprendizados Consolidados FY25
-        render_aprendizados_consolidados(['Q1', 'Q2', 'Q3', 'Q4'], '📚 Aprendizados Consolidados FY25')
+        # Aprendizados Consolidados FY25 - REMOVIDO conforme solicitado
 
     elif q == 'FY26':
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview FY26 (parcial)</div><div class="section-sub">Indicadores disponíveis - Q1 FY26</div></div></div>', unsafe_allow_html=True)
@@ -2517,10 +2387,8 @@ def main():
         st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical - Q1 FY26</div><div class="section-sub">% Peças por vertical</div></div></div>', unsafe_allow_html=True)
         render_horizontal_bars(get_vertical_distribution('Q1FY26'), "% Peças por Vertical - Q1 FY26")
         
-        # Aprendizados Consolidados FY26
-        render_aprendizados_consolidados(['Q1FY26'], '📚 Aprendizados Consolidados FY26')
-    
-    
+        # Aprendizados Consolidados FY26 - REMOVIDO conforme solicitado
+
     # ==================== VIEW Q1FY26 ====================
     elif q == 'Q1FY26':
         prev_fy25_q = 'Q4'
