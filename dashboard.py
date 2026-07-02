@@ -53,7 +53,7 @@ with st.sidebar:
     st.markdown("""
     Dashboard QBR TD SYNNEX<br>
     Dados de Performance Marketing<br>
-    FY25 - Q1 a Q4 | FY26 - Q1
+    FY25 - Q1 a Q4 | FY26 - Q1 e Q2
     """, unsafe_allow_html=True)
 
 # ==================== CORES BASEADAS NO TEMA ====================
@@ -206,69 +206,138 @@ FALLBACK_DATA_FY25 = {
     }
 }
 
-# ==================== DADOS FY26 Q1 ====================
-FALLBACK_DATA_FY26_Q1 = {
-    'pecas': 411,
-    'solicitacoes': 125,
-    'campanhas': 4,
-    'email': {'entrega': 97, 'abertura': 31, 'cliques': 1.8, 'optout': 0.01},
-    'email_envios': None,
-    'redes': {'seguidores': 1123, 'engajamentos': 9804, 'cliques': 24552},
-    'blog': {'visitas': 22980, 'usuarios': 12077, 'blogposts': 25, 'tempo_medio': '4.2'},
-    'newsletter': {'empresas': 522, 'envios': 1065, 'abertura': 33, 'cliques': 3.4},
-    'vertical_distribution': [
-        ('Cloud', 28), ('Segurança', 26), ('Data Center', 14), 
-        ('Networking', 12), ('Institucional', 11), ('Data & AI', 8)
-    ],
-    'fabricantes': [
-        {'vertical': 'Segurança', 'maior_solicitante': 'Fortinet — 42 peças', 'menor_solicitante': 'Netscout — 1 peça', 'top_3_pecas': 'EMKT (47), Peça Avulsa (11), Campanha Emails (4)'},
-        {'vertical': 'Cloud', 'maior_solicitante': 'Microsoft — 63 peças', 'menor_solicitante': 'AWS — 1 peça', 'top_3_pecas': 'EMKT (58), Peça Avulsa (26), Campanha Post (4)'},
-        {'vertical': 'Data & AI', 'maior_solicitante': 'NVIDIA — 17 peças', 'menor_solicitante': 'SAS — 2 peças', 'top_3_pecas': 'Peça Avulsa (11), Campanha Post (7), EMKT (7)'},
-        {'vertical': 'Data Center', 'maior_solicitante': 'HPE — 25 peças', 'menor_solicitante': 'SUSE — 2 peças', 'top_3_pecas': 'Campanha Post (18), EMKT (16), Campanha Emails (11)'},
-        {'vertical': 'Networking', 'maior_solicitante': 'Cisco — 43 peças', 'menor_solicitante': '--', 'top_3_pecas': 'EMKT (31), Peça Avulsa (5), Campanha KV (2)'},
-    ],
-    'campanhas_detalhes': {
-        'solicitadas': 4, 'veiculadas': 3, 'taxa_conversao_com_investimento': 0.01, 
-        'taxa_conversao_sem_investimento': 0, 'leads': 26, 
-        'top': '🏆 Campanha VCF VMware (26 empresas)',
-        'objetivo_conversao': 100, 'objetivo_branding': 0
+# ==================== DADOS FY26 ====================
+FALLBACK_DATA_FY26 = {
+    'Q1': {
+        'pecas': 411,
+        'solicitacoes': 125,
+        'campanhas': 4,
+        'email': {'entrega': 97, 'abertura': 31, 'cliques': 1.8, 'optout': 0.01},
+        'email_envios': None,
+        'redes': {'seguidores': 1123, 'engajamentos': 9804, 'cliques': 24552},
+        'blog': {'visitas': 22980, 'usuarios': 12077, 'blogposts': 25, 'tempo_medio': '4.2'},
+        'newsletter': {'empresas': 522, 'envios': 1065, 'abertura': 33, 'cliques': 3.4},
+        'vertical_distribution': [
+            ('Cloud', 28), ('Segurança', 26), ('Data Center', 14), 
+            ('Networking', 12), ('Institucional', 11), ('Data & AI', 8)
+        ],
+        'fabricantes': [
+            {'vertical': 'Segurança', 'maior_solicitante': 'Fortinet — 42 peças', 'menor_solicitante': 'Netscout — 1 peça', 'top_3_pecas': 'EMKT (47), Peça Avulsa (11), Campanha Emails (4)'},
+            {'vertical': 'Cloud', 'maior_solicitante': 'Microsoft — 63 peças', 'menor_solicitante': 'AWS — 1 peça', 'top_3_pecas': 'EMKT (58), Peça Avulsa (26), Campanha Post (4)'},
+            {'vertical': 'Data & AI', 'maior_solicitante': 'NVIDIA — 17 peças', 'menor_solicitante': 'SAS — 2 peças', 'top_3_pecas': 'Peça Avulsa (11), Campanha Post (7), EMKT (7)'},
+            {'vertical': 'Data Center', 'maior_solicitante': 'HPE — 25 peças', 'menor_solicitante': 'SUSE — 2 peças', 'top_3_pecas': 'Campanha Post (18), EMKT (16), Campanha Emails (11)'},
+            {'vertical': 'Networking', 'maior_solicitante': 'Cisco — 43 peças', 'menor_solicitante': '--', 'top_3_pecas': 'EMKT (31), Peça Avulsa (5), Campanha KV (2)'},
+        ],
+        'campanhas_detalhes': {
+            'solicitadas': 4, 'veiculadas': 3, 'taxa_conversao_com_investimento': 0.01, 
+            'taxa_conversao_sem_investimento': 0, 'leads': 26, 
+            'top': '🏆 Campanha VCF VMware (26 empresas)',
+            'objetivo_conversao': 100, 'objetivo_branding': 0
+        },
+        'email_vertical_data': pd.DataFrame([
+            {'vertical_tipo': 'Segurança', 'percent_envio': '24%', 'entrega': '92%', 'abertura': '27%', 'clique': '0.9%', 'opt_out': '0.01%'},
+            {'vertical_tipo': 'Networking', 'percent_envio': '43%', 'entrega': '98%', 'abertura': '29%', 'clique': '0.8%', 'opt_out': '0.02%'},
+            {'vertical_tipo': 'Cloud', 'percent_envio': '5%', 'entrega': '99%', 'abertura': '26%', 'clique': '1.4%', 'opt_out': '0.01%'},
+            {'vertical_tipo': 'Data Center', 'percent_envio': '7%', 'entrega': '99%', 'abertura': '32%', 'clique': '1.8%', 'opt_out': '0.01%'},
+            {'vertical_tipo': 'Data & AI', 'percent_envio': '21%', 'entrega': '98%', 'abertura': '32%', 'clique': '1.7%', 'opt_out': '0.01%'},
+        ]),
+        'email_tipo_data': pd.DataFrame([
+            {'tipo_email': 'Eventos', 'percent_envio': '14%', 'entrega': '97%', 'abertura': '30%', 'clique': '1.9%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Campanha Digital', 'percent_envio': '26%', 'entrega': '95%', 'abertura': '29%', 'clique': '1.9%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Prom. e Estoque', 'percent_envio': '5%', 'entrega': '95%', 'abertura': '29%', 'clique': '1.8%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Comunicado', 'percent_envio': '22%', 'entrega': '97%', 'abertura': '31%', 'clique': '1.8%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Camp. Incentivo', 'percent_envio': '30%', 'entrega': '98%', 'abertura': '31%', 'clique': '1.6%', 'opt_out': '0.01%'},
+        ]),
+        'redes_por_rede_data': pd.DataFrame([
+            {'rede': 'Instagram', 'seguidores': 400, 'media_seguidores': 133, 'engajamentos': 5498, 'cliques': 8116},
+            {'rede': 'LinkedIn', 'seguidores': 716, 'media_seguidores': 238, 'engajamentos': 3443, 'cliques': 7827},
+            {'rede': 'Facebook', 'seguidores': 7, 'media_seguidores': 2.3, 'engajamentos': 863, 'cliques': 8609},
+        ]),
+        'top_fabricantes': {
+            'mais_publicados': 'Microsoft (24), IBM (21), Dell (20)',
+            'mais_engajados': 'Microsoft, IBM, NVIDIA',
+            'distribuicao_vertical': 'Institucional 56%, Data Center 25%, Data & AI 8%, Cloud 6%, Segurança 3%, Networking 3%'
+        },
+        'publicacoes_solicitadas': 114,
+        'publicacoes_publicadas': 108,
+        'cliques_top_posts': 784,
+        'blog_empresas': 522,
+        'blog_visitas_q4fy25': 18910,
+        'blog_visitas_q1fy25': None,
+        'newsletter_envios_q4fy25': 426,
+        'newsletter_envios_q1fy25': 544,
+        'newsletter_abertura_q4fy25': 32,
+        'newsletter_abertura_q1fy25': 52,
+        'newsletter_cliques_q4fy25': 1.8,
+        'newsletter_cliques_q1fy25': 2.8,
     },
-    'email_vertical_data': pd.DataFrame([
-        {'vertical_tipo': 'Segurança', 'percent_envio': '24%', 'entrega': '92%', 'abertura': '27%', 'clique': '0.9%', 'opt_out': '0.01%'},
-        {'vertical_tipo': 'Networking', 'percent_envio': '43%', 'entrega': '98%', 'abertura': '29%', 'clique': '0.8%', 'opt_out': '0.02%'},
-        {'vertical_tipo': 'Cloud', 'percent_envio': '5%', 'entrega': '99%', 'abertura': '26%', 'clique': '1.4%', 'opt_out': '0.01%'},
-        {'vertical_tipo': 'Data Center', 'percent_envio': '7%', 'entrega': '99%', 'abertura': '32%', 'clique': '1.8%', 'opt_out': '0.01%'},
-        {'vertical_tipo': 'Data & AI', 'percent_envio': '21%', 'entrega': '98%', 'abertura': '32%', 'clique': '1.7%', 'opt_out': '0.01%'},
-    ]),
-    'email_tipo_data': pd.DataFrame([
-        {'tipo_email': 'Eventos', 'percent_envio': '14%', 'entrega': '97%', 'abertura': '30%', 'clique': '1.9%', 'opt_out': '0.01%'},
-        {'tipo_email': 'Campanha Digital', 'percent_envio': '26%', 'entrega': '95%', 'abertura': '29%', 'clique': '1.9%', 'opt_out': '0.01%'},
-        {'tipo_email': 'Prom. e Estoque', 'percent_envio': '5%', 'entrega': '95%', 'abertura': '29%', 'clique': '1.8%', 'opt_out': '0.01%'},
-        {'tipo_email': 'Comunicado', 'percent_envio': '22%', 'entrega': '97%', 'abertura': '31%', 'clique': '1.8%', 'opt_out': '0.01%'},
-        {'tipo_email': 'Camp. Incentivo', 'percent_envio': '30%', 'entrega': '98%', 'abertura': '31%', 'clique': '1.6%', 'opt_out': '0.01%'},
-    ]),
-    'redes_por_rede_data': pd.DataFrame([
-        {'rede': 'Instagram', 'seguidores': 400, 'media_seguidores': 133, 'engajamentos': 5498, 'cliques': 8116},
-        {'rede': 'LinkedIn', 'seguidores': 716, 'media_seguidores': 238, 'engajamentos': 3443, 'cliques': 7827},
-        {'rede': 'Facebook', 'seguidores': 7, 'media_seguidores': 2.3, 'engajamentos': 863, 'cliques': 8609},
-    ]),
-    'top_fabricantes': {
-        'mais_publicados': 'Microsoft (24), IBM (21), Dell (20)',
-        'mais_engajados': 'Microsoft, IBM, NVIDIA',
-        'distribuicao_vertical': 'Institucional 56%, Data Center 25%, Data & AI 8%, Cloud 6%, Segurança 3%, Networking 3%'
-    },
-    'publicacoes_solicitadas': 114,
-    'publicacoes_publicadas': 108,
-    'cliques_top_posts': 784,
-    'blog_empresas': 522,
-    'blog_visitas_q4fy25': 18910,
-    'blog_visitas_q1fy25': None,
-    'newsletter_envios_q4fy25': 426,
-    'newsletter_envios_q1fy25': 544,
-    'newsletter_abertura_q4fy25': 32,
-    'newsletter_abertura_q1fy25': 52,
-    'newsletter_cliques_q4fy25': 1.8,
-    'newsletter_cliques_q1fy25': 2.8,
+    'Q2': {
+        'pecas': 643,
+        'solicitacoes': 133,
+        'campanhas': 12,
+        'email': {'entrega': 94, 'abertura': 32, 'cliques': 2, 'optout': 0.01},
+        'email_envios': 171817,
+        'redes': {'seguidores': 1776, 'engajamentos': 11332, 'cliques': 27292},
+        'blog': {'visitas': 30040, 'usuarios': 22150, 'blogposts': 31, 'tempo_medio': '4.7'},
+        'newsletter': {'empresas': 536, 'envios': 1620, 'abertura': 34, 'cliques': 2.9},
+        'vertical_distribution': [
+            ('Segurança', 28), ('Institucional', 24), ('Cloud', 23), 
+            ('Data Center', 12), ('Networking', 11), ('Data & AI', 3)
+        ],
+        'fabricantes': [
+            {'vertical': 'Segurança', 'maior_solicitante': 'Fortinet — 113 peças', 'menor_solicitante': 'Splunk / Tenable / Zscaler — 1 peça', 'top_3_pecas': 'EMKT (57), POST RS (33), Peça Avulsa (29)'},
+            {'vertical': 'Cloud', 'maior_solicitante': 'Microsoft — 104 peças', 'menor_solicitante': 'AWS — 19 peças', 'top_3_pecas': 'EMKT (73), Peça Avulsa (53), LP+TKY Padrão (8)'},
+            {'vertical': 'Data & AI', 'maior_solicitante': 'IBM — 13 peças', 'menor_solicitante': 'NVIDIA — 5 peças', 'top_3_pecas': 'EMKT (7), Peça Avulsa (7), Campanha – KV (2)'},
+            {'vertical': 'Data Center', 'maior_solicitante': 'HPE — 37 peças', 'menor_solicitante': 'COMMVAULT — 18 peças', 'top_3_pecas': 'EMKT (31), Campanha – POST (19), POST RS (11)'},
+            {'vertical': 'Networking', 'maior_solicitante': 'Cisco — 59 peças', 'menor_solicitante': 'Ciena — 9 peças', 'top_3_pecas': 'EMKT (40), Peça Avulsa (5), Campanha KV (2)'},
+        ],
+        'campanhas_detalhes': {
+            'solicitadas': 12, 
+            'veiculadas': 7, 
+            'taxa_conversao_com_investimento': 0.29, 
+            'taxa_conversao_sem_investimento': 0, 
+            'leads': 17, 
+            'top': '🏆 Campanha de Recrutamento Fortinet<br>🏆 Campanha NVidia',
+            'objetivo_conversao': 70, 
+            'objetivo_branding': 30
+        },
+        'email_vertical_data': pd.DataFrame([
+            {'vertical_tipo': 'Segurança', 'percent_envio': '22%', 'entrega': '95%', 'abertura': '29%', 'clique': '2%', 'opt_out': '0.01%'},
+            {'vertical_tipo': 'Networking', 'percent_envio': '18%', 'entrega': '93%', 'abertura': '30%', 'clique': '1.9%', 'opt_out': '0.01%'},
+            {'vertical_tipo': 'Cloud', 'percent_envio': '26%', 'entrega': '94%', 'abertura': '32%', 'clique': '2%', 'opt_out': '0.02%'},
+            {'vertical_tipo': 'Data Center', 'percent_envio': '17%', 'entrega': '93%', 'abertura': '32%', 'clique': '2.1%', 'opt_out': '0.01%'},
+            {'vertical_tipo': 'Data & AI', 'percent_envio': '17%', 'entrega': '94%', 'abertura': '30%', 'clique': '2.1%', 'opt_out': '0.01%'},
+        ]),
+        'email_tipo_data': pd.DataFrame([
+            {'tipo_email': 'Eventos', 'percent_envio': '--', 'entrega': '92%', 'abertura': '28%', 'clique': '0.8%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Campanha Digital', 'percent_envio': '--', 'entrega': '95%', 'abertura': '30%', 'clique': '0.8%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Prom. e Estoque', 'percent_envio': '--', 'entrega': '94%', 'abertura': '29%', 'clique': '1.9%', 'opt_out': '0.0%'},
+            {'tipo_email': 'Comunicado', 'percent_envio': '--', 'entrega': '94%', 'abertura': '30%', 'clique': '2%', 'opt_out': '0.01%'},
+            {'tipo_email': 'Camp. Incentivo', 'percent_envio': '--', 'entrega': '95%', 'abertura': '32%', 'clique': '2%', 'opt_out': '0.01%'},
+        ]),
+        'redes_por_rede_data': pd.DataFrame([
+            {'rede': 'Instagram', 'seguidores': 805, 'media_seguidores': 268, 'engajamentos': 5445, 'cliques': 9245},
+            {'rede': 'LinkedIn', 'seguidores': 940, 'media_seguidores': 313, 'engajamentos': 4896, 'cliques': 15767},
+            {'rede': 'Facebook', 'seguidores': 31, 'media_seguidores': 10, 'engajamentos': 991, 'cliques': 2280},
+        ]),
+        'top_fabricantes': {
+            'mais_publicados': 'HPE (25), Fortinet (15), Cisco (14)',
+            'mais_engajados': 'HPE, Fortinet, NVidia',
+            'distribuicao_vertical': 'Institucional 50%, Segurança 27%, Data Center 17%, Cloud 2%, Networking 2%, Data & AI 1%'
+        },
+        'publicacoes_solicitadas': 173,
+        'publicacoes_publicadas': 71,
+        'cliques_top_posts': 683,
+        'blog_empresas': 536,
+        'blog_visitas_q1fy26': 22980,
+        'blog_visitas_q2fy25': None,
+        'newsletter_envios_q1fy26': 1065,
+        'newsletter_envios_q2fy25': 750,
+        'newsletter_abertura_q1fy26': 33,
+        'newsletter_abertura_q2fy25': 35,
+        'newsletter_cliques_q1fy26': 3.4,
+        'newsletter_cliques_q2fy25': 2.8,
+    }
 }
 
 # ==================== DADOS DETALHADOS DE EMAIL MARKETING (FY25) ====================
@@ -1094,7 +1163,7 @@ SLIDES_CONTENT = {
 • Segurança 3%
 • Networking 3%
 
-**Oportunidade:** Final de Ano e começo do ano são meses que as redes apresentam queda por padrão. Indicamos campanhas e ações institucionais para incentivar os usuários a seguirem nossos perfis.
+**Oportunidade:** Final de Ano e começo de ano são meses que as redes apresentam queda por padrão. Indicamos campanhas e ações institucionais para incentivar os usuários a seguirem nossos perfis.
                 '''
             },
             'Blog & Newsletter': {
@@ -1139,12 +1208,181 @@ SLIDES_CONTENT = {
                 '''
             }
         }
+    },
+    'Q2FY26': {
+        'titulo': 'Q2 FY26 - Análise de Performance',
+        'secoes': {
+            'Visão Geral': {
+                'titulo': '📊 Visão Geral',
+                'conteudo': '''
+**Destaques do Q2 FY26:**
+
+• 643 peças produzidas (+56,44% vs Q1FY26)
+• 133 solicitações de campanhas (+6,4% vs Q1FY26)
+• 12 campanhas solicitadas (+200% vs Q1FY26)
+• 7 campanhas veiculadas
+
+**Variações vs Períodos Anteriores:**
+• Peças: +56,44% vs Q1FY26 | -7% vs Q2FY25
+• Solicitações: +6,4% vs Q1FY26 | -16,35% vs Q2FY25
+• Campanhas: +200% vs Q1FY26 | +33% vs Q2FY25
+
+**Distribuição por Vertical:**
+• Segurança: 28% (liderança)
+• Institucional: 24%
+• Cloud: 23%
+• Data Center: 12%
+• Networking: 11%
+• Data & AI: 3%
+
+**Destaques:**
+• Fortinet foi o maior solicitante em Segurança com 113 peças
+• Microsoft liderou em Cloud com 104 peças
+• HPE se destacou em Data Center com 37 peças
+• Cisco foi o maior em Networking com 59 peças
+                '''
+            },
+            'Campanhas': {
+                'titulo': '🎯 Campanhas',
+                'conteudo': '''
+**Indicadores de Campanha:**
+
+• Campanhas solicitadas: 12
+• Campanhas veiculadas: 7
+• Representação das solicitações: 9,02%
+• Taxa de conversão (com investimento): 0,29%
+• Taxa de conversão (sem investimento): 0%
+• Leads gerados: 17 empresas
+
+**Distribuição por Objetivo:**
+• 70% campanhas de conversão
+• 30% campanhas de branding
+
+**Top Campanhas:**
+🏆 **Campanha de Recrutamento Fortinet**
+🏆 **Campanha NVidia**
+
+**Comparativo de Taxa de Conversão:**
+• Q2FY26 (c/ investimento): 0,29% | (s/ investimento): 0%
+• Q1FY26 (c/ investimento): 0,01% | (s/ investimento): 0%
+• Referência mercado: 0,5% a 2%
+
+**Oportunidade:** Campanhas com variação de criativos estático, carrossel e motion apresentam maior entrega e impactados. Recomendamos campanhas com no mínimo 90 dias para o algoritmo passar pela fase de aprendizado, acumular dados históricos e otimizar a distribuição do orçamento.
+                '''
+            },
+            'Email Marketing': {
+                'titulo': '📧 E-mail Marketing',
+                'conteudo': '''
+**Performance de e-mail marketing no Q2 FY26:**
+
+• Envios: 171.817
+• Taxa de entrega: 94% (↓ vs Q1FY26: 97%)
+• Taxa de abertura: 32% (↑ vs Q1FY26: 31%)
+• Taxa de cliques: 2% (↑ vs Q1FY26: 1,8%)
+• Taxa de opt-out: 0,01%
+• E-mails solicitados: 243 (37,8% das solicitações)
+
+**Destaques por vertical:**
+• Cloud: Maior volume de envios (26%), 32% abertura
+• Data Center e Cloud: Melhor taxa de abertura (32%)
+• Data & AI e Data Center: Melhor taxa de cliques (2,1%)
+
+**Por tipo de e-mail:**
+• Campanhas de Incentivo: Melhor taxa de abertura (32%)
+• Prom. e Estoque: Melhor taxa de cliques (1,9%)
+• Eventos: Menor taxa de abertura (28%)
+
+**Oportunidade:** Recomendamos a atualização, utilização regular de filtro da base e a limpeza contínua da base de e-mails para garantir o aumento da qualidade dos dados. Além disso, disparos de acordo com a maturidade/status da base.
+                '''
+            },
+            'Redes Sociais': {
+                'titulo': '🌐 Redes Sociais',
+                'conteudo': '''
+**Performance nas redes sociais Q2 FY26:**
+
+• Novos seguidores: 1.776
+• Publicações solicitadas: 173 (26,91% das solicitações)
+• Publicações publicadas: 71
+• Total de engajamentos: 11.332
+• Total de cliques: 27.292
+• Cliques nos 3 top posts: 683
+
+**Destaques por rede:**
+• LinkedIn: 940 seguidores, 4.896 engajamentos, 15.767 cliques
+• Instagram: 805 seguidores, 5.445 engajamentos, 9.245 cliques
+• Facebook: 31 seguidores, 991 engajamentos, 2.280 cliques
+
+**Top fabricantes mais publicados:**
+1. HPE (25 publicações)
+2. Fortinet (15 publicações)
+3. Cisco (14 publicações)
+
+**Top fabricantes mais engajados:**
+• HPE, Fortinet, NVidia (liderança em cliques)
+
+**Distribuição por vertical:**
+• Institucional 50%
+• Segurança 27%
+• Data Center 17%
+• Cloud 2%
+• Networking 2%
+• Data & AI 1%
+
+**Oportunidade:** Os conteúdos de campanhas/vendors apresentam bons resultados quando usamos formatos diferentes de estáticos. Indicamos utilizar mais campanhas e conteúdos institucionais incentivando as interações e seguir o perfil.
+                '''
+            },
+            'Blog & Newsletter': {
+                'titulo': '📝 Blog & Newsletter',
+                'conteudo': '''
+**Blog:**
+• Visitas: 30.040 (↑ vs Q1FY26: 22.980)
+• Blogposts publicados: 31 (↑ vs Q1FY26: 25)
+• Usuários: 22.150 (↑ vs Q1FY26: 12.077)
+• Tempo médio na página: 4,7 min (↑ vs Q1FY26: 4,2 min)
+• Empresas: 536 (↑ vs Q1FY26: 522)
+
+**Newsletter:**
+• Envios: 1.620 (↑ vs Q1FY26: 1.065)
+• Taxa de abertura: 34% (↑ vs Q1FY26: 33%)
+• Taxa de cliques: 2,9% (↓ vs Q1FY26: 3,4%)
+
+**Oportunidade:** Voltar a utilizar o blog de forma estratégica para potencializar as atividades. Usar a newsletter do LinkedIn como mais um canal de comunicação com as revendas.
+                '''
+            },
+            'Aprendizados': {
+                'titulo': '📚 Aprendizados e Recomendações',
+                'conteudo': '''
+✅ **QUE BOM:**
+• Crescimento expressivo de 56,44% na produção de peças vs Q1FY26
+• Aumento de 200% no número de campanhas solicitadas
+• Blog com crescimento de 30,7% em visitas vs Q1FY26
+• Melhora na taxa de abertura de e-mails (32%)
+• LinkedIn com 940 seguidores e 15.767 cliques
+
+⚠️ **QUE PENA:**
+• Queda de 7% na produção de peças vs Q2FY25
+• Redução de 16,35% nas solicitações vs Q2FY25
+• Taxa de conversão de campanhas ainda abaixo da média de mercado (0,29% vs 0,5-2%)
+• Queda na taxa de cliques da newsletter
+
+💡 **QUE TAL:**
+• Campanhas com no mínimo 90 dias para otimização do algoritmo
+• Utilizar mais campanhas institucionais para incentivar interações
+• Voltar a utilizar o blog de forma estratégica
+• Manter higienização contínua da base de e-mails
+• Variar criativos (estático, carrossel, motion) para melhor performance
+                '''
+            }
+        }
     }
 }
 
 # ==================== FUNÇÕES AUXILIARES ====================
-def get_fy26_q1_data(key, subkey=None):
-    data = FALLBACK_DATA_FY26_Q1
+def get_fy26_data(q, key, subkey=None):
+    """Obtém dados do FY26 para um trimestre específico"""
+    if q not in FALLBACK_DATA_FY26:
+        return None
+    data = FALLBACK_DATA_FY26[q]
     if subkey:
         return data.get(key, {}).get(subkey, '—')
     return data.get(key, '—')
@@ -1180,72 +1418,104 @@ def calc_variacao(atual, anterior):
 
 def get_pecas_value(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('pecas')
+        return get_fy26_data('Q1', 'pecas')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'pecas')
     return FALLBACK_DATA_FY25['pecas'].get(q, 0)
 
 def get_solicitacoes_value(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('solicitacoes')
+        return get_fy26_data('Q1', 'solicitacoes')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'solicitacoes')
     return FALLBACK_DATA_FY25['solicitacoes'].get(q, 0)
 
 def get_campanhas_value(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('campanhas')
+        return get_fy26_data('Q1', 'campanhas')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'campanhas')
     return FALLBACK_DATA_FY25['campanhas'].get(q, 0)
 
 def get_pecas_fy24(q):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     return FALLBACK_DATA_FY25['pecas_fy24'].get(q)
 
 def get_solicitacoes_fy24(q):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     return FALLBACK_DATA_FY25['solicitacoes_fy24'].get(q)
 
 def get_campanhas_fy24(q):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     return FALLBACK_DATA_FY25['campanhas_fy24'].get(q)
 
 def get_vertical_distribution(q):
     if q == 'Q1FY26':
-        return pd.DataFrame(get_fy26_q1_data('vertical_distribution'), columns=['vertical', 'percentual'])
+        return pd.DataFrame(get_fy26_data('Q1', 'vertical_distribution'), columns=['vertical', 'percentual'])
+    elif q == 'Q2FY26':
+        return pd.DataFrame(get_fy26_data('Q2', 'vertical_distribution'), columns=['vertical', 'percentual'])
     return pd.DataFrame(FALLBACK_DATA_FY25['vertical_distribution'].get(q, FALLBACK_DATA_FY25['vertical_distribution']['Q1']), columns=['vertical', 'percentual'])
 
 def get_fabricantes_data(q):
     if q == 'Q1FY26':
-        return pd.DataFrame(get_fy26_q1_data('fabricantes'))
+        return pd.DataFrame(get_fy26_data('Q1', 'fabricantes'))
+    elif q == 'Q2FY26':
+        return pd.DataFrame(get_fy26_data('Q2', 'fabricantes'))
     return pd.DataFrame(FALLBACK_DATA_FY25['fabricantes'].get(q, []))
 
 def get_campanhas_detalhes(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('campanhas_detalhes')
+        return get_fy26_data('Q1', 'campanhas_detalhes')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'campanhas_detalhes')
     return FALLBACK_DATA_FY25['campanhas_detalhes'].get(q, {})
 
 def get_campanhas_comparativos(q, tipo):
     if q == 'Q1FY26':
-        camp_data = get_fy26_q1_data('campanhas_detalhes')
+        camp_data = get_fy26_data('Q1', 'campanhas_detalhes')
         if tipo == 'taxa_conversao':
             return {
                 'com_investimento': camp_data.get('taxa_conversao_com_investimento', 0.01),
                 'sem_investimento': camp_data.get('taxa_conversao_sem_investimento', 0),
                 'referencia_mercado': '0,5% a 2%',
                 'q4fy25': 0.04,
-                'q1fy25': None
+                'q2fy25': None
             }
         elif tipo == 'objetivo':
             return {
                 'conversao': camp_data.get('objetivo_conversao', 100),
                 'branding': camp_data.get('objetivo_branding', 0)
             }
+    elif q == 'Q2FY26':
+        camp_data = get_fy26_data('Q2', 'campanhas_detalhes')
+        if tipo == 'taxa_conversao':
+            return {
+                'com_investimento': camp_data.get('taxa_conversao_com_investimento', 0.29),
+                'sem_investimento': camp_data.get('taxa_conversao_sem_investimento', 0),
+                'referencia_mercado': '0,5% a 2%',
+                'q1fy26': 0.01,
+                'q2fy25': None
+            }
+        elif tipo == 'objetivo':
+            return {
+                'conversao': camp_data.get('objetivo_conversao', 70),
+                'branding': camp_data.get('objetivo_branding', 30)
+            }
     return {}
 
 def get_email_value(q, metric):
     if q == 'Q1FY26':
         if metric == 'envios':
-            return get_fy26_q1_data('email_envios') if get_fy26_q1_data('email_envios') else '—'
-        return get_fy26_q1_data('email', metric)
+            return get_fy26_data('Q1', 'email_envios') if get_fy26_data('Q1', 'email_envios') else '—'
+        return get_fy26_data('Q1', 'email', metric)
+    elif q == 'Q2FY26':
+        if metric == 'envios':
+            val = get_fy26_data('Q2', 'email_envios')
+            return format_number(val) if val else '—'
+        return get_fy26_data('Q2', 'email', metric)
     if q and q in FALLBACK_DATA_FY25['email']:
         if metric == 'envios':
             return format_number(FALLBACK_DATA_FY25['email_envios'].get(q, '—'))
@@ -1253,7 +1523,7 @@ def get_email_value(q, metric):
     return '—'
 
 def get_email_fy24(q, metric):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     if metric == 'envios':
         return format_number(FALLBACK_DATA_FY25['email_envios_fy24'].get(q, '—'))
@@ -1263,7 +1533,12 @@ def get_email_fy24(q, metric):
 
 def get_blog_value(q, metric):
     if q == 'Q1FY26':
-        val = get_fy26_q1_data('blog', metric)
+        val = get_fy26_data('Q1', 'blog', metric)
+        if metric == 'tempo_medio':
+            return val
+        return format_number(val)
+    elif q == 'Q2FY26':
+        val = get_fy26_data('Q2', 'blog', metric)
         if metric == 'tempo_medio':
             return val
         return format_number(val)
@@ -1275,7 +1550,7 @@ def get_blog_value(q, metric):
     return '—'
 
 def get_blog_fy24(q, metric):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     if q and q in FALLBACK_DATA_FY25['blog_fy24']:
         return FALLBACK_DATA_FY25['blog_fy24'][q].get(metric)
@@ -1283,7 +1558,12 @@ def get_blog_fy24(q, metric):
 
 def get_newsletter_value(q, metric):
     if q == 'Q1FY26':
-        val = get_fy26_q1_data('newsletter', metric)
+        val = get_fy26_data('Q1', 'newsletter', metric)
+        if metric in ['abertura', 'cliques']:
+            return f"{val}%"
+        return format_number(val)
+    elif q == 'Q2FY26':
+        val = get_fy26_data('Q2', 'newsletter', metric)
         if metric in ['abertura', 'cliques']:
             return f"{val}%"
         return format_number(val)
@@ -1295,7 +1575,7 @@ def get_newsletter_value(q, metric):
     return '—'
 
 def get_newsletter_fy24(q, metric):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     if q and q in FALLBACK_DATA_FY25['newsletter_fy24']:
         val = FALLBACK_DATA_FY25['newsletter_fy24'][q].get(metric)
@@ -1307,13 +1587,15 @@ def get_newsletter_fy24(q, metric):
 
 def get_redes_value(q, metric):
     if q == 'Q1FY26':
-        return format_number(get_fy26_q1_data('redes', metric))
+        return format_number(get_fy26_data('Q1', 'redes', metric))
+    elif q == 'Q2FY26':
+        return format_number(get_fy26_data('Q2', 'redes', metric))
     if q and q in FALLBACK_DATA_FY25['redes']:
         return format_number(FALLBACK_DATA_FY25['redes'][q].get(metric, '—'))
     return '—'
 
 def get_redes_fy24(q, metric):
-    if q == 'Q1FY26':
+    if q in ['Q1FY26', 'Q2FY26']:
         return None
     if q and q in FALLBACK_DATA_FY25['redes_fy24']:
         return format_number(FALLBACK_DATA_FY25['redes_fy24'][q].get(metric, '—'))
@@ -1321,23 +1603,35 @@ def get_redes_fy24(q, metric):
 
 def get_email_vertical_data(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('email_vertical_data')
+        return get_fy26_data('Q1', 'email_vertical_data')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'email_vertical_data')
     return EMAIL_VERTICAL_DATA.get(q, pd.DataFrame())
 
 def get_email_tipo_data(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('email_tipo_data')
+        return get_fy26_data('Q1', 'email_tipo_data')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'email_tipo_data')
     return EMAIL_TIPO_DATA.get(q, pd.DataFrame())
 
 def get_redes_por_rede_data(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('redes_por_rede_data')
+        return get_fy26_data('Q1', 'redes_por_rede_data')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'redes_por_rede_data')
     return REDES_POR_REDE_DATA.get(q, pd.DataFrame())
 
 def get_top_fabricantes_data(q):
     if q == 'Q1FY26':
-        return get_fy26_q1_data('top_fabricantes')
+        return get_fy26_data('Q1', 'top_fabricantes')
+    elif q == 'Q2FY26':
+        return get_fy26_data('Q2', 'top_fabricantes')
     return TOP_FABRICANTES_DATA.get(q, {})
+
+def get_fy26_q1_data(key, subkey=None):
+    """Mantido para compatibilidade com código existente que usa Q1FY26"""
+    return get_fy26_data('Q1', key, subkey)
 
 def get_slides_content(q):
     return SLIDES_CONTENT.get(q, {})
@@ -1552,7 +1846,7 @@ def render_comparative_charts(quarterly_data):
                           legend=dict(font_color=COLORS['text']), height=400)
         st.plotly_chart(fig, use_container_width=True)
 
-# ==================== FUNÇÃO RENDER_CAMPANHAS_CARD CORRIGIDA ====================
+# ==================== FUNÇÃO RENDER_CAMPANHAS_CARD ====================
 def render_campanhas_card(q, is_annual=False):
     if is_annual:
         html_content = f"""
@@ -1630,8 +1924,6 @@ def render_campanhas_card(q, is_annual=False):
                 </div>
             </div>
             """)
-# ==================== FUNÇÃO RENDER_APRENDIZADOS_REMOVIDA (não será mais usada) ====================
-# A função render_aprendizados_consolidados foi completamente removida
 
 def export_quarter_data(q, quarterly_data):
     """Exporta todos os dados do trimestre selecionado para CSV/Excel"""
@@ -1704,6 +1996,13 @@ def export_quarter_data(q, quarterly_data):
             "Fortinet liderou em Segurança com 42 peças",
             "Blog com crescimento expressivo: +21,5% em visitas vs Q4FY25",
             "Newsletter com aumento de 150% nos envios vs Q4FY25"
+        ],
+        'Q2FY26': [
+            "Fortinet foi o maior solicitante em Segurança com 113 peças",
+            "Microsoft liderou em Cloud com 104 peças",
+            "Blog com crescimento de 30,7% em visitas vs Q1FY26",
+            "Aumento de 200% no número de campanhas solicitadas",
+            "LinkedIn com 940 seguidores e 15.767 cliques"
         ],
         'Q1': ["Fortinet foi o maior solicitante com 120 peças", "AWS liderou em Cloud", "Taxa de conversão de 7,26%"],
         'Q2': ["Microsoft liderou em Cloud", "Campanha IBM IA gerou 55 leads", "Taxa de abertura de e-mail 45,3%"],
@@ -2156,7 +2455,7 @@ def main():
         .section-title-premium, .blog-title-premium, .blog-value-premium {{ color: {COLORS['text']}; }}
         .bar-label-premium span:first-child {{ color: {COLORS['text']}; }};
         
-            /* Botões - sobrescreve vermelho padrão do Streamlit */
+        /* Botões - sobrescreve vermelho padrão do Streamlit */
         .stButton button {{
             background: {COLORS['button_bg']} !important;
             border: 1px solid rgba(7, 190, 213, 0.3) !important;
@@ -2250,17 +2549,21 @@ def main():
                 st.rerun()
     else:  # FY26
         st.markdown("### 🔷 Navegação FY26")
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             if st.button('🔷 Q1 FY26', key='q1_26', use_container_width=True):
                 st.session_state.view = 'Q1FY26'
                 st.rerun()
         with col2:
+            if st.button('🔷 Q2 FY26', key='q2_26', use_container_width=True):
+                st.session_state.view = 'Q2FY26'
+                st.rerun()
+        with col3:
             if st.button('🏆 Visão Anual', key='annual_26', use_container_width=True):
                 st.session_state.view = 'FY26'
                 st.rerun()
-        with col3:
+        with col4:
             if st.button('📄 Slides', key='slides_26', use_container_width=True):
                 st.session_state.view = 'Slides'
                 st.rerun()
@@ -2275,6 +2578,7 @@ def main():
         'Q3': {'pecas': get_pecas_value('Q3'), 'solic': get_solicitacoes_value('Q3'), 'camp': get_campanhas_value('Q3')},
         'Q4': {'pecas': get_pecas_value('Q4'), 'solic': get_solicitacoes_value('Q4'), 'camp': get_campanhas_value('Q4')},
         'Q1FY26': {'pecas': get_pecas_value('Q1FY26'), 'solic': get_solicitacoes_value('Q1FY26'), 'camp': get_campanhas_value('Q1FY26')},
+        'Q2FY26': {'pecas': get_pecas_value('Q2FY26'), 'solic': get_solicitacoes_value('Q2FY26'), 'camp': get_campanhas_value('Q2FY26')},
     }
 
     # ==================== VIEW SLIDES ====================
@@ -2284,7 +2588,7 @@ def main():
         if st.session_state.ano_selecionado == 'FY25':
             slide_opcoes = ['Q1', 'Q2', 'Q3', 'Q4']
         else:
-            slide_opcoes = ['Q1FY26']
+            slide_opcoes = ['Q1FY26', 'Q2FY26']
 
         slide_trimestre = st.selectbox(
             "Selecione o trimestre para visualizar o conteúdo dos slides",
@@ -2357,37 +2661,44 @@ def main():
         if not df_fab.empty:
             render_table(df_fab, "🏭 Fabricantes por Vertical (Q4 FY25)")
 
-        # Aprendizados Consolidados FY25 - REMOVIDO conforme solicitado
-
+    # ==================== VIEW FY26 ====================
     elif q == 'FY26':
-        st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview FY26 (parcial)</div><div class="section-sub">Indicadores disponíveis - Q1 FY26</div></div></div>', unsafe_allow_html=True)
-    
-        pecas_atual = quarterly_data['Q1FY26']['pecas']
-        solic_atual = quarterly_data['Q1FY26']['solic']
-        camp_atual = quarterly_data['Q1FY26']['camp']
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview FY26</div><div class="section-sub">Indicadores disponíveis - Q1 e Q2 FY26</div></div></div>', unsafe_allow_html=True)
         
-        pecas_q1fy25 = quarterly_data['Q1']['pecas']
-        solic_q1fy25 = quarterly_data['Q1']['solic']
-        camp_q1fy25 = quarterly_data['Q1']['camp']
+        # Dados Q1
+        pecas_q1 = quarterly_data['Q1FY26']['pecas']
+        solic_q1 = quarterly_data['Q1FY26']['solic']
+        camp_q1 = quarterly_data['Q1FY26']['camp']
         
-        pecas_var = calc_variacao(pecas_atual, pecas_q1fy25)
-        solic_var = calc_variacao(solic_atual, solic_q1fy25)
-        camp_var = calc_variacao(camp_atual, camp_q1fy25)
-    
-        k1, k2, k3 = st.columns(3)
-        with k1:
-            render_kpi_premium(pecas_atual, "Peças Q1 FY26", "📦", pecas_var, "Q1 FY25")
-        with k2:
-            render_kpi_premium(solic_atual, "Solicitações Q1 FY26", "📋", solic_var, "Q1 FY25")
-        with k3:
-            render_kpi_premium(camp_atual, "Campanhas Q1 FY26", "🎯", camp_var, "Q1 FY25")
+        # Dados Q2
+        pecas_q2 = quarterly_data['Q2FY26']['pecas']
+        solic_q2 = quarterly_data['Q2FY26']['solic']
+        camp_q2 = quarterly_data['Q2FY26']['camp']
+        
+        # Variações Q2 vs Q1
+        pecas_var = calc_variacao(pecas_q2, pecas_q1)
+        solic_var = calc_variacao(solic_q2, solic_q1)
+        camp_var = calc_variacao(camp_q2, camp_q1)
+        
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
+        with col1:
+            render_kpi_premium(pecas_q1, "Peças Q1", "📦")
+        with col2:
+            render_kpi_premium(pecas_q2, "Peças Q2", "📦", pecas_var, "Q1 FY26")
+        with col3:
+            render_kpi_premium(solic_q1, "Solicitações Q1", "📋")
+        with col4:
+            render_kpi_premium(solic_q2, "Solicitações Q2", "📋", solic_var, "Q1 FY26")
+        with col5:
+            render_kpi_premium(camp_q1, "Campanhas Q1", "🎯")
+        with col6:
+            render_kpi_premium(camp_q2, "Campanhas Q2", "🎯", camp_var, "Q1 FY26")
         
         st.info("📌 Os demais trimestres do FY26 serão adicionados conforme disponibilidade dos dados.")
         
-        st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical - Q1 FY26</div><div class="section-sub">% Peças por vertical</div></div></div>', unsafe_allow_html=True)
-        render_horizontal_bars(get_vertical_distribution('Q1FY26'), "% Peças por Vertical - Q1 FY26")
-        
-        # Aprendizados Consolidados FY26 - REMOVIDO conforme solicitado
+        # Distribuição Vertical Q2
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical - Q2 FY26</div><div class="section-sub">% Peças por vertical</div></div></div>', unsafe_allow_html=True)
+        render_horizontal_bars(get_vertical_distribution('Q2FY26'), "% Peças por Vertical - Q2 FY26")
 
     # ==================== VIEW Q1FY26 ====================
     elif q == 'Q1FY26':
@@ -2537,9 +2848,9 @@ def main():
         # Métricas complementares redes sociais
         st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Métricas Complementares</div><div class="section-sub">Publicações e engajamento</div></div></div>', unsafe_allow_html=True)
         
-        pub_solicitadas = get_fy26_q1_data('publicacoes_solicitadas')
-        pub_publicadas = get_fy26_q1_data('publicacoes_publicadas')
-        cliques_top = get_fy26_q1_data('cliques_top_posts')
+        pub_solicitadas = get_fy26_data('Q1', 'publicacoes_solicitadas')
+        pub_publicadas = get_fy26_data('Q1', 'publicacoes_publicadas')
+        cliques_top = get_fy26_data('Q1', 'cliques_top_posts')
         
         col_pub1, col_pub2, col_pub3 = st.columns(3)
         with col_pub1:
@@ -2627,7 +2938,7 @@ def main():
             blog_usuarios = get_blog_value('Q1FY26', 'usuarios')
             blog_posts = get_blog_value('Q1FY26', 'blogposts')
             blog_tempo = get_blog_value('Q1FY26', 'tempo_medio')
-            blog_empresas = get_fy26_q1_data('blog_empresas')
+            blog_empresas = get_fy26_data('Q1', 'blog_empresas')
 
             prev_visitas = get_blog_value('Q4', 'visitas')
             prev_usuarios = get_blog_value('Q4', 'usuarios')
@@ -2657,13 +2968,489 @@ def main():
             nw_abertura = get_newsletter_value('Q1FY26', 'abertura')
             nw_cliques = get_newsletter_value('Q1FY26', 'cliques')
 
-            prev_envios = get_fy26_q1_data('newsletter_envios_q4fy25')
-            prev_abertura = get_fy26_q1_data('newsletter_abertura_q4fy25')
-            prev_cliques = get_fy26_q1_data('newsletter_cliques_q4fy25')
+            prev_envios = get_fy26_data('Q1', 'newsletter_envios_q4fy25')
+            prev_abertura = get_fy26_data('Q1', 'newsletter_abertura_q4fy25')
+            prev_cliques = get_fy26_data('Q1', 'newsletter_cliques_q4fy25')
 
             render_blog_item("Envios", nw_envios, prev_envios, prev_fy25_name, icon="📨")
             render_blog_item("Taxa de Abertura", nw_abertura, prev_abertura, prev_fy25_name, is_percentage=True, icon="📊")
             render_blog_item("Taxa de Cliques", nw_cliques, prev_cliques, prev_fy25_name, is_percentage=True, icon="🖱️")
+
+        # Exportação
+        with st.sidebar:
+            st.markdown("---")
+            st.markdown("### 📥 Exportar Dados")
+            dl_fmt = st.selectbox("Formato", ["CSV", "Excel"], key="dl_q")
+            export_completo = st.checkbox("📋 Exportar todas as abas (completo)", value=True)
+            
+            if st.button(f"📥 Baixar {q}", key="btn_dl_q"):
+                if export_completo:
+                    all_data = export_quarter_data(q, quarterly_data)
+                    
+                    if dl_fmt == "CSV":
+                        zip_buffer = io.BytesIO()
+                        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                            for sheet_name, df in all_data.items():
+                                csv_data = df.to_csv(index=False)
+                                zip_file.writestr(f"{sheet_name}.csv", csv_data)
+                        st.download_button(
+                            "✅ Baixar Todos (ZIP)", 
+                            zip_buffer.getvalue(), 
+                            f"qbr_{q}_completo.zip", 
+                            "application/zip"
+                        )
+                    else:
+                        buf = io.BytesIO()
+                        with pd.ExcelWriter(buf, engine='openpyxl') as writer:
+                            for sheet_name, df in all_data.items():
+                                df.to_excel(writer, sheet_name=sheet_name[:31], index=False)
+                        st.download_button(
+                            "✅ Baixar Excel Completo", 
+                            buf.getvalue(), 
+                            f"qbr_{q}_completo.xlsx",
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        )
+                else:
+                    rows = [
+                        {'Categoria':'Peças Produzidas','Valor':pecas_val},
+                        {'Categoria':'Solicitações','Valor':solic_val},
+                        {'Categoria':'Campanhas','Valor':camp_val},
+                        {'Categoria':'Taxa Entrega E-mail','Valor':entrega_atual},
+                        {'Categoria':'Taxa Abertura E-mail','Valor':abertura_atual},
+                        {'Categoria':'Taxa Cliques E-mail','Valor':cliques_atual},
+                        {'Categoria':'Novos Seguidores','Valor':seg_atual},
+                        {'Categoria':'Total Engajamentos','Valor':eng_atual},
+                        {'Categoria':'Total Cliques','Valor':cli_atual},
+                    ]
+                    df_dl = pd.DataFrame(rows)
+                    
+                    if dl_fmt == "CSV":
+                        st.download_button("✅ Baixar CSV", df_dl.to_csv(index=False), f"qbr_{q}.csv", "text/csv")
+                    else:
+                        buf = io.BytesIO()
+                        with pd.ExcelWriter(buf, engine='openpyxl') as w: 
+                            df_dl.to_excel(w, index=False, sheet_name=q)
+                        st.download_button("✅ Baixar Excel", buf.getvalue(), f"qbr_{q}.xlsx")
+
+    # ==================== VIEW Q2FY26 ====================
+    elif q == 'Q2FY26':
+        prev_fy25_q = 'Q2'
+        prev_fy25_name = f'{prev_fy25_q} FY25'
+        prev_fy26_q = 'Q1FY26'
+        prev_fy26_name = 'Q1 FY26'
+
+        pecas_val = quarterly_data['Q2FY26']['pecas']
+        solic_val = quarterly_data['Q2FY26']['solic']
+        camp_val = quarterly_data['Q2FY26']['camp']
+
+        pecas_var_q1fy26 = calc_variacao(pecas_val, quarterly_data['Q1FY26']['pecas'])
+        solic_var_q1fy26 = calc_variacao(solic_val, quarterly_data['Q1FY26']['solic'])
+        camp_var_q1fy26 = calc_variacao(camp_val, quarterly_data['Q1FY26']['camp'])
+
+        pecas_var_q2fy25 = calc_variacao(pecas_val, quarterly_data['Q2']['pecas'])
+        solic_var_q2fy25 = calc_variacao(solic_val, quarterly_data['Q2']['solic'])
+        camp_var_q2fy25 = calc_variacao(camp_val, quarterly_data['Q2']['camp'])
+
+        # Overview KPIs com duas comparações
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Overview</div><div class="section-sub">Indicadores de performance · Q2 FY26</div></div></div>', unsafe_allow_html=True)
+        
+        # KPI com duas badges de variação
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            pecas_badges = ''
+            if pecas_var_q1fy26 is not None:
+                pecas_badges += _var_badge(pecas_var_q1fy26, f'<span style="font-size:9px;">vs {prev_fy26_name}</span>')
+            if pecas_var_q2fy25 is not None:
+                pecas_badges += _var_badge(pecas_var_q2fy25, f'<span style="font-size:9px;">vs {prev_fy25_name}</span>')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">📦</div>
+                <div class="kpi-number">{format_number(pecas_val)}</div>
+                <div class="kpi-label">Peças Produzidas</div>
+                {pecas_badges}
+            </div>
+            """)
+        
+        with col2:
+            solic_badges = ''
+            if solic_var_q1fy26 is not None:
+                solic_badges += _var_badge(solic_var_q1fy26, f'<span style="font-size:9px;">vs {prev_fy26_name}</span>')
+            if solic_var_q2fy25 is not None:
+                solic_badges += _var_badge(solic_var_q2fy25, f'<span style="font-size:9px;">vs {prev_fy25_name}</span>')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">📋</div>
+                <div class="kpi-number">{format_number(solic_val)}</div>
+                <div class="kpi-label">Solicitações</div>
+                {solic_badges}
+            </div>
+            """)
+        
+        with col3:
+            camp_badges = ''
+            if camp_var_q1fy26 is not None:
+                camp_badges += _var_badge(camp_var_q1fy26, f'<span style="font-size:9px;">vs {prev_fy26_name}</span>')
+            if camp_var_q2fy25 is not None:
+                camp_badges += _var_badge(camp_var_q2fy25, f'<span style="font-size:9px;">vs {prev_fy25_name}</span>')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">🎯</div>
+                <div class="kpi-number">{format_number(camp_val)}</div>
+                <div class="kpi-label">Campanhas</div>
+                {camp_badges}
+            </div>
+            """)
+
+        # Distribuição por Vertical
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📊</div><div><div class="section-title-premium">Distribuição por Vertical</div><div class="section-sub">% Peças por vertical - Q2 FY26</div></div></div>', unsafe_allow_html=True)
+        render_horizontal_bars(get_vertical_distribution('Q2FY26'), "% Peças por Vertical")
+
+        # Campanhas
+        st.markdown(f'<div class="section-premium"><div class="section-icon">🎯</div><div><div class="section-title-premium">Campanhas</div><div class="section-sub">Métricas, comparativos e destaques Q2 FY26</div></div></div>', unsafe_allow_html=True)
+        render_campanhas_card('Q2FY26', is_annual=False)
+        
+        # Taxa de Conversão Comparativo
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📈</div><div><div class="section-title-premium">Comparativo de Taxa de Conversão</div><div class="section-sub">Histórico e referência de mercado</div></div></div>', unsafe_allow_html=True)
+        
+        taxa_comp = get_campanhas_comparativos('Q2FY26', 'taxa_conversao')
+        if taxa_comp:
+            col_comp1, col_comp2, col_comp3 = st.columns(3)
+            
+            with col_comp1:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['primary']};">💰 Com Investimento</div>
+                    <div style="font-size:32px;font-weight:800;color:#6FBF6F;">{taxa_comp.get('com_investimento', '—')}%</div>
+                    <div style="font-size:11px;color:{COLORS['text_muted']};margin-top:8px;">Referência mercado: {taxa_comp.get('referencia_mercado', '—')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with col_comp2:
+                sem_invest = taxa_comp.get('sem_investimento')
+                if sem_invest is not None and sem_invest != '—':
+                    st.markdown(f"""
+                    <div class="glass-card">
+                        <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['secondary']};">📢 Sem Investimento</div>
+                        <div style="font-size:32px;font-weight:800;color:#FF8C5A;">{sem_invest}%</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div class="glass-card">
+                        <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['secondary']};">📢 Sem Investimento</div>
+                        <div style="font-size:32px;font-weight:800;color:{COLORS['text_muted']};">—</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            with col_comp3:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:{COLORS['accent']};">📅 Comparativo Q1FY26</div>
+                    <div style="font-size:13px;line-height:1.8;">
+                        <div>vs Q1FY26 (c/ investimento): {taxa_comp.get('q1fy26', '—')}%</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # Fabricantes
+        st.markdown(f'<div class="section-premium"><div class="section-icon">🏭</div><div><div class="section-title-premium">Fabricantes por Vertical</div><div class="section-sub">Principais fornecedores Q2 FY26</div></div></div>', unsafe_allow_html=True)
+        df_fab = get_fabricantes_data('Q2FY26')
+        if not df_fab.empty:
+            render_table(df_fab, "🏭 Fabricantes por Vertical")
+
+        # Email Marketing
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📧</div><div><div class="section-title-premium">E-mail Marketing</div><div class="section-sub">Métricas de performance e análise detalhada Q2 FY26</div></div></div>', unsafe_allow_html=True)
+        
+        entrega_atual = get_email_value('Q2FY26', 'entrega')
+        abertura_atual = get_email_value('Q2FY26', 'abertura')
+        cliques_atual = get_email_value('Q2FY26', 'cliques')
+        optout_atual = get_email_value('Q2FY26', 'optout')
+        envios_atual = get_email_value('Q2FY26', 'envios')
+
+        prev_entrega_q1 = get_email_value('Q1FY26', 'entrega')
+        prev_abertura_q1 = get_email_value('Q1FY26', 'abertura')
+        prev_cliques_q1 = get_email_value('Q1FY26', 'cliques')
+        prev_optout_q1 = get_email_value('Q1FY26', 'optout')
+
+        prev_entrega_q2fy25 = get_email_value('Q2', 'entrega')
+        prev_abertura_q2fy25 = get_email_value('Q2', 'abertura')
+        prev_cliques_q2fy25 = get_email_value('Q2', 'cliques')
+        prev_optout_q2fy25 = get_email_value('Q2', 'optout')
+
+        def fmt_pct(v): return f"{v}%" if v not in ('—', None, '') else '—'
+
+        # Cards de Email com duas comparações
+        col_e1, col_e2, col_e3, col_e4 = st.columns(4)
+        
+        with col_e1:
+            entrega_badges = ''
+            var_entrega_q1 = calc_variacao(entrega_atual, prev_entrega_q1)
+            var_entrega_q2fy25 = calc_variacao(entrega_atual, prev_entrega_q2fy25)
+            if var_entrega_q1 is not None:
+                entrega_badges += _var_badge(var_entrega_q1, 'vs Q1FY26')
+            if var_entrega_q2fy25 is not None:
+                entrega_badges += _var_badge(var_entrega_q2fy25, 'vs Q2FY25')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-number">{fmt_pct(entrega_atual)}</div>
+                <div class="kpi-label">Entregas</div>
+                {entrega_badges}
+            </div>
+            """)
+        
+        with col_e2:
+            abertura_badges = ''
+            var_abertura_q1 = calc_variacao(abertura_atual, prev_abertura_q1)
+            var_abertura_q2fy25 = calc_variacao(abertura_atual, prev_abertura_q2fy25)
+            if var_abertura_q1 is not None:
+                abertura_badges += _var_badge(var_abertura_q1, 'vs Q1FY26')
+            if var_abertura_q2fy25 is not None:
+                abertura_badges += _var_badge(var_abertura_q2fy25, 'vs Q2FY25')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">👁️</div>
+                <div class="kpi-number">{fmt_pct(abertura_atual)}</div>
+                <div class="kpi-label">Aberturas</div>
+                {abertura_badges}
+            </div>
+            """)
+        
+        with col_e3:
+            cliques_badges = ''
+            var_cliques_q1 = calc_variacao(cliques_atual, prev_cliques_q1)
+            var_cliques_q2fy25 = calc_variacao(cliques_atual, prev_cliques_q2fy25)
+            if var_cliques_q1 is not None:
+                cliques_badges += _var_badge(var_cliques_q1, 'vs Q1FY26')
+            if var_cliques_q2fy25 is not None:
+                cliques_badges += _var_badge(var_cliques_q2fy25, 'vs Q2FY25')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">🖱️</div>
+                <div class="kpi-number">{fmt_pct(cliques_atual)}</div>
+                <div class="kpi-label">Cliques</div>
+                {cliques_badges}
+            </div>
+            """)
+        
+        with col_e4:
+            optout_badges = ''
+            var_optout_q1 = calc_variacao(optout_atual, prev_optout_q1)
+            var_optout_q2fy25 = calc_variacao(optout_atual, prev_optout_q2fy25)
+            if var_optout_q1 is not None:
+                optout_badges += _var_badge(var_optout_q1, 'vs Q1FY26')
+            if var_optout_q2fy25 is not None:
+                optout_badges += _var_badge(var_optout_q2fy25, 'vs Q2FY25')
+            
+            st.html(f"""
+            <div class="glass-card kpi-premium">
+                <div class="kpi-icon">🚫</div>
+                <div class="kpi-number">{fmt_pct(optout_atual)}</div>
+                <div class="kpi-label">Opt-Out</div>
+                {optout_badges}
+            </div>
+            """)
+        
+        # Envios e e-mails solicitados
+        col_envios1, col_envios2 = st.columns(2)
+        with col_envios1:
+            st.markdown(f"""
+            <div class="glass-card" style="text-align:center;">
+                <div style="font-size:34px;margin-bottom:8px;">📨</div>
+                <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{format_number(envios_atual)}</div>
+                <div style="font-size:12px;color:{COLORS['text_muted']};">Total de Envios</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_envios2:
+            emails_solicitados = 243  # Do arquivo Excel
+            pct_solicitacoes = 37.8  # Do arquivo Excel
+            st.markdown(f"""
+            <div class="glass-card" style="text-align:center;">
+                <div style="font-size:34px;margin-bottom:8px;">✉️</div>
+                <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{emails_solicitados}</div>
+                <div style="font-size:12px;color:{COLORS['text_muted']};">E-mails Solicitados</div>
+                <div style="font-size:11px;color:#6FBF6F;margin-top:8px;">{pct_solicitacoes}% das solicitações</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Tabelas detalhadas de Email
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Análise Detalhada</div><div class="section-sub">Métricas por Vertical e Tipo de E-mail</div></div></div>', unsafe_allow_html=True)
+        
+        col_email_vert, col_email_tipo = st.columns(2)
+        
+        with col_email_vert:
+            df_email_vertical = get_email_vertical_data('Q2FY26')
+            if not df_email_vertical.empty:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📊 Por Vertical</div>
+                """, unsafe_allow_html=True)
+                st.dataframe(df_email_vertical, use_container_width=True, hide_index=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col_email_tipo:
+            df_email_tipo = get_email_tipo_data('Q2FY26')
+            if not df_email_tipo.empty:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📧 Por Tipo de E-mail</div>
+                """, unsafe_allow_html=True)
+                st.dataframe(df_email_tipo, use_container_width=True, hide_index=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+
+        # Redes Sociais
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📱</div><div><div class="section-title-premium">Redes Sociais</div><div class="section-sub">Engajamento, alcance e análise por rede Q2 FY26</div></div></div>', unsafe_allow_html=True)
+        
+        seg_atual = get_redes_value('Q2FY26', 'seguidores')
+        eng_atual = get_redes_value('Q2FY26', 'engajamentos')
+        cli_atual = get_redes_value('Q2FY26', 'cliques')
+        prev_seg = get_redes_value('Q1FY26', 'seguidores')
+        prev_eng = get_redes_value('Q1FY26', 'engajamentos')
+        prev_cli = get_redes_value('Q1FY26', 'cliques')
+
+        r1, r2, r3 = st.columns(3)
+        with r1: render_metric_card("Novos Seguidores", "👥", seg_atual, prev_seg, 'Q1 FY26')
+        with r2: render_metric_card("Engajamentos", "❤️", eng_atual, prev_eng, 'Q1 FY26')
+        with r3: render_metric_card("Cliques", "🖱️", cli_atual, prev_cli, 'Q1 FY26')
+        
+        # Métricas complementares redes sociais
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Métricas Complementares</div><div class="section-sub">Publicações e engajamento</div></div></div>', unsafe_allow_html=True)
+        
+        pub_solicitadas = get_fy26_data('Q2', 'publicacoes_solicitadas')
+        pub_publicadas = get_fy26_data('Q2', 'publicacoes_publicadas')
+        cliques_top = get_fy26_data('Q2', 'cliques_top_posts')
+        
+        col_pub1, col_pub2, col_pub3 = st.columns(3)
+        with col_pub1:
+            st.markdown(f"""
+            <div class="glass-card" style="text-align:center;">
+                <div style="font-size:34px;margin-bottom:8px;">📝</div>
+                <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{pub_solicitadas}</div>
+                <div style="font-size:12px;color:{COLORS['text_muted']};">Publicações Solicitadas</div>
+                <div style="font-size:11px;color:#6FBF6F;margin-top:8px;">{((pub_publicadas/pub_solicitadas)*100):.1f}% de aproveitamento</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_pub2:
+            st.markdown(f"""
+            <div class="glass-card" style="text-align:center;">
+                <div style="font-size:34px;margin-bottom:8px;">✅</div>
+                <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{pub_publicadas}</div>
+                <div style="font-size:12px;color:{COLORS['text_muted']};">Publicações Publicadas</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_pub3:
+            st.markdown(f"""
+            <div class="glass-card" style="text-align:center;">
+                <div style="font-size:34px;margin-bottom:8px;">⭐</div>
+                <div style="font-size:36px;font-weight:800;color:{COLORS['text']};">{cliques_top}</div>
+                <div style="font-size:12px;color:{COLORS['text_muted']};">Cliques nos 3 Top Posts</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Tabelas detalhadas Redes Sociais
+        st.markdown(f'<div class="section-premium" style="margin-top: 16px;"><div class="section-icon">📊</div><div><div class="section-title-premium">Análise Detalhada</div><div class="section-sub">Performance por rede e destaques de fabricantes</div></div></div>', unsafe_allow_html=True)
+        
+        df_redes_por_rede = get_redes_por_rede_data('Q2FY26')
+        if not df_redes_por_rede.empty:
+            st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:{COLORS['primary']};border-left:3px solid {COLORS['primary']};padding-left:12px;">📈 Performance por Rede Social</div>
+            """, unsafe_allow_html=True)
+            st.dataframe(df_redes_por_rede, use_container_width=True, hide_index=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        top_fab = get_top_fabricantes_data('Q2FY26')
+        if top_fab:
+            col_fab1, col_fab2 = st.columns(2)
+            with col_fab1:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#FFD966;border-left:3px solid #FFD966;padding-left:12px;">📸 Top Fabricantes Mais Publicados</div>
+                    <div style="font-size:14px;line-height:1.6;color:{COLORS['text']};">{top_fab.get('mais_publicados', '—')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with col_fab2:
+                st.markdown(f"""
+                <div class="glass-card">
+                    <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#FF8C5A;border-left:3px solid #FF8C5A;padding-left:12px;">🔥 Top Fabricantes Mais Engajados</div>
+                    <div style="font-size:14px;line-height:1.6;color:{COLORS['text']};">{top_fab.get('mais_engajados', '—')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size:16px;font-weight:600;margin-bottom:16px;color:#6FBF6F;border-left:3px solid #6FBF6F;padding-left:12px;">📊 Distribuição de Publicações por Vertical</div>
+                <div style="font-size:14px;line-height:1.6;color:{COLORS['text']};">{top_fab.get('distribuicao_vertical', '—')}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Blog & Newsletter
+        st.markdown(f'<div class="section-premium"><div class="section-icon">📝</div><div><div class="section-title-premium">Blog &amp; Newsletter</div><div class="section-sub">Conteúdo e engajamento Q2 FY26</div></div></div>', unsafe_allow_html=True)
+
+        bl_col, nw_col = st.columns(2)
+
+        with bl_col:
+            st.html(f"""
+            <div class="blog-premium">
+                <div class="blog-header-premium">
+                    <div class="blog-icon-premium">📖</div>
+                    <div>
+                        <div class="blog-title-premium">Blog</div>
+                        <div class="blog-sub-premium">Conteúdos e performance</div>
+                    </div>
+                </div>
+            </div>
+            """)
+
+            blog_visitas = get_blog_value('Q2FY26', 'visitas')
+            blog_usuarios = get_blog_value('Q2FY26', 'usuarios')
+            blog_posts = get_blog_value('Q2FY26', 'blogposts')
+            blog_tempo = get_blog_value('Q2FY26', 'tempo_medio')
+            blog_empresas = get_fy26_data('Q2', 'blog_empresas')
+
+            prev_visitas = get_blog_value('Q1FY26', 'visitas')
+            prev_usuarios = get_blog_value('Q1FY26', 'usuarios')
+            prev_posts = get_blog_value('Q1FY26', 'blogposts')
+            prev_tempo = get_blog_value('Q1FY26', 'tempo_medio')
+
+            render_blog_item("Visitas", blog_visitas, prev_visitas, 'Q1 FY26', icon="👁️")
+            render_blog_item("Usuários", blog_usuarios, prev_usuarios, 'Q1 FY26', icon="👥")
+            render_blog_item("Blogposts Publicados", blog_posts, prev_posts, 'Q1 FY26', icon="📝")
+            render_blog_item("Tempo Médio na Página", blog_tempo, prev_tempo, 'Q1 FY26', icon="⏱️")
+            render_blog_item("Empresas", blog_empresas, 522, 'Q1 FY26', icon="🏢")
+
+        with nw_col:
+            st.html(f"""
+            <div class="blog-premium">
+                <div class="blog-header-premium">
+                    <div class="blog-icon-premium">📬</div>
+                    <div>
+                        <div class="blog-title-premium">Newsletter</div>
+                        <div class="blog-sub-premium">Comunicação direta</div>
+                    </div>
+                </div>
+            </div>
+            """)
+
+            nw_envios = get_newsletter_value('Q2FY26', 'envios')
+            nw_abertura = get_newsletter_value('Q2FY26', 'abertura')
+            nw_cliques = get_newsletter_value('Q2FY26', 'cliques')
+
+            prev_envios = get_fy26_data('Q2', 'newsletter_envios_q1fy26')
+            prev_abertura = get_fy26_data('Q2', 'newsletter_abertura_q1fy26')
+            prev_cliques = get_fy26_data('Q2', 'newsletter_cliques_q1fy26')
+
+            render_blog_item("Envios", nw_envios, prev_envios, 'Q1 FY26', icon="📨")
+            render_blog_item("Taxa de Abertura", nw_abertura, prev_abertura, 'Q1 FY26', is_percentage=True, icon="📊")
+            render_blog_item("Taxa de Cliques", nw_cliques, prev_cliques, 'Q1 FY26', is_percentage=True, icon="🖱️")
 
         # Exportação
         with st.sidebar:
