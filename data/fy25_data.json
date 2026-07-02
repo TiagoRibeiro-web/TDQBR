@@ -1,0 +1,168 @@
+{
+  "pecas": {
+    "Q1": 518,
+    "Q2": 692,
+    "Q3": 674,
+    "Q4": 647
+  },
+  "solicitacoes": {
+    "Q1": 108,
+    "Q2": 159,
+    "Q3": 100,
+    "Q4": 131
+  },
+  "campanhas": {
+    "Q1": 4,
+    "Q2": 9,
+    "Q3": 7,
+    "Q4": 6
+  },
+  "pecas_fy24": {
+    "Q1": null,
+    "Q2": null,
+    "Q3": null,
+    "Q4": 838
+  },
+  "solicitacoes_fy24": {
+    "Q1": null,
+    "Q2": null,
+    "Q3": null,
+    "Q4": 193
+  },
+  "campanhas_fy24": {
+    "Q1": null,
+    "Q2": null,
+    "Q3": null,
+    "Q4": 4
+  },
+  "email": {
+    "Q1": {"entrega": 95.7, "abertura": 35.8, "cliques": 1.7, "optout": 0.04},
+    "Q2": {"entrega": 98.4, "abertura": 45.3, "cliques": 2.6, "optout": 0.07},
+    "Q3": {"entrega": 96.0, "abertura": 38.0, "cliques": 6.0, "optout": 0.05},
+    "Q4": {"entrega": 93.0, "abertura": 24.0, "cliques": 2.2, "optout": 0.02}
+  },
+  "email_envios": {
+    "Q1": 169948,
+    "Q2": 122639,
+    "Q3": 134035,
+    "Q4": 349487
+  },
+  "email_fy24": {
+    "Q1": {"entrega": 99.44, "abertura": 44.11, "cliques": 2.03, "optout": 0.07},
+    "Q2": {"entrega": 96.96, "abertura": 30.01, "cliques": 1.94, "optout": 0.14},
+    "Q3": {"entrega": 94.0, "abertura": 42.0, "cliques": 1.36, "optout": 0.06},
+    "Q4": {"entrega": 94.0, "abertura": 24.0, "cliques": 1.3, "optout": 0.04}
+  },
+  "email_envios_fy24": {
+    "Q1": 169948,
+    "Q2": 122639,
+    "Q3": 134035,
+    "Q4": 349487
+  },
+  "redes": {
+    "Q1": {"seguidores": 1230, "engajamentos": 81419, "cliques": 6117},
+    "Q2": {"seguidores": 1688, "engajamentos": 10237, "cliques": 8585},
+    "Q3": {"seguidores": 1927, "engajamentos": 76102, "cliques": 36375},
+    "Q4": {"seguidores": 2296, "engajamentos": 58046, "cliques": 51119}
+  },
+  "redes_fy24": {
+    "Q1": {"seguidores": 1361, "engajamentos": 17583, "cliques": 12983},
+    "Q2": {"seguidores": 1361, "engajamentos": 17583, "cliques": 12983},
+    "Q3": {"seguidores": 1361, "engajamentos": 17583, "cliques": 12983},
+    "Q4": {"seguidores": 764, "engajamentos": 19348, "cliques": 23131}
+  },
+  "blog": {
+    "Q1": {"visitas": 24926, "usuarios": 17075, "blogposts": 31, "tempo_medio": "5:00"},
+    "Q2": {"visitas": 16137, "usuarios": 11295, "blogposts": 25, "tempo_medio": "4:04"},
+    "Q3": {"visitas": 13353, "usuarios": 7037, "blogposts": 26, "tempo_medio": "2:35"},
+    "Q4": {"visitas": 18910, "usuarios": 12348, "blogposts": 27, "tempo_medio": "4:36"}
+  },
+  "blog_fy24": {
+    "Q1": {"visitas": null, "usuarios": 794, "blogposts": null, "tempo_medio": null},
+    "Q2": {"visitas": null, "usuarios": 868, "blogposts": null, "tempo_medio": null},
+    "Q3": {"visitas": null, "usuarios": 1049, "blogposts": null, "tempo_medio": null},
+    "Q4": {"visitas": null, "usuarios": 1049, "blogposts": null, "tempo_medio": null}
+  },
+  "newsletter": {
+    "Q1": {"empresas": 416, "envios": 544, "abertura": 34.19, "cliques": 2.8},
+    "Q2": {"empresas": 427, "envios": 750, "abertura": 35.2, "cliques": 2.8},
+    "Q3": {"empresas": 428, "envios": 1059, "abertura": 33.1, "cliques": 1.5},
+    "Q4": {"empresas": 488, "envios": 426, "abertura": 32.0, "cliques": 1.8}
+  },
+  "newsletter_fy24": {
+    "Q1": {"empresas": null, "envios": null, "abertura": 71.03, "cliques": 3.90},
+    "Q2": {"empresas": null, "envios": null, "abertura": 65.09, "cliques": 7.96},
+    "Q3": {"empresas": null, "envios": 1049, "abertura": 62.0, "cliques": 2.12},
+    "Q4": {"empresas": null, "envios": 1049, "abertura": 62.0, "cliques": 2.2}
+  },
+  "vertical_distribution": {
+    "Q1": [
+      ["Segurança", 27.0],
+      ["Networking", 13.0],
+      ["Cloud", 13.0],
+      ["Data & AI", 10.0],
+      ["Data Center", 9.0],
+      ["Institucional", 15.0]
+    ],
+    "Q2": [
+      ["Cloud", 27.0],
+      ["Segurança", 22.0],
+      ["Networking", 19.0],
+      ["Data & AI", 14.0],
+      ["Data Center", 10.0],
+      ["Institucional", 8.0]
+    ],
+    "Q3": [
+      ["Segurança", 31.0],
+      ["Cloud", 19.0],
+      ["Networking", 16.0],
+      ["Institucional", 15.0],
+      ["Data & AI", 14.0],
+      ["Data Center", 6.0]
+    ],
+    "Q4": [
+      ["Segurança", 40.0],
+      ["Cloud", 21.0],
+      ["Institucional", 14.0],
+      ["Networking", 9.0],
+      ["Data Center", 8.0],
+      ["Data & AI", 7.0]
+    ]
+  },
+  "fabricantes": {
+    "Q1": [
+      {"vertical": "Segurança", "maior_solicitante": "Fortinet — 120 peças", "menor_solicitante": "Palo Alto — 1 peça", "top_3_pecas": "9520 - Fortinet"},
+      {"vertical": "Cloud", "maior_solicitante": "AWS — 43 peças", "menor_solicitante": "Microsoft — 11 peças", "top_3_pecas": "--"},
+      {"vertical": "Data & AI", "maior_solicitante": "IBM — 40 peças", "menor_solicitante": "Red Hat — 3 peças", "top_3_pecas": "9466 - IBM / 9483 - NVIDIA"},
+      {"vertical": "Data Center", "maior_solicitante": "Dell — 15 peças", "menor_solicitante": "Pure Storage — 2 peças", "top_3_pecas": "--"},
+      {"vertical": "Networking", "maior_solicitante": "Cisco — 132 peças", "menor_solicitante": "Juniper — 2 peças", "top_3_pecas": "9488 - Cisco"}
+    ],
+    "Q2": [
+      {"vertical": "Segurança", "maior_solicitante": "Fortinet — 117 peças", "menor_solicitante": "Trend Micro — 1 peça", "top_3_pecas": "E-mail Deriv. 76 | E-mail Novo 32 | Avulsa 30"},
+      {"vertical": "Cloud", "maior_solicitante": "Microsoft — 115 peças", "menor_solicitante": "Google Cloud — 35 peças", "top_3_pecas": "E-mail Deriv. 109 | Avulsa 30 | Post RS Deriv. 22"},
+      {"vertical": "Data & AI", "maior_solicitante": "IBM — 59 peças", "menor_solicitante": "NVIDIA — 27 peças", "top_3_pecas": "E-mail Novo 14 | Avulsa 6 | LP+TKY 4"},
+      {"vertical": "Data Center", "maior_solicitante": "Dell — 117 peças", "menor_solicitante": "HPE Aruba — 1 peça", "top_3_pecas": "Avulsa 42 | E-mail Deriv. 28 | E-mail Novo 16"},
+      {"vertical": "Networking", "maior_solicitante": "Cisco — 63 peças", "menor_solicitante": "Ciena — 7 peças", "top_3_pecas": "E-mail Novo 25 | E-mail Deriv. 15 | Avulsa 12"}
+    ],
+    "Q3": [
+      {"vertical": "Segurança", "maior_solicitante": "Fortinet — 129 peças", "menor_solicitante": "Trend Micro — 1 peça", "top_3_pecas": "E-mail Deriv. 69 | Avulsa 34 | E-mail Novo 30"},
+      {"vertical": "Cloud", "maior_solicitante": "Microsoft — 69 peças", "menor_solicitante": "Google Cloud — 20 peças", "top_3_pecas": "E-mail Deriv. 52 | Avulsa 41 | E-mail Novo 8"},
+      {"vertical": "Data & AI", "maior_solicitante": "Red Hat — 44 peças", "menor_solicitante": "SAS — 1 peça", "top_3_pecas": "Avulsa 14 | Camp. Anúncio 12 | Post RS Deriv. 12"},
+      {"vertical": "Data Center", "maior_solicitante": "TD SYNNEX — 12 peças", "menor_solicitante": "Pure Storage — 1 peça", "top_3_pecas": "E-mail Novo 19 | Avulsa 14 | LP+TKY 4"},
+      {"vertical": "Networking", "maior_solicitante": "Cisco — 82 peças", "menor_solicitante": "Ciena — 4 peças", "top_3_pecas": "E-mail Deriv. 49 | Avulsa 23 | E-mail Novo 11"}
+    ],
+    "Q4": [
+      {"vertical": "Segurança", "maior_solicitante": "Fortinet — 75 peças", "menor_solicitante": "Tenable — 1 peça", "top_3_pecas": "EMKT Deriv. 42 | EMKT Novo 36 | Avulsa 17"},
+      {"vertical": "Cloud", "maior_solicitante": "Google Cloud — 28 peças", "menor_solicitante": "AWS — 11 peças", "top_3_pecas": "EMKT Deriv. 36 | EMKT Novo 20 | Post RS Deriv. 13"},
+      {"vertical": "Data & AI", "maior_solicitante": "IBM — 25 peças", "menor_solicitante": "NVIDIA — 10 peças", "top_3_pecas": "Avulsa Deriv. 10 | EMKT Deriv. 6 | EMKT Novo 6"},
+      {"vertical": "Data Center", "maior_solicitante": "HPE — 10 peças", "menor_solicitante": "Commvault / Dell / Pure — 1 peça", "top_3_pecas": "Avulsa 9 | EMKT Novo 6 | EMKT Deriv. 2"},
+      {"vertical": "Networking", "maior_solicitante": "Cisco — 17 peças", "menor_solicitante": "Ciena — 1 peça", "top_3_pecas": "EMKT Novo 6 | EMKT Deriv. 4 | Avulsa 2"}
+    ]
+  },
+  "campanhas_detalhes": {
+    "Q1": {"solicitadas": 6, "veiculadas": 4, "taxa_conversao": 7.26, "leads": 62, "top": "🏆 Fortinet Roadshow (56 empresas)<br>🏆 NVIDIA IA (6 empresas)"},
+    "Q2": {"solicitadas": 9, "veiculadas": 6, "taxa_conversao": 6.5, "leads": 205, "top": "🏆 IBM IA (55 empresas)<br>🏆 Microsoft Roadshow (40 empresas)<br>🏆 Fortinet Recrutamento (25 empresas)"},
+    "Q3": {"solicitadas": 7, "veiculadas": 6, "taxa_conversao": 0.54, "leads": 439, "top": "🏆 Cloud On the Go (383 empresas)<br>🏆 Fortinet Roadshow (46 empresas)<br>🏆 NVIDIA IA (10 empresas)"},
+    "Q4": {"solicitadas": 6, "veiculadas": 3, "taxa_conversao": 0.04, "leads": 70, "top": "🏆 Campanha Recrutamento Fortinet (70 empresas)"}
+  }
+}
