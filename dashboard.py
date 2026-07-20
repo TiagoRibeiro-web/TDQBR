@@ -1564,22 +1564,25 @@ def get_blog_fy24(q, metric):
         return FALLBACK_DATA_FY25['blog_fy24'][q].get(metric)
     return None
 
+# CORRIGIDO: Função get_newsletter_value melhorada
 def get_newsletter_value(q, metric):
     if q == 'Q1FY26':
-        val = get_fy26_data('Q1', 'newsletter', metric)
+        data = FALLBACK_DATA_FY26['Q1']['newsletter']
+        val = data.get(metric, '—')
         if metric in ['abertura', 'cliques']:
-            return f"{val}%"
-        return format_number(val)
+            return f"{val}%" if val != '—' and val is not None else '—'
+        return format_number(val) if val != '—' and val is not None else '—'
     elif q == 'Q2FY26':
-        val = get_fy26_data('Q2', 'newsletter', metric)
+        data = FALLBACK_DATA_FY26['Q2']['newsletter']
+        val = data.get(metric, '—')
         if metric in ['abertura', 'cliques']:
-            return f"{val}%"
-        return format_number(val)
+            return f"{val}%" if val != '—' and val is not None else '—'
+        return format_number(val) if val != '—' and val is not None else '—'
     if q and q in FALLBACK_DATA_FY25['newsletter']:
         val = FALLBACK_DATA_FY25['newsletter'][q].get(metric, '—')
         if metric in ['abertura', 'cliques']:
-            return f"{val}%"
-        return format_number(val)
+            return f"{val}%" if val != '—' and val is not None else '—'
+        return format_number(val) if val != '—' and val is not None else '—'
     return '—'
 
 def get_newsletter_fy24(q, metric):
@@ -1587,7 +1590,7 @@ def get_newsletter_fy24(q, metric):
         return None
     if q and q in FALLBACK_DATA_FY25['newsletter_fy24']:
         val = FALLBACK_DATA_FY25['newsletter_fy24'][q].get(metric)
-        if val is not None:
+        if val is not None and val != '—':
             if metric in ['abertura', 'cliques']:
                 return f"{val}%"
             return format_number(val)
@@ -2989,17 +2992,22 @@ def main():
             </div>
             """)
 
+            # CORRIGIDO: Busca direta dos dados de newsletter Q1FY26
+            nw_empresas = get_newsletter_value('Q1FY26', 'empresas')
             nw_envios = get_newsletter_value('Q1FY26', 'envios')
             nw_abertura = get_newsletter_value('Q1FY26', 'abertura')
             nw_cliques = get_newsletter_value('Q1FY26', 'cliques')
 
-            prev_envios = get_fy26_data('Q1', 'newsletter_envios_q4fy25')
-            prev_abertura = get_fy26_data('Q1', 'newsletter_abertura_q4fy25')
-            prev_cliques = get_fy26_data('Q1', 'newsletter_cliques_q4fy25')
+            # Dados de comparação Q4FY25
+            prev_envios = get_newsletter_value('Q4', 'envios')
+            prev_abertura = get_newsletter_value('Q4', 'abertura')
+            prev_cliques = get_newsletter_value('Q4', 'cliques')
+            prev_empresas = get_newsletter_value('Q4', 'empresas')
 
-            render_blog_item("Envios", nw_envios, prev_envios, prev_fy25_name, icon="📨")
-            render_blog_item("Taxa de Abertura", nw_abertura, prev_abertura, prev_fy25_name, is_percentage=True, icon="📊")
-            render_blog_item("Taxa de Cliques", nw_cliques, prev_cliques, prev_fy25_name, is_percentage=True, icon="🖱️")
+            render_blog_item("Empresas", nw_empresas, prev_empresas, 'Q4 FY25', icon="🏢")
+            render_blog_item("Envios", nw_envios, prev_envios, 'Q4 FY25', icon="📨")
+            render_blog_item("Taxa de Abertura", nw_abertura, prev_abertura, 'Q4 FY25', is_percentage=True, icon="📊")
+            render_blog_item("Taxa de Cliques", nw_cliques, prev_cliques, 'Q4 FY25', is_percentage=True, icon="🖱️")
 
         # Exportação
         with st.sidebar:
@@ -3465,14 +3473,19 @@ def main():
             </div>
             """)
 
+            # CORRIGIDO: Busca direta dos dados de newsletter Q2FY26
+            nw_empresas = get_newsletter_value('Q2FY26', 'empresas')
             nw_envios = get_newsletter_value('Q2FY26', 'envios')
             nw_abertura = get_newsletter_value('Q2FY26', 'abertura')
             nw_cliques = get_newsletter_value('Q2FY26', 'cliques')
 
-            prev_envios = get_fy26_data('Q2', 'newsletter_envios_q1fy26')
-            prev_abertura = get_fy26_data('Q2', 'newsletter_abertura_q1fy26')
-            prev_cliques = get_fy26_data('Q2', 'newsletter_cliques_q1fy26')
+            # Dados de comparação Q1FY26
+            prev_envios = get_newsletter_value('Q1FY26', 'envios')
+            prev_abertura = get_newsletter_value('Q1FY26', 'abertura')
+            prev_cliques = get_newsletter_value('Q1FY26', 'cliques')
+            prev_empresas = get_newsletter_value('Q1FY26', 'empresas')
 
+            render_blog_item("Empresas", nw_empresas, prev_empresas, 'Q1 FY26', icon="🏢")
             render_blog_item("Envios", nw_envios, prev_envios, 'Q1 FY26', icon="📨")
             render_blog_item("Taxa de Abertura", nw_abertura, prev_abertura, 'Q1 FY26', is_percentage=True, icon="📊")
             render_blog_item("Taxa de Cliques", nw_cliques, prev_cliques, 'Q1 FY26', is_percentage=True, icon="🖱️")
